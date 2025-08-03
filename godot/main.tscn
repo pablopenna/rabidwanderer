@@ -1,9 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://c4mdemd284n0y"]
+[gd_scene load_steps=3 format=3 uid="uid://c4mdemd284n0y"]
 
 [ext_resource type="Texture2D" uid="uid://lk8aa3scbsc" path="res://icon.svg" id="1_fn4gn"]
+[ext_resource type="TileSet" uid="uid://ch3lkinfhmitw" path="res://board_tileset.tres" id="2_0xm2m"]
 
 [node name="Main" type="Node2D"]
 
 [node name="Player" type="Player" parent="."]
+z_index = 1
 position = Vector2(450, 300)
 texture = ExtResource("1_fn4gn")
+
+[node name="Board" type="Board" parent="."]
+tile_map_data = PackedByteArray(0, 0, 25, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 23, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 23, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+tile_set = ExtResource("2_0xm2m")
