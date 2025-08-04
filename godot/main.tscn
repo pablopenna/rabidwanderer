@@ -11,5 +11,9 @@ position = Vector2(450, 300)
 texture = ExtResource("1_fn4gn")
 
 [node name="Board" type="Board" parent="."]
-tile_map_data = PackedByteArray(0, 0, 25, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 23, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 23, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+position = Vector2(100, 100)
+tile_set = ExtResource("2_0xm2m")
+
+[node name="BoardBackground" type="BoardBackground" parent="."]
+z_index = -1
 tile_set = ExtResource("2_0xm2m")

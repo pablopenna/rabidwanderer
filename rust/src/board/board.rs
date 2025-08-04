@@ -1,10 +1,11 @@
 // use core::f32;
-
 use godot::prelude::*;
 use godot::classes::*;
 
-const BOARD_WIDTH: u16 = 100;
-const BOARD_HEIGHT: u16 = 50;
+use crate::board::board_utils;
+
+const BOARD_WIDTH: u16 = 20;
+const BOARD_HEIGHT: u16 = 10;
 
 #[derive(GodotClass)]
 #[class(base=TileMapLayer)]
@@ -21,8 +22,7 @@ impl ITileMapLayer for Board {
     }
 
     fn ready(&mut self) {
-        verify_tile_set_exists(self);
-
+        board_utils::verify_tile_set_exists(self.base().to_godot());
         add_board_base_tiles(self);
     }
 
@@ -35,13 +35,6 @@ impl ITileMapLayer for Board {
             godot_print!("Okay!!");
         }
     }
-
-}
-
-fn verify_tile_set_exists(board: &Board) {
-    if board.base().get_tile_set().is_none() {
-        panic!("No tileset provided for the board!");
-    }
 }
 
 fn add_board_base_tiles(board: &mut Board) {
@@ -49,7 +42,7 @@ fn add_board_base_tiles(board: &mut Board) {
         for y in 0..BOARD_HEIGHT {
             board.base_mut().set_cell_ex(Vector2i::from_tuple((x.into(), y.into())))
                 .source_id(0)
-                .atlas_coords(Vector2i::from_tuple((0,0)))
+                .atlas_coords(Vector2i::from_tuple((1,0)))
                 .alternative_tile(0)
                 .done();
         }
