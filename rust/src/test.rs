@@ -5,7 +5,7 @@ use godot::classes::*;
 
 #[derive(GodotClass)]
 #[class(base=Sprite2D)]
-struct Player {
+struct Test {
     speed: f64,
     angular_speed: f64,
 
@@ -13,7 +13,7 @@ struct Player {
 }
 
 #[godot_api]
-impl ISprite2D for Player {
+impl ISprite2D for Test {
     fn init(base: Base<Sprite2D>) -> Self {
         godot_print!("Hello, world!"); // Prints to the Godot console
 
