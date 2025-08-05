@@ -1,0 +1,30 @@
+{
+    "configurations": [
+        {
+            "name": "Debug Project (Godot 4)",
+            "type": "lldb", // type provided by CodeLLDB extension
+            "request": "launch",
+            "preLaunchTask": "rust-build",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "-w", // windowed mode
+                "--path", 
+                "${workspaceFolder}${pathSeparator}..${pathSeparator}godot${pathSeparator}",
+                "main.tscn"
+            ],
+            "program": "this-is-overriden",
+            "linux": {
+                "program": "/home/pablo/apps/godot",
+                // "program": "/usr/bin/echo",
+            },
+            "windows": {
+                "program": "D:\\__root__\\apps\\Godot.exe",
+            },
+            "osx": {
+                // NOTE: on macOS the Godot.app needs to be manually re-signed 
+                // to enable debugging (see below)
+                "program": "/Applications/Godot.app/Contents/MacOS/Godot",
+            }
+        }
+    ]
+}
