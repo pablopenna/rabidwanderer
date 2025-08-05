@@ -1,19 +1,28 @@
-[gd_scene load_steps=3 format=3 uid="uid://c4mdemd284n0y"]
+[gd_scene load_steps=5 format=3 uid="uid://c4mdemd284n0y"]
 
-[ext_resource type="Texture2D" uid="uid://lk8aa3scbsc" path="res://icon.svg" id="1_fn4gn"]
 [ext_resource type="TileSet" uid="uid://ch3lkinfhmitw" path="res://board_tileset.tres" id="2_0xm2m"]
+[ext_resource type="Texture2D" uid="uid://bgkykn476xvii" path="res://art/knight.png" id="2_1bvp3"]
+[ext_resource type="Shader" uid="uid://2810ppb25wdd" path="res://player_sprite.gdshader" id="2_lquwl"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7mycd"]
+shader = ExtResource("2_lquwl")
 
 [node name="Main" type="Node2D"]
 
-[node name="Player" type="Player" parent="."]
-z_index = 1
-position = Vector2(450, 300)
-texture = ExtResource("1_fn4gn")
-
 [node name="Board" type="Board" parent="."]
+z_index = -1
 position = Vector2(100, 100)
 tile_set = ExtResource("2_0xm2m")
 
 [node name="BoardBackground" type="BoardBackground" parent="."]
-z_index = -1
+z_index = -2
 tile_set = ExtResource("2_0xm2m")
+
+[node name="Player" type="Player" parent="." node_paths=PackedStringArray("sprite")]
+sprite = NodePath("Sprite2D")
+position = Vector2(185, 155)
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+material = SubResource("ShaderMaterial_7mycd")
+texture = ExtResource("2_1bvp3")
+hframes = 3
