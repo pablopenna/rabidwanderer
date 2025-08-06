@@ -18,7 +18,7 @@
                 // "program": "/usr/bin/echo",
             },
             "windows": {
-                "program": "D:\\__root__\\apps\\Godot.exe",
+                "program": "D:\\__root\\apps\\Godot\\Godot.exe",
             },
             "osx": {
                 // NOTE: on macOS the Godot.app needs to be manually re-signed 
