@@ -5,11 +5,15 @@ use godot::prelude::*;
 use rand::rngs::ThreadRng;
 use rand::Rng;
 
-use crate::board::board_utils;
+use crate::board::board_data::generate_empty_board_data;
+use crate::board::board_data::DataTile;
+use crate::board::board_coordinate::coordinate_to_index;
+use crate::board::board_coordinate::godot_vector_to_vector2d;
+use crate::board::board_utils::verify_tile_set_exists;
+use crate::board::constants::*;
 
-const BOARD_WIDTH: usize = 20;
-const BOARD_HEIGHT: usize = 10;
-const BOARD_SIZE: usize = BOARD_WIDTH * BOARD_HEIGHT;
+
+
 
 #[derive(GodotClass)]
 #[class(base=TileMapLayer)]
@@ -30,7 +34,7 @@ impl ITileMapLayer for Board {
     }
 
     fn ready(&mut self) {
-        board_utils::verify_tile_set_exists(self.base().to_godot());
+        verify_tile_set_exists(self.base().to_godot());
         Board::populate_board(self);
     }
 
@@ -95,48 +99,3 @@ const FOUR_WAY_DRAW_CELL: DrawTile = DrawTile {
     alternative_tile: 0,
     atlas_coords: Vector2i::from_tuple((1, 0)),
 };
-
-// =======
-// Data
-// =======
-struct Vector2D {
-    x: usize,
-    y: usize,
-}
-
-struct DataTile {
-    coordinates: Vector2D,
-    can_be_traversed: bool,
-}
-
-impl DataTile {
-    fn make_traversable(&mut self) {
-        self.can_be_traversed = true;
-    }
-}
-
-fn godot_vector_to_vector2d(vector: Vector2i) -> Vector2D {
-    Vector2D {
-        x: vector.x as usize,
-        y: vector.y as usize,
-    }
-}
-
-fn index_to_coordinate(idx: usize) -> Vector2D {
-    Vector2D {
-        x: idx % BOARD_WIDTH,
-        y: idx / BOARD_WIDTH,
-    }
-}
-
-fn coordinate_to_index(coordinate: Vector2D) -> usize {
-    coordinate.y * BOARD_WIDTH + coordinate.x
-}
-
-fn generate_empty_board_data() -> [DataTile; BOARD_SIZE as usize] {
-    let data: [DataTile; BOARD_SIZE as usize] = core::array::from_fn(|i| DataTile {
-        coordinates: index_to_coordinate(i),
-        can_be_traversed: false,
-    });
-    data
-}

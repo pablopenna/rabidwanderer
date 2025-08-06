@@ -34,7 +34,6 @@ impl INode2D for Player {
 
         let input_dir =
             Input::singleton().get_vector(INPUT_LEFT, INPUT_RIGHT, INPUT_UP, INPUT_DOWN);
-        let cell_size = 16;
         
         if input_dir.is_zero_approx() {
             return;
@@ -43,6 +42,6 @@ impl INode2D for Player {
         self.board_movement_manager
             .signals()
             .entity_move_intent()
-            .emit(&self.to_gd(), input_dir * cell_size as f32);
+            .emit(&self.to_gd(), input_dir.normalized());
     }
 }
