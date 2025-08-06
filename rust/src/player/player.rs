@@ -1,21 +1,48 @@
-use godot::prelude::*;
 use godot::classes::*;
+use godot::prelude::*;
+
+use crate::board::board_movement_manager::BoardMovementManager;
 
 #[derive(GodotClass)]
 #[class(init, base=Node2D)]
-struct Player {
+pub struct Player {
+    // https://github.com/godot-rust/gdext/issues/972
+    // https://godot-rust.github.io/docs/gdext/master/godot/obj/struct.Gd.html#exporting
     #[export]
-    sprite: Option<Gd<Sprite2D>>, // https://github.com/godot-rust/gdext/issues/972
+    sprite: OnEditor<Gd<Sprite2D>>,
+    #[export]
+    board_movement_manager: OnEditor<Gd<BoardMovementManager>>,
     base: Base<Node2D>,
 }
 
+const INPUT_LEFT: &'static str = "ui_left";
+const INPUT_RIGHT: &'static str = "ui_right";
+const INPUT_UP: &'static str = "ui_up";
+const INPUT_DOWN: &'static str = "ui_down";
+
 #[godot_api]
 impl INode2D for Player {
-    fn physics_process(&mut self, delta: f32) {
-        let input_dir = Input::singleton().get_vector("ui_left", "ui_right", "ui_up", "ui_down");
-        let position = self.base().get_position();
-        let move_speed: f32 = 100.0;
+    //fn physics_process(&mut self, delta: f32) {
+    fn unhandled_input(&mut self, event: Gd<InputEvent>) {
+        if !event.is_action(INPUT_LEFT)
+            && !event.is_action(INPUT_RIGHT)
+            && !event.is_action(INPUT_UP)
+            && !event.is_action(INPUT_DOWN)
+        {
+            return;
+        }
 
-        self.base_mut().set_position(position + input_dir * move_speed * delta);
+        let input_dir =
+            Input::singleton().get_vector(INPUT_LEFT, INPUT_RIGHT, INPUT_UP, INPUT_DOWN);
+        let cell_size = 16;
+        
+        if input_dir.is_zero_approx() {
+            return;
+        }
+
+        self.board_movement_manager
+            .signals()
+            .entity_move_intent()
+            .emit(&self.to_gd(), input_dir * cell_size as f32);
     }
 }

@@ -13,7 +13,7 @@ const BOARD_SIZE: usize = BOARD_WIDTH * BOARD_HEIGHT;
 
 #[derive(GodotClass)]
 #[class(base=TileMapLayer)]
-struct Board {
+pub(crate) struct Board {
     random_generator: ThreadRng,
     data: [DataTile; BOARD_SIZE],
     base: Base<TileMapLayer>,

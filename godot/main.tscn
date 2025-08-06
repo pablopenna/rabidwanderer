@@ -18,8 +18,12 @@ tile_set = ExtResource("2_0xm2m")
 z_index = -2
 tile_set = ExtResource("2_0xm2m")
 
-[node name="Player" type="Player" parent="." node_paths=PackedStringArray("sprite")]
+[node name="BoardMovementManager" type="BoardMovementManager" parent="." node_paths=PackedStringArray("board")]
+board = NodePath("../Board")
+
+[node name="Player" type="Player" parent="." node_paths=PackedStringArray("sprite", "board_movement_manager")]
 sprite = NodePath("Sprite2D")
+board_movement_manager = NodePath("../BoardMovementManager")
 position = Vector2(185, 155)
 
 [node name="Sprite2D" type="Sprite2D" parent="Player"]

@@ -1,1 +1,1 @@
-mod player;
+pub(crate) mod player;
