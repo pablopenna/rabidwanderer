@@ -1,10 +1,12 @@
 // use core::f32;
 use godot::classes::*;
+use godot::obj::NewAlloc;
 use godot::prelude::*;
 
 use rand::rngs::ThreadRng;
 use rand::Rng;
 
+use crate::board::background::BoardBackground;
 use crate::board::data::generate_empty_board_data;
 use crate::board::data::DataTile;
 use crate::board::coordinate::coordinate_to_index;
@@ -20,6 +22,7 @@ use crate::board::constants::*;
 pub(crate) struct Board {
     random_generator: ThreadRng,
     data: [DataTile<'static>; BOARD_SIZE],
+    background: Gd<BoardBackground>,
     base: Base<TileMapLayer>,
 }
 
@@ -29,6 +32,7 @@ impl ITileMapLayer for Board {
         Self {
             random_generator: rand::rng(),
             data: generate_empty_board_data(),
+            background: BoardBackground::new_alloc(),
             base,
         }
     }
@@ -36,6 +40,18 @@ impl ITileMapLayer for Board {
     fn ready(&mut self) {
         verify_tile_set_exists(self.base().to_godot());
         Board::populate_board(self);
+
+        // background node setup
+        let tile_set = self.base().get_tile_set().unwrap();
+        self.background.set_tile_set(&tile_set);
+        
+        self.base_mut().set_z_as_relative(true);
+        self.base_mut().set_z_index(-1);
+        self.background.set_z_as_relative(true);
+        self.background.set_z_index(-1);
+        
+        let background_node = self.background.clone().upcast::<Node>();
+        self.base_mut().add_child(&background_node);
     }
 
     fn physics_process(&mut self, _delta: f64) {}

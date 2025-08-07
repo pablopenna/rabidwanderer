@@ -14,10 +14,6 @@ z_index = -1
 position = Vector2(100, 100)
 tile_set = ExtResource("2_0xm2m")
 
-[node name="BoardBackground" type="BoardBackground" parent="."]
-z_index = -2
-tile_set = ExtResource("2_0xm2m")
-
 [node name="BoardMovementManager" type="BoardMovementManager" parent="." node_paths=PackedStringArray("board")]
 board = NodePath("../Board")
 
