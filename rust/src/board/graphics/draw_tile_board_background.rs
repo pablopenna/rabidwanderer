@@ -5,7 +5,7 @@ use crate::board::constants::BOARD_BACKGROUND_HEIGHT;
 use crate::board::constants::BOARD_BACKGROUND_HEIGHT_OFFSET;
 use crate::board::constants::BOARD_BACKGROUND_WIDTH;
 use crate::board::constants::BOARD_BACKGROUND_WIDTH_OFFSET;
-use crate::board::utils;
+use crate::board::graphics::utils;
 
 #[derive(GodotClass)]
 #[class(base=TileMapLayer)]

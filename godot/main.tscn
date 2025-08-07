@@ -10,9 +10,9 @@ shader = ExtResource("2_lquwl")
 [node name="Main" type="Node2D"]
 
 [node name="Board" type="Board" parent="."]
+tile_set = ExtResource("2_0xm2m")
 z_index = -1
 position = Vector2(100, 100)
-tile_set = ExtResource("2_0xm2m")
 
 [node name="BoardMovementManager" type="BoardMovementManager" parent="." node_paths=PackedStringArray("board")]
 board = NodePath("../Board")
