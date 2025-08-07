@@ -20,7 +20,7 @@ board = NodePath("../Board")
 [node name="Player" type="Player" parent="." node_paths=PackedStringArray("sprite", "board_movement_manager")]
 sprite = NodePath("Sprite2D")
 board_movement_manager = NodePath("../BoardMovementManager")
-position = Vector2(185, 155)
+position = Vector2(100, 100)
 
 [node name="Sprite2D" type="Sprite2D" parent="Player"]
 material = SubResource("ShaderMaterial_7mycd")

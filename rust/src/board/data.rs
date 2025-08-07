@@ -17,6 +17,10 @@ impl<'a> DataTile<'a> {
             entities: Vec::new(),
         }
     }
+
+    pub(crate) fn get_coordinates(&self) -> &BoardCoordinate {
+        &self.coordinates
+    }
     
     pub(crate) fn make_traversable(&mut self) {
         self.can_be_traversed = true;
@@ -26,7 +30,7 @@ impl<'a> DataTile<'a> {
         self.can_be_traversed = false;
     }
 
-    pub(crate) fn is_traversable(&mut self) -> bool {
+    pub(crate) fn is_traversable(&self) -> bool {
         self.can_be_traversed
     }
 
