@@ -1,7 +1,7 @@
 use godot::prelude::*;
 use godot::classes::*;
 
-use crate::board::board_utils;
+use crate::board::utils;
 
 const BOARD_BACKGROUND_WIDTH: u16 = 100;
 const BOARD_BACKGROUND_HEIGHT: u16 = 100;
@@ -21,7 +21,7 @@ impl ITileMapLayer for BoardBackground {
     }
 
     fn ready(&mut self) {
-        board_utils::verify_tile_set_exists(self.base().to_godot());
+        utils::verify_tile_set_exists(self.base().to_godot());
         add_board_base_tiles(self);
     }
 

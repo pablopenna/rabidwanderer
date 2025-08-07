@@ -1,7 +1,7 @@
 use godot::classes::*;
 use godot::prelude::*;
 
-use crate::board::board_movement_manager::BoardMovementManager;
+use crate::board::movement_manager::BoardMovementManager;
 
 #[derive(GodotClass)]
 #[class(init, base=Node2D)]

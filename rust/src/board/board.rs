@@ -5,11 +5,11 @@ use godot::prelude::*;
 use rand::rngs::ThreadRng;
 use rand::Rng;
 
-use crate::board::board_data::generate_empty_board_data;
-use crate::board::board_data::DataTile;
-use crate::board::board_coordinate::coordinate_to_index;
-use crate::board::board_coordinate::godot_vector_to_vector2d;
-use crate::board::board_utils::verify_tile_set_exists;
+use crate::board::data::generate_empty_board_data;
+use crate::board::data::DataTile;
+use crate::board::coordinate::coordinate_to_index;
+use crate::board::coordinate::godot_vector_to_vector2d;
+use crate::board::utils::verify_tile_set_exists;
 use crate::board::constants::*;
 
 
@@ -19,7 +19,7 @@ use crate::board::constants::*;
 #[class(base=TileMapLayer)]
 pub(crate) struct Board {
     random_generator: ThreadRng,
-    data: [DataTile; BOARD_SIZE],
+    data: [DataTile<'static>; BOARD_SIZE],
     base: Base<TileMapLayer>,
 }
 
