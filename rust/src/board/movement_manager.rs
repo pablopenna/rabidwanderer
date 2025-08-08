@@ -24,8 +24,49 @@ impl INode for BoardMovementManager {
 #[godot_api]
 impl BoardMovementManager {
 
-    pub(crate) fn move_entity_in_board(&mut self, &_entity: &mut impl BoardEntity, _board_movement: Vector2i) {
+    pub(crate) fn move_entity_in_board(&mut self, &entity: &mut impl BoardEntity, board_movement: Vector2i) {
+        let origin_coordinate = entity.get_coordinates();
+        let target_coordinate = BoardCoordinate::from_vector2i(
+            entity.get_coordinates().to_godot_vector2i() + board_movement
+        );
+        if !target_coordinate.is_valid() {
+            return;
+        }
+
+        let origin_data_tile = 
+            &mut self
+                .get_board()
+                .unwrap()
+                .bind_mut()
+                .get_data_mut()
+                [origin_coordinate.to_index()]
+                .clone();
+
+        let target_data_tile = 
+            &mut self
+                .get_board()
+                .unwrap()
+                .bind_mut()
+                .get_data_mut()
+                [target_coordinate.to_index()]
+                .clone();
         
+        if !target_data_tile.is_traversable() {
+            return;
+        }
+        
+        origin_data_tile.remove_entity(entity);
+        target_data_tile.add_entity(entity);
+        entity.set_coordinates(target_coordinate.clone());
+
+        let target_world_position = 
+            self
+            .get_board()
+            .unwrap()
+            .bind()
+            .get_graphics()
+            .map_to_local(target_coordinate.to_godot_vector2i());
+        entity.set_world_position(target_world_position);
     }
 
     pub(crate) fn add_entity_to_board_at_coordinate(&mut self, &entity: &mut impl BoardEntity, coordinate: BoardCoordinate) {
@@ -59,7 +100,7 @@ impl BoardMovementManager {
     pub(crate) fn get_first_traversable_tile_coordinates_in_board(&mut self) -> Option<Vector2i> {
         let mut board_gd = self.get_board().to_godot().unwrap();
         let board = board_gd.bind_mut();
-        let board_data = board.get_data();
+        let board_data = board.get_data_ref();
         let index = board_data.iter().position(
             |tile| tile.is_traversable()
         );

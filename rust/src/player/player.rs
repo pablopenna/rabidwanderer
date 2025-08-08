@@ -62,7 +62,7 @@ impl BoardEntity for Player {
     }
 
     fn set_world_position(&mut self, position: Vector2) {
-        let global_position = self.base().to_godot().to_global(position);
-        self.base_mut().to_godot().set_position(global_position);
+        // let global_position = self.base().to_godot().to_global(position);
+        self.base_mut().to_godot().set_position(position);
     }
 }

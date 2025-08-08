@@ -66,7 +66,7 @@ impl Board {
     pub(crate) fn board_setted_up(board: Gd<Board>);
 
     fn populate_board(&mut self) {
-        let blocks_to_place: u8 = 20;
+        let blocks_to_place: u8 = 150;
         let mut blocks_placed: u8 = 0;
         let draw_tile_board = &mut self.graphics.clone().upcast::<TileMapLayer>();
 
@@ -84,7 +84,7 @@ impl Board {
         }
     }
 
-    pub(crate) fn get_data(&self) -> &[DataTile<'static>; BOARD_SIZE] {
+    pub(crate) fn get_data_ref(&self) -> &[DataTile<'static>; BOARD_SIZE] {
         &self.data
     }
 

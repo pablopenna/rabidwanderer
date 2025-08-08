@@ -1,6 +1,6 @@
 use godot::builtin::Vector2i;
 
-use crate::board::constants::BOARD_WIDTH;
+use crate::board::constants::{BOARD_HEIGHT, BOARD_WIDTH};
 
 #[derive(Default)]
 #[derive(Clone)]
@@ -21,6 +21,16 @@ impl BoardCoordinate {
 
     pub(crate) fn from_vector2i(vector: Vector2i) -> Self {
         Self { x: vector.x as usize, y: vector.y as usize }
+    }
+
+    pub(crate) fn is_valid(&self) -> bool {
+        if self.x > BOARD_WIDTH-1 {
+            return false;
+        }
+        if self.y > BOARD_HEIGHT-1 {
+            return false;
+        }
+        true
     }
 }
 
