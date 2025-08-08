@@ -1,28 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://c4mdemd284n0y"]
+[gd_scene load_steps=3 format=3 uid="uid://c4mdemd284n0y"]
 
-[ext_resource type="TileSet" uid="uid://ch3lkinfhmitw" path="res://board_tileset.tres" id="2_0xm2m"]
-[ext_resource type="Texture2D" uid="uid://bgkykn476xvii" path="res://art/knight.png" id="2_1bvp3"]
-[ext_resource type="Shader" uid="uid://2810ppb25wdd" path="res://player_sprite.gdshader" id="2_lquwl"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_7mycd"]
-shader = ExtResource("2_lquwl")
+[ext_resource type="PackedScene" uid="uid://c1djv0afxupqf" path="res://scenes/board.tscn" id="1_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://2n6rh32qnx05" path="res://scenes/player.tscn" id="2_h2yge"]
 
 [node name="Main" type="Node2D"]
 
-[node name="Board" type="Board" parent="."]
-tile_set = ExtResource("2_0xm2m")
-z_index = -1
-position = Vector2(100, 100)
-
-[node name="BoardMovementManager" type="BoardMovementManager" parent="." node_paths=PackedStringArray("board")]
-board = NodePath("../Board")
-
-[node name="Player" type="Player" parent="." node_paths=PackedStringArray("sprite", "board_movement_manager")]
-sprite = NodePath("Sprite2D")
-board_movement_manager = NodePath("../BoardMovementManager")
-position = Vector2(100, 100)
-
-[node name="Sprite2D" type="Sprite2D" parent="Player"]
-material = SubResource("ShaderMaterial_7mycd")
-texture = ExtResource("2_1bvp3")
-hframes = 3
+[node name="GameManager" type="GameManager" parent="."]
+board_scene = ExtResource("1_0xm2m")
+player_scene = ExtResource("2_h2yge")

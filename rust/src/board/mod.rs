@@ -2,7 +2,7 @@
 pub(crate) mod board;
 pub(crate) mod movement_manager;
 pub(crate) mod entity;
-mod coordinate;
+pub(crate) mod coordinate;
 mod data;
 mod constants;
 mod graphics;

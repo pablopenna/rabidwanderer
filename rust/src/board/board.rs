@@ -84,8 +84,16 @@ impl Board {
         }
     }
 
-    pub(crate) fn get_data(&mut self) -> &[DataTile<'static>; BOARD_SIZE] {
+    pub(crate) fn get_data(&self) -> &[DataTile<'static>; BOARD_SIZE] {
         &self.data
+    }
+
+    pub(crate) fn get_data_mut(&mut self) -> &mut [DataTile<'static>; BOARD_SIZE] {
+        &mut self.data
+    }
+
+    pub(crate) fn get_graphics(&self) -> &Gd<DrawTileBoard> {
+        &self.graphics
     }
 }
 

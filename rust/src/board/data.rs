@@ -1,5 +1,6 @@
-use crate::{board::{constants::BOARD_SIZE, coordinate::{index_to_coordinate, BoardCoordinate}, entity::BoardEntity}, player::player::Player};
+use crate::board::{constants::BOARD_SIZE, coordinate::{index_to_coordinate, BoardCoordinate}, entity::BoardEntity};
 
+#[derive(Clone)]
 pub(crate) struct DataTile<'a> {
     coordinates: BoardCoordinate,
     can_be_traversed: bool,
@@ -24,10 +25,6 @@ impl<'a> DataTile<'a> {
     
     pub(crate) fn make_traversable(&mut self) {
         self.can_be_traversed = true;
-    }
-
-    pub(crate) fn make_non_traversable(&mut self) {
-        self.can_be_traversed = false;
     }
 
     pub(crate) fn is_traversable(&self) -> bool {

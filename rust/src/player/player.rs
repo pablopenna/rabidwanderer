@@ -1,11 +1,14 @@
 use godot::classes::*;
 use godot::prelude::*;
 
+use crate::board::coordinate::BoardCoordinate;
+use crate::board::entity::BoardEntity;
 use crate::board::movement_manager::BoardMovementManager;
 
 #[derive(GodotClass)]
 #[class(init, base=Node2D)]
 pub struct Player {
+    coordinates: BoardCoordinate,
     // https://github.com/godot-rust/gdext/issues/972
     // https://godot-rust.github.io/docs/gdext/master/godot/obj/struct.Gd.html#exporting
     #[export]
@@ -39,9 +42,27 @@ impl INode2D for Player {
             return;
         }
 
-        self.board_movement_manager
-            .signals()
-            .entity_move_intent()
-            .emit(&self.to_gd(), input_dir.normalized());
+        self.get_board_movement_manager()
+            .unwrap()
+            .bind_mut()
+            .move_entity_in_board(self, Vector2i {
+                x: input_dir.x.ceil() as i32,
+                y: input_dir.y.ceil() as i32,
+            });
+    }
+}
+
+impl BoardEntity for Player {
+    fn get_coordinates(&self) -> &BoardCoordinate {
+        &self.coordinates
+    }
+    
+    fn set_coordinates(&mut self, coord: BoardCoordinate) {
+        self.coordinates = coord
+    }
+
+    fn set_world_position(&mut self, position: Vector2) {
+        let global_position = self.base().to_godot().to_global(position);
+        self.base_mut().to_godot().set_position(global_position);
     }
 }

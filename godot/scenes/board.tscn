@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://c1djv0afxupqf"]
+
+[ext_resource type="TileSet" uid="uid://ch3lkinfhmitw" path="res://resources/board_tileset.tres" id="1_bw3vb"]
+
+[node name="Board" type="Board"]
+tile_set = ExtResource("1_bw3vb")
+z_index = -1
