@@ -23,15 +23,23 @@ impl INode for DataTileBoard {
 }
 
 impl DataTileBoard {
-    fn get_tile_ref(&self, coord: &BoardCoordinate) -> &DataTile {
+    pub(crate) fn get_tile_ref(&self, coord: &BoardCoordinate) -> &DataTile {
         & self.data[coord.to_index()]
     }
 
     // https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html#lifetime-annotations-in-function-signatures
     // https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html#lifetime-elision
     // https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html#the-static-lifetime
-    fn get_tile_mut(&mut self, coord: &BoardCoordinate) -> &mut DataTile<'static> {
+    pub(crate) fn get_tile_mut(&mut self, coord: &BoardCoordinate) -> &mut DataTile<'static> {
         &mut self.data[coord.to_index()]
+    }
+
+    pub(crate) fn get_first_traversable_tile(&self) -> Option<&DataTile> {
+        let position = self.data.iter().position(
+            |tile| tile.is_traversable()
+        );
+
+        position.map(|pos| &self.data[pos])
     }
 }
 
