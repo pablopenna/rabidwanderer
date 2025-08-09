@@ -6,8 +6,8 @@ use rand::Rng;
 
 use crate::board::coordinate::coordinate_to_index;
 use crate::board::coordinate::godot_vector_to_vector2d;
+use crate::board::data::data_tile::generate_empty_board_data;
 use crate::board::data::data_tile::DataTile;
-use crate::board::data::data_tile_board::DataTileBoard;
 use crate::board::graphics::draw_tile_board::DrawTileBoard;
 use crate::board::graphics::utils as DrawBoardUtils;
 use crate::board::constants::*;
@@ -16,7 +16,7 @@ use crate::board::constants::*;
 #[class(base=Node2D)]
 pub(crate) struct Board {
     random_generator: ThreadRng,
-    data: Gd<DataTileBoard>,
+    data: [DataTile<'static>; BOARD_SIZE],
     graphics: Gd<DrawTileBoard>,
     #[export]
     tile_set: OnEditor<Gd<TileSet>>,
@@ -28,7 +28,7 @@ impl INode2D for Board {
     fn init(base: Base<Node2D>) -> Self {
         Self {
             random_generator: rand::rng(),
-            data: DataTileBoard::new_alloc(),
+            data: generate_empty_board_data(),
             graphics: DrawTileBoard::new_alloc(),
             // https://godot-rust.github.io/docs/gdext/master/godot/prelude/struct.OnEditor.html#example-user-defined-init
             tile_set: OnEditor::default(),
@@ -41,9 +41,6 @@ impl INode2D for Board {
         self.graphics.set_tile_set(&tile_set);
         
         self.populate_board();
-
-        let data_node = self.data.clone().upcast::<Node>();
-        self.base_mut().add_child(&data_node);
 
         let graphics_node = self.graphics.clone().upcast::<Node>();
         self.base_mut().add_child(&graphics_node);
@@ -81,23 +78,17 @@ impl Board {
                 DrawBoardUtils::add_four_way_draw_tile(draw_tile_board, coord);
                 blocks_placed += 1;
                 
-                // let data_tile = &mut self.data[coordinate_to_index(godot_vector_to_vector2d(coord))];
-                let mut data_tile = self
-                .get_data_mut()
-                .bind_mut()
-                .get_tile_mut(&godot_vector_to_vector2d(coord))
-                .clone();
-            
+                let data_tile = &mut self.data[coordinate_to_index(godot_vector_to_vector2d(coord))];
                 data_tile.make_traversable();
             }
         }
     }
 
-    pub(crate) fn get_data_ref(&self) -> &Gd<DataTileBoard> {
+    pub(crate) fn get_data_ref(&self) -> &[DataTile<'static>; BOARD_SIZE] {
         &self.data
     }
 
-    pub(crate) fn get_data_mut(&mut self) -> &mut Gd<DataTileBoard> {
+    pub(crate) fn get_data_mut(&mut self) -> &mut [DataTile<'static>; BOARD_SIZE] {
         &mut self.data
     }
 
