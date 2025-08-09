@@ -4,6 +4,7 @@ use crate::board::{constants::BOARD_SIZE, coordinate::{index_to_coordinate, Boar
 pub(crate) struct DataTile<'a> {
     coordinates: BoardCoordinate,
     can_be_traversed: bool,
+    // https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html#lifetime-annotations-in-struct-definitions
     // https://doc.rust-lang.org/rust-by-example/scope/lifetime.html
     entities: Vec<&'a dyn BoardEntity>,
 }
@@ -35,7 +36,7 @@ impl<'a> DataTile<'a> {
         self.entities.push(entity);
     }
 
-    pub(crate) fn remove_entity(& mut self, entity_to_remove: &'a impl BoardEntity) -> bool {
+    pub(crate) fn remove_entity(& mut self, entity_to_remove: & impl BoardEntity) -> bool {
         let position = self.entities.iter().position(
             |&entity| std::ptr::addr_eq(entity, entity_to_remove)
         );

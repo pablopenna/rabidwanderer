@@ -6,8 +6,8 @@ use rand::Rng;
 
 use crate::board::coordinate::coordinate_to_index;
 use crate::board::coordinate::godot_vector_to_vector2d;
-use crate::board::data::generate_empty_board_data;
-use crate::board::data::DataTile;
+use crate::board::data::data_tile::generate_empty_board_data;
+use crate::board::data::data_tile::DataTile;
 use crate::board::graphics::draw_tile_board::DrawTileBoard;
 use crate::board::graphics::utils as DrawBoardUtils;
 use crate::board::constants::*;
