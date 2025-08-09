@@ -23,6 +23,13 @@ impl BoardCoordinate {
         Self { x: vector.x as usize, y: vector.y as usize }
     }
 
+    pub(crate) fn from_index(idx: usize) -> BoardCoordinate {
+        BoardCoordinate {
+            x: idx % BOARD_WIDTH,
+            y: idx / BOARD_WIDTH,
+        }
+    }
+
     pub(crate) fn is_valid(&self) -> bool {
         if self.x > BOARD_WIDTH-1 {
             return false;

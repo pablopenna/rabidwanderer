@@ -1,7 +1,6 @@
 use godot::prelude::*;
 
 use crate::board::board::Board;
-use crate::board::coordinate::BoardCoordinate;
 use crate::board::movement_manager::BoardMovementManager;
 use crate::player::player::Player;
 
@@ -64,9 +63,10 @@ impl GameManager {
     pub fn game_ready();
 
     fn on_game_ready(&mut self) {
-        let mut movement_manager_bind = self.movement_manager.bind_mut();
+        let mut board_bind = self.board.clone().unwrap();
+        let mut board = board_bind.bind_mut();
         let traversable_coordinate = 
-            movement_manager_bind
+            board
             .get_first_traversable_tile_coordinates_in_board()
             .unwrap();
 
@@ -83,9 +83,11 @@ impl GameManager {
         let mut player_bind = player_unwrap.bind_mut();
         let player_entity = &mut *player_bind;
         
+        let mut movement_manager_bind = self.movement_manager.bind_mut();
         movement_manager_bind.add_entity_to_board_at_coordinate(
             player_entity, 
-            BoardCoordinate::from_vector2i(traversable_coordinate));
+            traversable_coordinate
+        );
     }
 }
 

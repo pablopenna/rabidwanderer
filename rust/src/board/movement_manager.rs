@@ -15,9 +15,7 @@ pub(crate) struct BoardMovementManager {
 #[godot_api]
 impl INode for BoardMovementManager {
     fn ready(&mut self) {
-        //self.signals().entity_move_intent().connect_self(Self::on_entity_move_intent);
-        // https://godot-rust.github.io/book/register/signals.html#connecting-from-outside
-        self.board.signals().board_setted_up().connect_other(self, Self::on_board_setted_up);
+
     }
 }
 
@@ -38,8 +36,7 @@ impl BoardMovementManager {
                 .get_board()
                 .unwrap()
                 .bind_mut()
-                .get_data_mut()
-                [origin_coordinate.to_index()]
+                .get_data_tile_mut(origin_coordinate)
                 .clone();
 
         let target_data_tile = 
@@ -47,8 +44,7 @@ impl BoardMovementManager {
                 .get_board()
                 .unwrap()
                 .bind_mut()
-                .get_data_mut()
-                [target_coordinate.to_index()]
+                .get_data_tile_mut(&target_coordinate)
                 .clone();
         
         if !target_data_tile.is_traversable() {
@@ -73,8 +69,7 @@ impl BoardMovementManager {
         {
             let mut board = self.get_board().unwrap();
             let mut binding = board.bind_mut();
-            let mut data = binding.get_data_mut().clone();
-            let data_tile = &mut data[coordinate.to_index()];
+            let data_tile = &mut binding.get_data_tile_mut(&coordinate).clone();
             data_tile.add_entity(entity);
         }
 
@@ -89,27 +84,6 @@ impl BoardMovementManager {
             let position = draw_tile_board.map_to_local(coordinate.to_godot_vector2i());
             entity.set_world_position(position);
         }
-    }
-
-    fn on_board_setted_up(&mut self, &mut _board: Gd<Board>) {
-        let coord = self.get_first_traversable_tile_coordinates_in_board();
-        godot_print!("First available cell! {}", coord.unwrap().to_string());
-    }
-
-    // TODO: move to a more adequate file
-    pub(crate) fn get_first_traversable_tile_coordinates_in_board(&mut self) -> Option<Vector2i> {
-        let mut board_gd = self.get_board().to_godot().unwrap();
-        let board = board_gd.bind_mut();
-        let board_data = board.get_data_ref();
-        let index = board_data.iter().position(
-            |tile| tile.is_traversable()
-        );
-        if index.is_none() {
-            return None;
-        }
-        let tile = &board_data[index.unwrap()];
-        let coordinates = tile.get_coordinates();
-        return Option::Some(coordinates.to_godot_vector2i());
     }
 }
 

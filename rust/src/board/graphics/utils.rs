@@ -2,7 +2,7 @@ use godot::builtin::Vector2i;
 use godot::classes::TileMapLayer;
 use godot::obj::Gd;
 
-use crate::board::graphics::draw_tile::{DrawTile, BASE_DRAW_TILE, FOUR_WAY_DRAW_TILE};
+use crate::board::graphics::draw_tile::{DrawTile, FOUR_WAY_DRAW_TILE};
 
 pub(crate) fn verify_tile_set_exists(tile_map_layer: Gd<TileMapLayer>) {
     if tile_map_layer.get_tile_set().is_none() {
@@ -19,10 +19,7 @@ pub fn add_four_way_draw_tile(board: &mut Gd<TileMapLayer>, coordinates: Vector2
     add_draw_tile(board, coordinates, FOUR_WAY_DRAW_TILE);
 }
 
-pub fn add_base_draw_tile(board: &mut Gd<TileMapLayer>, coordinates: Vector2i) {
-    add_draw_tile(board, coordinates, BASE_DRAW_TILE);
-}
-
+// https://docs.godotengine.org/en/stable/classes/class_tilemaplayer.html#class-tilemaplayer-method-set-cell
 fn add_draw_tile(board: &mut Gd<TileMapLayer>, coordinates: Vector2i, tile: DrawTile) {
     board
         .set_cell_ex(coordinates)
@@ -32,12 +29,3 @@ fn add_draw_tile(board: &mut Gd<TileMapLayer>, coordinates: Vector2i, tile: Draw
         .done();
 }
 
-// https://docs.godotengine.org/en/stable/classes/class_tilemaplayer.html#class-tilemaplayer-method-set-cell
-fn remove_draw_tile(board: &mut Gd<TileMapLayer>, coordinates: Vector2i) {
-    board
-        .set_cell_ex(coordinates)
-        .source_id(-1)
-        .atlas_coords(Vector2i { x: -1, y: -1 })
-        .alternative_tile(-1)
-        .done();
-}

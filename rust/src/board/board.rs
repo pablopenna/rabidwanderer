@@ -6,6 +6,7 @@ use rand::Rng;
 
 use crate::board::coordinate::coordinate_to_index;
 use crate::board::coordinate::godot_vector_to_vector2d;
+use crate::board::coordinate::BoardCoordinate;
 use crate::board::data::data_tile::generate_empty_board_data;
 use crate::board::data::data_tile::DataTile;
 use crate::board::graphics::draw_tile_board::DrawTileBoard;
@@ -83,13 +84,25 @@ impl Board {
             }
         }
     }
-
-    pub(crate) fn get_data_ref(&self) -> &[DataTile<'static>; BOARD_SIZE] {
-        &self.data
+    
+    pub(crate) fn get_data_tile_ref(&self, coord: &BoardCoordinate) -> &DataTile {
+        & self.data[coord.to_index()]
     }
 
-    pub(crate) fn get_data_mut(&mut self) -> &mut [DataTile<'static>; BOARD_SIZE] {
-        &mut self.data
+    // https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html#lifetime-annotations-in-function-signatures
+    // https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html#lifetime-elision
+    // https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html#the-static-lifetime
+    // I tried creating a struct for managing all data tiles and encapsulating logic but hell broke loose
+    // See commit @f2d5f5c4b7fb44413d1607c9f496ffff518ec7f5
+    pub(crate) fn get_data_tile_mut(&mut self, coord: &BoardCoordinate) -> &mut DataTile<'static> {
+        &mut self.data[coord.to_index()]
+    }
+
+    pub(crate) fn get_first_traversable_tile_coordinates_in_board(&mut self) -> Option<BoardCoordinate> {
+        let index = self.data.iter().position(
+            |tile| tile.is_traversable()
+        );
+        index.map(|idx| BoardCoordinate::from_index(idx))
     }
 
     pub(crate) fn get_graphics(&self) -> &Gd<DrawTileBoard> {
