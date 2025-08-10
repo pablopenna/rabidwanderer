@@ -1,10 +1,13 @@
 [gd_scene load_steps=3 format=3 uid="uid://c4mdemd284n0y"]
 
-[ext_resource type="PackedScene" uid="uid://c1djv0afxupqf" path="res://scenes/board.tscn" id="1_0xm2m"]
+[ext_resource type="TileSet" uid="uid://ch3lkinfhmitw" path="res://resources/board_tileset.tres" id="2_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://2n6rh32qnx05" path="res://scenes/player.tscn" id="2_h2yge"]
 
 [node name="Main" type="Node2D"]
 
-[node name="GameManager" type="GameManager" parent="."]
-board_scene = ExtResource("1_0xm2m")
+[node name="GameManager" type="GameManager" parent="." node_paths=PackedStringArray("board")]
+board = NodePath("Board")
 player_scene = ExtResource("2_h2yge")
+
+[node name="Board" type="Board" parent="GameManager"]
+tile_set = ExtResource("2_0xm2m")

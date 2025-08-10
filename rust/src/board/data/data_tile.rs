@@ -1,17 +1,20 @@
-use crate::board::{constants::BOARD_SIZE, coordinate::{index_to_coordinate, BoardCoordinate}, entity::BoardEntity};
+use std::{cell::RefCell, rc::Rc};
+
+use godot::obj::Gd;
+
+use crate::board::constants::BOARD_SIZE;
+use crate::board::coordinate::BoardCoordinate;
+use crate::entity::board_entity::BoardEntity;
 
 #[derive(Clone)]
-pub(crate) struct DataTile<'a> {
+pub(crate) struct DataTile {
     coordinates: BoardCoordinate,
     can_be_traversed: bool,
-    // https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html#lifetime-annotations-in-struct-definitions
-    // https://doc.rust-lang.org/rust-by-example/scope/lifetime.html
-    entities: Vec<&'a dyn BoardEntity>,
+    // Read ADR-01 and ADR-02 for design decissions on why these attributes are done this way.
+    entities: Vec<Rc<RefCell<Gd<BoardEntity>>>>,
 }
 
-// impl<'a> = declares a lifetime parameter 'a for this impl block.
-// DataTile<'a> = this impl is for DataTile instances that are parameterized with 'a.
-impl<'a> DataTile<'a> {
+impl DataTile {
     pub fn new(coordinates: BoardCoordinate) -> Self {
         Self {
             coordinates,
@@ -32,13 +35,13 @@ impl<'a> DataTile<'a> {
         self.can_be_traversed
     }
 
-    pub(crate) fn add_entity(& mut self, entity: &'a impl BoardEntity) {
+    pub(crate) fn add_entity(& mut self, entity: Rc<RefCell<Gd<BoardEntity>>>) {
         self.entities.push(entity);
     }
 
-    pub(crate) fn remove_entity(& mut self, entity_to_remove: & impl BoardEntity) -> bool {
+    pub(crate) fn remove_entity(& mut self, entity_to_remove: Rc<RefCell<Gd<BoardEntity>>>) -> bool {
         let position = self.entities.iter().position(
-            |&entity| std::ptr::addr_eq(entity, entity_to_remove)
+            |entity| Rc::ptr_eq(&entity, &entity_to_remove)
         );
         if position.is_none() {
             return false;
@@ -48,9 +51,9 @@ impl<'a> DataTile<'a> {
     }
 }
 
-pub(crate) fn generate_empty_board_data<'a>() -> [DataTile<'a>; BOARD_SIZE as usize] {
+pub(crate) fn generate_empty_board_data() -> [DataTile; BOARD_SIZE as usize] {
     let data: [DataTile; BOARD_SIZE as usize] = core::array::from_fn(
-        |i| DataTile::new(index_to_coordinate(i))
+        |i| DataTile::new(BoardCoordinate::from_index(i))
     );
     data
 }

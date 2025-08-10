@@ -1,19 +1,23 @@
+use std::cell::RefCell;
+use std::rc::Rc;
+
 use godot::prelude::*;
 
 use crate::board::board::Board;
+use crate::board::coordinate::BoardCoordinate;
 use crate::board::movement_manager::BoardMovementManager;
-use crate::player::player::Player;
+use crate::entity::board_entity::BoardEntity;
 
 #[derive(GodotClass)]
 #[class(base=Node)]
 pub(crate) struct GameManager {
     base: Base<Node>,
     #[export]
-    board_scene: OnEditor<Gd<PackedScene>>,
-    board: Option<Gd<Board>>,
+    // https://godot-rust.github.io/docs/gdext/master/godot/obj/struct.OnEditor.html#custom-getters-and-setters-for-oneditor
+    board: OnEditor<Gd<Board>>,
     #[export]
     player_scene: OnEditor<Gd<PackedScene>>,
-    player: Option<Gd<Player>>,
+    player: Option<Rc<RefCell<Gd<BoardEntity>>>>,
     movement_manager: Gd<BoardMovementManager>,
 }
 
@@ -21,8 +25,7 @@ pub(crate) struct GameManager {
 impl INode for GameManager {
     fn init(base: Base<Node>) -> Self {
         Self {
-            board_scene: OnEditor::default(),
-            board: Option::None, // set in ready after instantiating scenes
+            board: OnEditor::default(),
             player_scene: OnEditor::default(),
             player: Option::None, // set in ready after instantiating scenes
             movement_manager: BoardMovementManager::new_alloc(),
@@ -31,13 +34,10 @@ impl INode for GameManager {
     }
 
     fn ready(&mut self) {
-        let board = self.board_scene.instantiate_as::<Board>();
-        self.base_mut().add_child(&board);
-        self.board = Some(board);
-
         {
             let mut movement_manager_ref = self.movement_manager.bind_mut();
-            movement_manager_ref.set_board(self.board.clone());
+            let board = self.board.get_property().unwrap();
+            movement_manager_ref.set_board(Option::Some(board));
         }
         
         {
@@ -46,10 +46,14 @@ impl INode for GameManager {
         }
 
         {
-            let mut player = self.player_scene.instantiate_as::<Player>();
-            player.bind_mut().set_board_movement_manager(Some(self.movement_manager.clone()));
-            self.base_mut().add_child(&player);
-            self.player = Some(player);
+            let player_instance = self.player_scene.instantiate_as::<BoardEntity>();
+            let player_ref = Rc::new(RefCell::new(player_instance));
+            self.player = Some(player_ref.clone());
+            
+            let player_node = player_ref.clone();
+            let player_node = player_node.borrow_mut();
+            let player_node = player_node.clone().upcast::<Node>();
+            self.base_mut().add_child(&player_node);
         }
 
         self.signals().game_ready().connect_self(Self::on_game_ready);
@@ -63,31 +67,35 @@ impl GameManager {
     pub fn game_ready();
 
     fn on_game_ready(&mut self) {
-        let mut board_bind = self.board.clone().unwrap();
-        let mut board = board_bind.bind_mut();
+        let board = self.board.get_property();
+        let board = board.unwrap();
+        let board = board.bind();
         let traversable_coordinate = 
             board
             .get_first_traversable_tile_coordinates_in_board()
             .unwrap();
 
-        godot_print!("Let's go");
+        // HACK: Compiler does not complain but game crashes on startup without the drop() below
+        /* ERROR: godot-rust function call failed: <Callable>::my_rust_lib::game_manager::GameManager::on_game_ready()
+        Reason: function panicked: Gd<T>::bind_mut() failed, already bound; T = my_rust_lib::board::board::Board.
+        Make sure to use `self.base_mut()` instead of `self.to_gd()` when possible.
+        Details: cannot borrow mutable while shared borrow exists. */ 
+        drop(board);
 
-        // let player_gd = self.player.as_mut().unwrap();
-        // let mut player_mut = player_gd.bind_mut();
-        // movement_manager_bind.add_entity_to_board_at_coordinate(
-        //     &mut *player_mut, 
-        //     BoardCoordinate::from_vector2i(traversable_coordinate));
+        godot_print!("Let's go");
         
-        let player = &self.player;
-        let player_unwrap = &mut player.clone().unwrap();
-        let mut player_bind = player_unwrap.bind_mut();
-        let player_entity = &mut *player_bind;
+        let player = self.get_player_ref();
         
         let mut movement_manager_bind = self.movement_manager.bind_mut();
         movement_manager_bind.add_entity_to_board_at_coordinate(
-            player_entity, 
+            player, 
             traversable_coordinate
+            // BoardCoordinate::from_index(0)
         );
+    }
+
+    fn get_player_ref(&self) -> Rc<RefCell<Gd<BoardEntity>>> {
+        self.player.clone().unwrap()
     }
 }
 

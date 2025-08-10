@@ -4,8 +4,6 @@ use godot::prelude::*;
 use rand::rngs::ThreadRng;
 use rand::Rng;
 
-use crate::board::coordinate::coordinate_to_index;
-use crate::board::coordinate::godot_vector_to_vector2d;
 use crate::board::coordinate::BoardCoordinate;
 use crate::board::data::data_tile::generate_empty_board_data;
 use crate::board::data::data_tile::DataTile;
@@ -17,7 +15,7 @@ use crate::board::constants::*;
 #[class(base=Node2D)]
 pub(crate) struct Board {
     random_generator: ThreadRng,
-    data: [DataTile<'static>; BOARD_SIZE],
+    data: [DataTile; BOARD_SIZE],
     graphics: Gd<DrawTileBoard>,
     #[export]
     tile_set: OnEditor<Gd<TileSet>>,
@@ -46,8 +44,7 @@ impl INode2D for Board {
         let graphics_node = self.graphics.clone().upcast::<Node>();
         self.base_mut().add_child(&graphics_node);
 
-        let gd_self = self.to_gd();
-        self.signals().board_setted_up().emit(&gd_self);
+        self.signals().board_setted_up().emit();
     }
 
     fn physics_process(&mut self, _delta: f64) {}
@@ -55,8 +52,7 @@ impl INode2D for Board {
     fn unhandled_input(&mut self, event: Gd<InputEvent>) {
         if event.is_action_pressed("ui_accept") {
             godot_print!("Okay!!");
-            let gd_self = self.to_gd();
-            self.signals().board_setted_up().emit(&gd_self);
+            self.signals().board_setted_up().emit();
         }
     }
 }
@@ -64,7 +60,7 @@ impl INode2D for Board {
 #[godot_api] // https://godot-rust.github.io/book/register/functions.html#user-defined-functions
 impl Board {
     #[signal]
-    pub(crate) fn board_setted_up(board: Gd<Board>);
+    pub(crate) fn board_setted_up();
 
     fn populate_board(&mut self) {
         let blocks_to_place: u8 = 150;
@@ -78,15 +74,12 @@ impl Board {
             if DrawBoardUtils::is_tile_empty(draw_tile_board, coord) {
                 DrawBoardUtils::add_four_way_draw_tile(draw_tile_board, coord);
                 blocks_placed += 1;
-                
-                let data_tile = &mut self.data[coordinate_to_index(godot_vector_to_vector2d(coord))];
+
+                let index = BoardCoordinate::from_vector2i(coord).to_index();
+                let data_tile = &mut self.data[index];
                 data_tile.make_traversable();
             }
         }
-    }
-    
-    pub(crate) fn get_data_tile_ref(&self, coord: &BoardCoordinate) -> &DataTile {
-        & self.data[coord.to_index()]
     }
 
     // https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html#lifetime-annotations-in-function-signatures
@@ -94,11 +87,11 @@ impl Board {
     // https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html#the-static-lifetime
     // I tried creating a struct for managing all data tiles and encapsulating logic but hell broke loose
     // See commit @f2d5f5c4b7fb44413d1607c9f496ffff518ec7f5
-    pub(crate) fn get_data_tile_mut(&mut self, coord: &BoardCoordinate) -> &mut DataTile<'static> {
+    pub(crate) fn get_data_tile_mut(&mut self, coord: &BoardCoordinate) -> &mut DataTile {
         &mut self.data[coord.to_index()]
     }
 
-    pub(crate) fn get_first_traversable_tile_coordinates_in_board(&mut self) -> Option<BoardCoordinate> {
+    pub(crate) fn get_first_traversable_tile_coordinates_in_board(&self) -> Option<BoardCoordinate> {
         let index = self.data.iter().position(
             |tile| tile.is_traversable()
         );

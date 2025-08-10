@@ -2,9 +2,11 @@
 
 [ext_resource type="Texture2D" uid="uid://bgkykn476xvii" path="res://art/knight.png" id="2_qhqgy"]
 
-[node name="Player" type="Player" node_paths=PackedStringArray("sprite")]
+[node name="Player" type="BoardEntity" node_paths=PackedStringArray("sprite")]
 sprite = NodePath("Sprite2D")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_qhqgy")
 hframes = 3
+
+[node name="PlayerInput" type="PlayerInput" parent="."]
