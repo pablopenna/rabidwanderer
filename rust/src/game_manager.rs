@@ -5,7 +5,7 @@ use godot::prelude::*;
 
 use crate::board::board::Board;
 use crate::board::movement_manager::BoardMovementManager;
-use crate::consts::groups::{GAME_MANAGER_GROUP, PLAYER_GROUP};
+use crate::consts::groups::{get_player_ref_from_tree, GAME_MANAGER_GROUP};
 use crate::entity::board_entity::BoardEntity;
 
 #[derive(GodotClass)]
@@ -15,9 +15,6 @@ pub(crate) struct GameManager {
     #[export]
     // https://godot-rust.github.io/docs/gdext/master/godot/obj/struct.OnEditor.html#custom-getters-and-setters-for-oneditor
     board: OnEditor<Gd<Board>>,
-    #[export]
-    player_scene: OnEditor<Gd<PackedScene>>,
-    player: Option<Rc<RefCell<Gd<BoardEntity>>>>,
     movement_manager: Gd<BoardMovementManager>,
 }
 
@@ -26,8 +23,6 @@ impl INode for GameManager {
     fn init(base: Base<Node>) -> Self {
         Self {
             board: OnEditor::default(),
-            player_scene: OnEditor::default(),
-            player: Option::None, // set in ready after instantiating scenes
             movement_manager: BoardMovementManager::new_alloc(),
             base,
         }
@@ -48,18 +43,6 @@ impl INode for GameManager {
         {
             let movement_manager_node = self.movement_manager.clone().upcast::<Node>();
             self.base_mut().add_child(&movement_manager_node);
-        }
-
-        {
-            let player_instance = self.player_scene.instantiate_as::<BoardEntity>();
-            let player_ref = Rc::new(RefCell::new(player_instance));
-            self.player = Some(player_ref.clone());
-            
-            let player_node = player_ref.clone();
-            let player_node = player_node.borrow_mut();
-            let mut player_node = player_node.clone().upcast::<Node>();
-            player_node.add_to_group(PLAYER_GROUP);
-            self.base_mut().add_child(&player_node);
         }
 
         self.signals().game_ready().connect_self(Self::on_game_ready);
@@ -101,7 +84,9 @@ impl GameManager {
     }
 
     fn get_player_ref(&self) -> Rc<RefCell<Gd<BoardEntity>>> {
-        self.player.clone().unwrap()
+        let node = self.base().to_godot().upcast::<Node>();
+        let player = get_player_ref_from_tree(node);
+        player
     }
 }
 

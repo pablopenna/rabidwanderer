@@ -7,7 +7,12 @@
 
 [node name="GameManager" type="GameManager" parent="." node_paths=PackedStringArray("board")]
 board = NodePath("Board")
-player_scene = ExtResource("2_h2yge")
 
 [node name="Board" type="Board" parent="GameManager"]
 tile_set = ExtResource("2_0xm2m")
+
+[node name="BoardCamera" type="BoardCamera" parent="." node_paths=PackedStringArray("focus_target")]
+focus_target = NodePath("../Player")
+zoom = Vector2(2, 2)
+
+[node name="Player" parent="." instance=ExtResource("2_h2yge")]

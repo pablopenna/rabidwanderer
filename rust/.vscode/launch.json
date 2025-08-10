@@ -6,7 +6,7 @@
             "request": "launch",
             "preLaunchTask": "rust-build",
             "cwd": "${workspaceFolder}",
-            "env": {"RUST_BACKTRACE": "0"},
+            "env": {"RUST_BACKTRACE": "1"},
             "args": [
                 "-w", // windowed mode
                 "--path", 

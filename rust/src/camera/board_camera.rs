@@ -23,7 +23,6 @@ impl ICamera2D for BoardCamera {
 
     fn process(&mut self, delta: f32) {
         self.focus_target.clone().inspect(|target| {
-            godot_print!("ni hao");
             let mut cam = self.base_mut().to_godot();
             
             let original_position = cam.get_position();

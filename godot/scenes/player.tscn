@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://bgkykn476xvii" path="res://art/knight.png" id="2_qhqgy"]
 
-[node name="Player" type="BoardEntity" node_paths=PackedStringArray("sprite")]
+[node name="Player" type="BoardEntity" node_paths=PackedStringArray("sprite") groups=["Player"]]
 sprite = NodePath("Sprite2D")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
