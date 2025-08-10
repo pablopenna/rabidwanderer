@@ -127,6 +127,8 @@ If going this way, I would need to implement as many methods as BoardEntity type
 (e.g. moveItem, moveEnemy, movePlayer) which I would not like doing as they are basically the same 
 functionality but I would need to have it duplicate
 
+UPDATE 2: This could work using [GdDyn](https://godot-rust.github.io/docs/gdext/master/godot/obj/struct.DynGd.html) 
+
 ### Option B
 Ditch current approach and go for a more Godot-oriented solution:
 
@@ -151,8 +153,9 @@ If this is done, we could still keep the `entities` field in DataTile, which is 
 
 
 ### Resolution
-~~Option A is prefered for now~~
-Go with Option C to keep a Vector for entity references
+~~Option A is prefered for now.~~
+Go with Option C to keep a Vector for entity references.
+Option A can still be an option (read Update2 under it).
 
 ## Consequences
 We cannot use Rust dynamic types (e.g. entity: dyn BoardEntity) as parameters while working with Godot as 
