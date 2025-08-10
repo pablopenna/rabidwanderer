@@ -118,6 +118,15 @@ struct DataTile<'a'> {
     ...
 }
 ```
+
+UPDATE: This would not properly scale (at least for movement). Currently I have a struct called
+MovementManager. It has a reference to the board and has a method for moving BoardEntities around.
+It currently receives a boardEntity as a parameter using a dynamic type (`entity: dyn BoardEntity`).
+
+If going this way, I would need to implement as many methods as BoardEntity types to move them around
+(e.g. moveItem, moveEnemy, movePlayer) which I would not like doing as they are basically the same 
+functionality but I would need to have it duplicate
+
 ### Option B
 Ditch current approach and go for a more Godot-oriented solution:
 
@@ -127,10 +136,26 @@ entity is not under said node, it would not exist for the logic.
 To check if there is any entites in a certain tile, we would need to go through the whole list of chidren
 and check the coordinate for each of them.
 
+Big drawback of this is that it would be much less performant, specially with an elevated number of entities
+
+### Option C
+
+Because gdext (Godot-Rust library) [does not support inheriting from custom Node types](https://godot-rust.github.io/book/godot-api/objects.html#inheritance), the way to go forward is to make BoardEntity an actual user-defined node type.
+
+Player, items, enemies, etc. should by implemented by using components and composition from within. BoardEntity should be dummy and not do anything on its own.
+
+To make a player, we would create a PlayerInputModule and place it as a child of a BoardEntity. The module would
+get a reference to the BoardEntity and move it through the board when a certain input is pressed.
+
+If this is done, we could still keep the `entities` field in DataTile, which is preferred over option B.
+
 
 ### Resolution
-Option A is prefered for now
+~~Option A is prefered for now~~
+Go with Option C to keep a Vector for entity references
 
 ## Consequences
 We cannot use Rust dynamic types (e.g. entity: dyn BoardEntity) as parameters while working with Godot as 
 they are not supported.
+
+Most likely that implies that we cannot use traits aside from the Godot already-defined ones.
