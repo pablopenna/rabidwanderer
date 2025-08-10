@@ -4,6 +4,7 @@ use std::rc::Rc;
 use godot::classes::*;
 use godot::prelude::*;
 
+use crate::consts::groups::get_movement_manager_node_from_tree;
 use crate::board::movement_manager::BoardMovementManager;
 use crate::entity::board_entity::BoardEntity;
 
@@ -37,7 +38,7 @@ impl INode2D for PlayerInput {
         self.entity_to_move = Some(entity);
 
         let node = self.base().clone().upcast::<Node>();
-        self.movement_manager = Some(BoardMovementManager::get_movement_manager_instance_from_tree(node));
+        self.movement_manager = Some(get_movement_manager_node_from_tree(node));
     }
 
     fn unhandled_input(&mut self, event: Gd<InputEvent>) {

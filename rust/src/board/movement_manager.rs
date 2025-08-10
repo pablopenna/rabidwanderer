@@ -20,7 +20,8 @@ pub(crate) struct BoardMovementManager {
 impl INode for BoardMovementManager {
     fn ready(&mut self) {
         // Adding to group crashes if called from within init()
-        self.base_mut().add_to_group_ex(MOVEMENT_MANAGER_GROUP).persistent(true).done();
+        // self.base_mut().add_to_group_ex(MOVEMENT_MANAGER_GROUP).persistent(true).done();
+        self.base_mut().add_to_group(MOVEMENT_MANAGER_GROUP);
     }
 }
 
@@ -93,11 +94,6 @@ impl BoardMovementManager {
             
             entity.set_world_position(position);
         }
-    }
-
-    pub(crate) fn get_movement_manager_instance_from_tree(node: Gd<Node>) -> Gd<BoardMovementManager> {
-        let movement_node = node.get_tree().unwrap().get_first_node_in_group(MOVEMENT_MANAGER_GROUP).unwrap();
-        movement_node.cast::<BoardMovementManager>()
     }
 }
 

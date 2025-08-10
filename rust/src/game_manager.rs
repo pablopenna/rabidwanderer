@@ -6,6 +6,7 @@ use godot::prelude::*;
 use crate::board::board::Board;
 use crate::board::coordinate::BoardCoordinate;
 use crate::board::movement_manager::BoardMovementManager;
+use crate::consts::groups::PLAYER_GROUP;
 use crate::entity::board_entity::BoardEntity;
 
 #[derive(GodotClass)]
@@ -52,7 +53,8 @@ impl INode for GameManager {
             
             let player_node = player_ref.clone();
             let player_node = player_node.borrow_mut();
-            let player_node = player_node.clone().upcast::<Node>();
+            let mut player_node = player_node.clone().upcast::<Node>();
+            player_node.add_to_group(PLAYER_GROUP);
             self.base_mut().add_child(&player_node);
         }
 
