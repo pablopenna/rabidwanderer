@@ -4,9 +4,8 @@ use std::rc::Rc;
 use godot::prelude::*;
 
 use crate::board::board::Board;
-use crate::board::coordinate::BoardCoordinate;
 use crate::board::movement_manager::BoardMovementManager;
-use crate::consts::groups::PLAYER_GROUP;
+use crate::consts::groups::{GAME_MANAGER_GROUP, PLAYER_GROUP};
 use crate::entity::board_entity::BoardEntity;
 
 #[derive(GodotClass)]
@@ -35,6 +34,11 @@ impl INode for GameManager {
     }
 
     fn ready(&mut self) {
+        {
+            let mut node = self.base().to_godot().upcast::<Node>();
+            node.add_to_group(GAME_MANAGER_GROUP);
+        }
+        
         {
             let mut movement_manager_ref = self.movement_manager.bind_mut();
             let board = self.board.get_property().unwrap();
