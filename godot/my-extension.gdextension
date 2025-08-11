@@ -3,6 +3,7 @@ entry_symbol = "gdext_rust_init"
 compatibility_minimum = 4.1
 reloadable = true
 
+
 [libraries]
 linux.debug.x86_64 =     "res://../rust/target/debug/libmy_rust_lib.so"
 linux.release.x86_64 =   "res://../rust/target/release/libmy_rust_lib.so"
@@ -12,3 +13,19 @@ macos.debug =            "res://../rust/target/debug/libmy_rust_lib.dylib"
 macos.release =          "res://../rust/target/release/libmy_rust_lib.dylib"
 macos.debug.arm64 =      "res://../rust/target/debug/libmy_rust_lib.dylib"
 macos.release.arm64 =    "res://../rust/target/release/libmy_rust_lib.dylib"
+
+
+[icons]
+GameManager="res://icon.svg"
+BoardBackground="res://icon.svg"
+DrawTileBoard="res://icon.svg"
+Board="res://icon.svg"
+BoardMovementManager="res://icon.svg"
+BoardCamera="res://icon.svg"
+BoardEntity="res://icon.svg"
+FloorItemFactory="res://icon.svg"
+FloorItemModule="res://icon.svg"
+PlayerInputModule="res://icon.svg"
+ItemFactory="res://icon.svg"
+Item="res://icon.svg"
+
