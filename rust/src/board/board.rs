@@ -98,6 +98,28 @@ impl Board {
         index.map(|idx| BoardCoordinate::from_index(idx))
     }
 
+    pub(crate) fn get_random_traversable_tile_coordinates_in_board(&mut self) -> Option<BoardCoordinate> {
+        let max_number_of_random_tries = 100;
+        let mut number_of_random_tries = 0;
+        let mut result: Option<BoardCoordinate> = Option::None;
+        
+        while result.is_none() && number_of_random_tries < max_number_of_random_tries {
+            let random_idx = self.random_generator.random_range(0..self.data.len()-1);
+            let tile = &self.data[random_idx];
+            number_of_random_tries += 1;
+
+            if tile.is_traversable() {
+                result = Some(BoardCoordinate::from_index(random_idx))
+            }
+        }
+
+        if result.is_none() {
+            result = self.get_first_traversable_tile_coordinates_in_board();
+        }
+        
+        result
+    }
+
     pub(crate) fn get_graphics(&self) -> &Gd<DrawTileBoard> {
         &self.graphics
     }

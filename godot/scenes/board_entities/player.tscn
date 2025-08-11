@@ -9,4 +9,4 @@ sprite = NodePath("Sprite2D")
 texture = ExtResource("2_qhqgy")
 hframes = 3
 
-[node name="PlayerInput" type="PlayerInput" parent="."]
+[node name="PlayerInputModule" type="PlayerInputModule" parent="."]

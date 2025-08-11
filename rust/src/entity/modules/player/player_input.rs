@@ -10,7 +10,7 @@ use crate::entity::board_entity::BoardEntity;
 
 #[derive(GodotClass)]
 #[class(base=Node2D)]
-pub struct PlayerInput {
+pub struct PlayerInputModule {
     entity_to_move: Option<Gd<BoardEntity>>,
     movement_manager: Option<Gd<BoardMovementManager>>,
     base: Base<Node2D>,
@@ -22,7 +22,7 @@ const INPUT_UP: &'static str = "ui_up";
 const INPUT_DOWN: &'static str = "ui_down";
 
 #[godot_api]
-impl INode2D for PlayerInput {
+impl INode2D for PlayerInputModule {
     fn init(base: Base<Node2D>) -> Self {
         Self {
             entity_to_move: Option::None,

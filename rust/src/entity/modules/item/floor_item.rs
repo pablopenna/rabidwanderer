@@ -8,14 +8,14 @@ use crate::item::item_definition::ItemDefinition;
 
 #[derive(GodotClass)]
 #[class(base=Node)]
-pub struct FloorItem {
+pub struct FloorItemModule {
     item: ItemDefinition,
     factory: Option<Gd<ItemFactory>>,
     base: Base<Node>,
 }
 
 #[godot_api]
-impl INode for FloorItem {
+impl INode for FloorItemModule {
     fn init(base: Base<Node>) -> Self {
         Self {
             item: ItemDefinition::Dummy,
@@ -31,12 +31,12 @@ impl INode for FloorItem {
     }
 }
 
-impl FloorItem {
-    fn set_item(&mut self, def: ItemDefinition) {
+impl FloorItemModule {
+    pub(crate) fn set_item(&mut self, def: ItemDefinition) {
         self.item = def;
     }
 
-    fn pickup(&mut self) -> Gd<Item>{
+    pub(crate) fn pickup(&mut self) -> Gd<Item>{
         let mut factory = self.factory.clone().unwrap();
         let factory = factory.bind_mut();
         factory.instance_item(&self.item)

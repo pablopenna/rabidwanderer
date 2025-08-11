@@ -1,15 +1,25 @@
-[gd_scene load_steps=6 format=3 uid="uid://c4mdemd284n0y"]
+[gd_scene load_steps=7 format=3 uid="uid://c4mdemd284n0y"]
 
 [ext_resource type="TileSet" uid="uid://ch3lkinfhmitw" path="res://resources/board_tileset.tres" id="2_0xm2m"]
-[ext_resource type="PackedScene" uid="uid://2n6rh32qnx05" path="res://scenes/player.tscn" id="2_h2yge"]
+[ext_resource type="PackedScene" uid="uid://2n6rh32qnx05" path="res://scenes/board_entities/player.tscn" id="2_h2yge"]
 [ext_resource type="PackedScene" uid="uid://cn54apgpqcv64" path="res://scenes/items/item_dummy.tscn" id="3_lquwl"]
 [ext_resource type="PackedScene" uid="uid://bqr368rvyyo2u" path="res://scenes/items/item_rusty_gauntlet.tscn" id="4_7mycd"]
 [ext_resource type="PackedScene" uid="uid://cirv8ed8ak827" path="res://scenes/items/item_rusty_plate.tscn" id="5_272bh"]
+[ext_resource type="PackedScene" uid="uid://bbtucxxldcnw" path="res://scenes/board_entities/floor_item.tscn" id="6_7mycd"]
 
 [node name="Main" type="Node2D"]
 
-[node name="GameManager" type="GameManager" parent="." node_paths=PackedStringArray("board")]
+[node name="GameManager" type="GameManager" parent="." node_paths=PackedStringArray("board", "floor_item_factory")]
 board = NodePath("Board")
+floor_item_factory = NodePath("FloorItemFactory")
+
+[node name="ItemFactory" type="ItemFactory" parent="GameManager"]
+dummy_item_scene = ExtResource("3_lquwl")
+rusty_gauntlet_scene = ExtResource("4_7mycd")
+rusty_plate_scene = ExtResource("5_272bh")
+
+[node name="FloorItemFactory" type="FloorItemFactory" parent="GameManager"]
+floor_item_board_entity_scene = ExtResource("6_7mycd")
 
 [node name="Board" type="Board" parent="GameManager"]
 tile_set = ExtResource("2_0xm2m")
@@ -19,8 +29,3 @@ focus_target = NodePath("../Player")
 zoom = Vector2(2, 2)
 
 [node name="Player" parent="." instance=ExtResource("2_h2yge")]
-
-[node name="ItemFactory" type="ItemFactory" parent="."]
-dummy_item_scene = ExtResource("3_lquwl")
-rusty_gauntlet_scene = ExtResource("4_7mycd")
-rusty_plate_scene = ExtResource("5_272bh")
