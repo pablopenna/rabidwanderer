@@ -1,0 +1,4 @@
+[gd_scene format=3 uid="uid://bqr368rvyyo2u"]
+
+[node name="ItemRustyGauntlet" type="Item"]
+definition = "RustyGauntlet"
