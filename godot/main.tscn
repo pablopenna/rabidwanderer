@@ -23,6 +23,7 @@ floor_item_board_entity_scene = ExtResource("6_7mycd")
 
 [node name="Board" type="Board" parent="GameManager"]
 tile_set = ExtResource("2_0xm2m")
+z_index = -1
 
 [node name="BoardCamera" type="BoardCamera" parent="." node_paths=PackedStringArray("focus_target")]
 focus_target = NodePath("../Player")

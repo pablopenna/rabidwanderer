@@ -6,10 +6,6 @@ use crate::board::coordinate::BoardCoordinate;
 #[derive(GodotClass)]
 #[class(init, base=Node2D)]
 pub struct BoardEntity {
-    // https://godot-rust.github.io/docs/gdext/master/godot/obj/struct.Gd.html#exporting
-    // TODO: move to a dedicated component
-    #[export]
-    sprite: OnEditor<Gd<Sprite2D>>,
     coordinates: BoardCoordinate,
     base: Base<Node2D>,
 }

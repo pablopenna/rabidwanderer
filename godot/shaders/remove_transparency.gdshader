@@ -8,7 +8,7 @@ void fragment() {
 	// Called for every pixel the material is visible on.
 	vec4 color = texture(TEXTURE, UV);
 	if (color.a == 0.0) {
-		color = vec4(1.0, 0.0, 0.0, 1.0);
+		color = vec4(0.0, 0.0, 0.0, 1.0);
 	}
 	COLOR = color;
 }

@@ -1,12 +1,11 @@
 [gd_scene load_steps=2 format=3 uid="uid://bbtucxxldcnw"]
 
-[ext_resource type="Texture2D" uid="uid://lanl8u4hnmd2" path="res://art/knight2.png" id="1_hqne8"]
+[ext_resource type="Texture2D" uid="uid://dab8btyq08g5g" path="res://art/coin.png" id="1_hqne8"]
 
-[node name="BoardEntity" type="BoardEntity" node_paths=PackedStringArray("sprite")]
-sprite = NodePath("Sprite2D")
+[node name="BoardEntity" type="BoardEntity"]
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(8, -4)
 texture = ExtResource("1_hqne8")
-hframes = 4
 
 [node name="FloorItemModule" type="FloorItemModule" parent="."]
