@@ -20,12 +20,12 @@ pub(crate) fn get_movement_manager_node_from_tree(node: Gd<Node>) -> Gd<BoardMov
     move_manager.cast::<BoardMovementManager>()
 }
 
-pub(crate) fn get_game_manager_node_from_tree(node: Gd<Node>) -> Gd<GameManager> {
+pub(crate) fn _get_game_manager_node_from_tree(node: Gd<Node>) -> Gd<GameManager> {
     let game_manager = get_node_in_group_from_tree(node, GAME_MANAGER_GROUP);
     game_manager.cast::<GameManager>()
 }
 
-pub(crate) fn get_player_node_from_tree(node: Gd<Node>) -> Gd<BoardEntity> {
+pub(crate) fn _get_player_node_from_tree(node: Gd<Node>) -> Gd<BoardEntity> {
     let player = get_node_in_group_from_tree(node, PLAYER_GROUP);
     player.cast::<BoardEntity>()
 }

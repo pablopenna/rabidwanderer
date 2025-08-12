@@ -24,7 +24,7 @@ pub(crate) const FOUR_WAY_DRAW_TILE: DrawTile = DrawTile {
     atlas_coords: Vector2i::from_tuple((1, 0)),
 };
 
-pub(crate) const BASE_DRAW_TILE: DrawTile = DrawTile {
+pub(crate) const _BASE_DRAW_TILE: DrawTile = DrawTile {
     source_id: 0,
     alternative_tile: 0,
     atlas_coords: Vector2i::from_tuple((0, 0)),

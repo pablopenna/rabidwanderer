@@ -28,7 +28,7 @@ impl FloorItemFactory {
         let board_entity = self.floor_item_board_entity_scene.instantiate_as::<BoardEntity>();
         let board_entity = board_entity.upcast::<Node>();
         
-        let floor_item_module = get_first_child_of_type(&board_entity);
+        let floor_item_module = BoardEntity::get_first_child_of_type::<FloorItemModule>(&board_entity);
         let mut floor_item_module = floor_item_module.unwrap();
         let mut floor_item_module = floor_item_module.bind_mut();
        
@@ -42,19 +42,4 @@ impl FloorItemFactory {
         let random_def = ItemDefinition::random();
         self.create_floor_item(random_def)
     }
-}
-
-fn get_first_child_of_type(parent: &Node) -> Option<Gd<FloorItemModule>> {
-    for i in 0..parent.get_child_count() {
-        let child = parent.get_child(i);
-        if child.is_none() {
-            continue;
-        }
-        let child = child.unwrap();
-        let child = child.try_cast::<FloorItemModule>();
-        if child.is_ok() {
-            return child.ok();
-        }
-    }
-    None
 }

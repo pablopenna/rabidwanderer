@@ -8,7 +8,7 @@ use crate::entity::board_entity::BoardEntity;
 
 #[derive(Clone)]
 pub(crate) struct DataTile {
-    coordinates: BoardCoordinate,
+    _coordinates: BoardCoordinate,
     can_be_traversed: bool,
     // Read ADR-01 and ADR-02 for design decissions on why these attributes are done this way.
     entities: Vec<Rc<RefCell<Gd<BoardEntity>>>>,
@@ -17,14 +17,14 @@ pub(crate) struct DataTile {
 impl DataTile {
     pub fn new(coordinates: BoardCoordinate) -> Self {
         Self {
-            coordinates,
+            _coordinates: coordinates,
             can_be_traversed: false,
             entities: Vec::new(),
         }
     }
 
-    pub(crate) fn get_coordinates(&self) -> &BoardCoordinate {
-        &self.coordinates
+    pub(crate) fn _get_coordinates(&self) -> &BoardCoordinate {
+        &self._coordinates
     }
     
     pub(crate) fn make_traversable(&mut self) {
