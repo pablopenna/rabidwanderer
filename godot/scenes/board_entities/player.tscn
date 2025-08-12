@@ -19,3 +19,5 @@ material = SubResource("ShaderMaterial_f3bwa")
 texture = ExtResource("3_euxjt")
 
 [node name="PlayerInputModule" type="PlayerInputModule" parent="."]
+
+[node name="InventoryModule" type="InventoryModule" parent="."]

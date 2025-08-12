@@ -28,4 +28,5 @@ FloorItemModule="res://icon.svg"
 PlayerInputModule="res://icon.svg"
 ItemFactory="res://icon.svg"
 Item="res://icon.svg"
+InventoryModule="res://icon.svg"
 
