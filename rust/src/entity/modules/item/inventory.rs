@@ -3,12 +3,12 @@ use godot::prelude::*;
 
 use crate::item::item::Item;
 
-const MAX_NUMBER_OF_ITEMS: usize = 8;
+const MAX_NUMBER_OF_ITEMS: i32 = 8;
 
+// Items are placed as children of this node
 #[derive(GodotClass)]
 #[class(base=Node)]
 pub struct InventoryModule {
-    _items: [Option<Item>; MAX_NUMBER_OF_ITEMS],
     base: Base<Node>,
 }
 
@@ -16,27 +16,23 @@ pub struct InventoryModule {
 impl INode for InventoryModule {
     fn init(base: Base<Node>) -> Self {
         Self {
-            _items: std::array::from_fn(|_| None),
             base
         }
     }
 }
 
 impl InventoryModule {
-    fn get_available_index(&self) -> Option<usize> {
-        self._items.iter().position(|item| item.is_none())
-    }
 
-    fn add_item(&mut self, item: Item) {
-        let pos = self.get_available_index().unwrap();
-        self._items[pos] = Some(item);
+    fn add_item(&mut self, item: Gd<Item>) {
+        let item_node = item.upcast::<Node>();
+        self.base_mut().add_child(&item_node);
     }
 
     pub(crate) fn has_room(&self) -> bool {
-        self.get_available_index().is_some()
+        self.base().get_child_count() < MAX_NUMBER_OF_ITEMS
     }
 
-    pub(crate) fn add_item_if_has_room(&mut self, item: Item) -> bool {
+    pub(crate) fn add_item_if_has_room(&mut self, item: Gd<Item>) -> bool {
         let mut result = false;
         if self.has_room() {
             self.add_item(item);
@@ -46,6 +42,11 @@ impl InventoryModule {
     }
 
     pub(crate) fn remove_item(&mut self, index: usize) {
-        self._items[index] = Option::None;
+        let children = self.base().get_children();
+        let child_to_remove = children.get(index);
+        if child_to_remove.is_some() {
+            let child_to_remove = child_to_remove.unwrap();
+            self.base_mut().remove_child(&child_to_remove);
+        }
     }
 }

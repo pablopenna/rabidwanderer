@@ -14,10 +14,11 @@ pub struct BoardEntity {
 impl BoardEntity {
 
     #[signal]
-    pub(crate) fn on_interact_with(entity: Gd<BoardEntity>);
+    pub(crate) fn on_interact(self_reference: Gd<BoardEntity>, interacted_with: Gd<BoardEntity>);
 
     pub(crate) fn interact_with(&mut self, entity: Gd<BoardEntity>) {
-        self.signals().on_interact_with().emit(&entity);
+        let gd_ref = self.to_gd();
+        self.signals().on_interact().emit(&gd_ref, &entity);
     }
 
     pub(crate) fn get_coordinates(&self) -> &BoardCoordinate {
