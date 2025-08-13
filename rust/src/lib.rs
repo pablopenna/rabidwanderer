@@ -6,6 +6,7 @@ pub(crate) mod board; // https://stackoverflow.com/a/63766603
 mod entity;
 mod camera;
 mod item;
+mod enemy;
 
 struct MyExtension; // The name of the struct does not matter
 

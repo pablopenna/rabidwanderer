@@ -5,10 +5,6 @@ use crate::consts::groups::ITEM_FACTORY_GROUP;
 use crate::item::item::Item;
 use crate::item::item_definition::ItemDefinition;
 
-/* 
-* This is a template for an item.
-* Each individual kind of Item will need to be defined in a dedicated scene.
-*/
 #[derive(GodotClass)]
 #[class(base=Node)]
 pub(crate) struct ItemFactory {
