@@ -9,7 +9,7 @@ shader = ExtResource("1_sk03y")
 
 [node name="Player" type="BoardEntity" groups=["Player"]]
 
-[node name="Player" type="Sprite2D" parent="."]
+[node name="Sprite" type="Sprite2D" parent="."]
 z_index = 1
 texture = ExtResource("1_8t548")
 hframes = 4
@@ -21,3 +21,5 @@ texture = ExtResource("3_euxjt")
 [node name="PlayerInputModule" type="PlayerInputModule" parent="."]
 
 [node name="InventoryModule" type="InventoryModule" parent="."]
+
+[node name="BattleModule" type="BattleModule" parent="."]

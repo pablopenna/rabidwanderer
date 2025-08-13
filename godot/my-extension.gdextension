@@ -31,4 +31,5 @@ PlayerInputModule="res://icon.svg"
 ItemFactory="res://icon.svg"
 Item="res://icon.svg"
 InventoryModule="res://icon.svg"
+BattleModule="res://icon.svg"
 

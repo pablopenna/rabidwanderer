@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://dqm3n1e4wlusu"]
+
+[ext_resource type="Shader" uid="uid://2810ppb25wdd" path="res://shaders/remove_transparency.gdshader" id="1_dudxg"]
+[ext_resource type="Texture2D" uid="uid://chb5sg8jyoyjr" path="res://art/wolf.png" id="1_gf0hb"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gu2wu"]
+shader = ExtResource("1_dudxg")
+
+[node name="Wolf" type="BoardEntity"]
+
+[node name="Sprite" type="Sprite2D" parent="."]
+z_index = 1
+material = SubResource("ShaderMaterial_gu2wu")
+texture = ExtResource("1_gf0hb")
+
+[node name="BattleModule" type="BattleModule" parent="."]
+stats = 1
