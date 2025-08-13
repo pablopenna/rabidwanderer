@@ -5,8 +5,8 @@ use rand::rngs::ThreadRng;
 use rand::Rng;
 
 use crate::board::coordinate::BoardCoordinate;
-use crate::board::data::data_tile::generate_empty_board_data;
 use crate::board::data::data_tile::DataTile;
+use crate::board::data::data_tile_board::DataTileBoard;
 use crate::board::graphics::draw_tile_board::DrawTileBoard;
 use crate::board::graphics::utils as DrawBoardUtils;
 use crate::board::constants::*;
@@ -15,7 +15,7 @@ use crate::board::constants::*;
 #[class(base=Node2D)]
 pub(crate) struct Board {
     random_generator: ThreadRng,
-    data: [DataTile; BOARD_SIZE],
+    data: Gd<DataTileBoard>,
     graphics: Gd<DrawTileBoard>,
     #[export]
     tile_set: OnEditor<Gd<TileSet>>,
@@ -27,9 +27,8 @@ impl INode2D for Board {
     fn init(base: Base<Node2D>) -> Self {
         Self {
             random_generator: rand::rng(),
-            data: generate_empty_board_data(),
+            data: DataTileBoard::new_alloc(),
             graphics: DrawTileBoard::new_alloc(),
-            // https://godot-rust.github.io/docs/gdext/master/godot/prelude/struct.OnEditor.html#example-user-defined-init
             tile_set: OnEditor::default(),
             base,
         }
@@ -37,13 +36,15 @@ impl INode2D for Board {
 
     fn ready(&mut self) {
         let tile_set = self.tile_set.to_godot();
-        self.graphics.set_tile_set(&tile_set);
+        self.get_graphics().set_tile_set(&tile_set);
         
-        self.populate_board();
-
-        let graphics_node = self.graphics.clone().upcast::<Node>();
+        let graphics_node = self.get_graphics().upcast::<Node>();
         self.base_mut().add_child(&graphics_node);
 
+        let data_node = self.get_data().upcast::<Node>();
+        self.base_mut().add_child(&data_node);
+
+        self.populate_board();
         self.signals().board_setted_up().emit();
     }
 
@@ -66,6 +67,7 @@ impl Board {
         let blocks_to_place: u8 = 150;
         let mut blocks_placed: u8 = 0;
         let draw_tile_board = &mut self.graphics.clone().upcast::<TileMapLayer>();
+        let data_tile_board = &mut self.data;
 
         while blocks_placed < blocks_to_place {
             let x = self.random_generator.random_range(0..BOARD_WIDTH) as i32;
@@ -76,52 +78,38 @@ impl Board {
                 blocks_placed += 1;
 
                 let index = BoardCoordinate::from_vector2i(coord).to_index();
-                let data_tile = &mut self.data[index];
-                data_tile.make_traversable();
+                let mut data_tile = data_tile_board.bind().get_tile_at_index(index).unwrap();
+                data_tile.bind_mut().make_traversable();
             }
         }
     }
 
-    // https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html#lifetime-annotations-in-function-signatures
-    // https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html#lifetime-elision
-    // https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html#the-static-lifetime
-    // I tried creating a struct for managing all data tiles and encapsulating logic but hell broke loose
-    // See commit @f2d5f5c4b7fb44413d1607c9f496ffff518ec7f5
-    pub(crate) fn get_data_tile_mut(&mut self, coord: &BoardCoordinate) -> &mut DataTile {
-        &mut self.data[coord.to_index()]
+    pub(crate) fn get_tile_at(&mut self, coord: &BoardCoordinate) -> Option<Gd<DataTile>> {
+        self.data.bind_mut().get_tile_at_index(coord.to_index())
     }
 
-    pub(crate) fn get_first_traversable_tile_coordinates_in_board(&self) -> Option<BoardCoordinate> {
-        let index = self.data.iter().position(
-            |tile| tile.is_traversable()
-        );
-        index.map(|idx| BoardCoordinate::from_index(idx))
-    }
-
-    pub(crate) fn get_random_traversable_tile_coordinates_in_board(&mut self) -> Option<BoardCoordinate> {
-        let max_number_of_random_tries = 100;
-        let mut number_of_random_tries = 0;
-        let mut result: Option<BoardCoordinate> = Option::None;
-        
-        while result.is_none() && number_of_random_tries < max_number_of_random_tries {
-            let random_idx = self.random_generator.random_range(0..self.data.len()-1);
-            let tile = &self.data[random_idx];
-            number_of_random_tries += 1;
-
-            if tile.is_traversable() {
-                result = Some(BoardCoordinate::from_index(random_idx))
-            }
+    pub(crate) fn get_first_traversable_tile_in_board(&mut self) -> Option<Gd<DataTile>> {
+        let coord = self.data.bind_mut().get_first_traversable_tile_coordinates_in_board();
+        if coord.is_none() {
+            return None;
         }
-
-        if result.is_none() {
-            result = self.get_first_traversable_tile_coordinates_in_board();
-        }
-        
-        result
+        self.get_tile_at(&coord.unwrap())
     }
 
-    pub(crate) fn get_graphics(&self) -> &Gd<DrawTileBoard> {
-        &self.graphics
+    pub(crate) fn get_random_traversable_tile_in_board(&mut self) -> Option<Gd<DataTile>> {
+        let coord = self.data.bind_mut().get_random_traversable_tile_coordinates_in_board();
+        if coord.is_none() {
+            return None;
+        }
+        self.get_tile_at(&coord.unwrap())
+    }
+
+    pub(crate) fn get_graphics(&self) -> Gd<DrawTileBoard> {
+        self.graphics.clone()
+    }
+
+    fn get_data(&self) -> Gd<DataTileBoard> {
+        self.data.clone()
     }
 }
 

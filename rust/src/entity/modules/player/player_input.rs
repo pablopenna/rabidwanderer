@@ -1,6 +1,3 @@
-use std::cell::RefCell;
-use std::rc::Rc;
-
 use godot::classes::*;
 use godot::prelude::*;
 
@@ -58,15 +55,14 @@ impl INode2D for PlayerInputModule {
         }
         
         
-        let entity = self.entity_to_move.clone().unwrap();
-        let entity_reference = Rc::new(RefCell::new(entity));
+        let mut entity = self.entity_to_move.clone().unwrap();
         let direction = Vector2i {
             x: input_dir.x.ceil() as i32,
             y: input_dir.y.ceil() as i32,
         };
 
         self.movement_manager.clone().unwrap().bind_mut().move_entity_in_board(
-            entity_reference,
+            &mut entity,
             direction
         );
     }

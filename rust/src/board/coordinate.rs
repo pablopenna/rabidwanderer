@@ -2,14 +2,21 @@ use godot::builtin::Vector2i;
 
 use crate::board::constants::{BOARD_HEIGHT, BOARD_WIDTH};
 
-#[derive(Default)]
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub(crate) struct BoardCoordinate {
     x: usize,
     y: usize,
 }
 
 impl BoardCoordinate {
+
+    pub(crate) fn get_x(&self) -> usize {
+        self.x
+    }
+
+    pub(crate) fn get_y(&self) -> usize {
+        self.y
+    }
 
     pub(crate) fn to_godot_vector2i(&self) -> Vector2i {
         Vector2i {x: self.x as i32, y: self.y as i32}
@@ -40,3 +47,11 @@ impl BoardCoordinate {
         true
     }
 }
+
+impl PartialEq for BoardCoordinate {
+    fn eq(&self, other: &Self) -> bool {
+        self.x == other.x && self.y == other.y
+    }
+}
+
+impl Eq for BoardCoordinate {}

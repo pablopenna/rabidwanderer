@@ -1,5 +1,3 @@
-use std::{cell::RefCell, rc::Rc};
-
 use godot::{classes::Node, obj::Gd};
 
 use crate::{board::movement_manager::BoardMovementManager, entity::board_entity::BoardEntity, game_manager::{GameManager}, item::factory::ItemFactory};
@@ -25,15 +23,9 @@ pub(crate) fn _get_game_manager_node_from_tree(node: Gd<Node>) -> Gd<GameManager
     game_manager.cast::<GameManager>()
 }
 
-pub(crate) fn _get_player_node_from_tree(node: Gd<Node>) -> Gd<BoardEntity> {
+pub(crate) fn get_player_node_from_tree(node: Gd<Node>) -> Gd<BoardEntity> {
     let player = get_node_in_group_from_tree(node, PLAYER_GROUP);
     player.cast::<BoardEntity>()
-}
-
-pub(crate) fn get_player_ref_from_tree(node: Gd<Node>) -> Rc<RefCell<Gd<BoardEntity>>> {
-    let player = get_node_in_group_from_tree(node, PLAYER_GROUP);
-    let player = player.cast::<BoardEntity>();
-    Rc::new(RefCell::new(player))
 }
 
 pub(crate) fn get_item_factory_node_from_tree(node: Gd<Node>) -> Gd<ItemFactory> {

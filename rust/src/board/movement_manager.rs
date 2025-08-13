@@ -1,8 +1,6 @@
-use std::cell::RefCell;
-use std::rc::Rc;
-
 use godot::prelude::*;
 
+use crate::board::data::data_tile::DataTile;
 use crate::consts::groups::MOVEMENT_MANAGER_GROUP;
 use crate::board::board::Board;
 use crate::board::coordinate::BoardCoordinate;
@@ -28,41 +26,29 @@ impl INode for BoardMovementManager {
 #[godot_api]
 impl BoardMovementManager {
 
-    pub(crate) fn move_entity_in_board(&mut self, entity_reference: Rc<RefCell<Gd<BoardEntity>>>, board_movement: Vector2i) {
-        let mut entity_borrow = entity_reference.borrow_mut();
-        let mut entity = entity_borrow.bind_mut();
-
-        let origin_coordinate = entity.get_coordinates();
+    pub(crate) fn move_entity_in_board(&mut self, entity: &mut Gd<BoardEntity>, board_movement: Vector2i) {
         let target_coordinate = BoardCoordinate::from_vector2i(
-            entity.get_coordinates().to_godot_vector2i() + board_movement
+            entity.bind_mut().get_coordinates().to_godot_vector2i() + board_movement
         );
+
         if !target_coordinate.is_valid() {
             return;
         }
 
-        let origin_data_tile = 
-            &mut self
+        let mut target_data_tile = 
+            self
                 .get_board()
                 .unwrap()
                 .bind_mut()
-                .get_data_tile_mut(origin_coordinate)
-                .clone();
-
-        let target_data_tile = 
-            &mut self
-                .get_board()
-                .unwrap()
-                .bind_mut()
-                .get_data_tile_mut(&target_coordinate)
-                .clone();
+                .get_tile_at(&target_coordinate)
+                .unwrap();
         
-        if !target_data_tile.is_traversable() {
+        if !target_data_tile.bind().is_traversable() {
             return;
         }
         
-        origin_data_tile.remove_entity(entity_reference.clone());
-        target_data_tile.add_entity(entity_reference.clone());
-        entity.set_coordinates(target_coordinate.clone());
+        DataTile::move_entity_to(entity, &mut target_data_tile);
+        entity.bind_mut().set_coordinates(target_coordinate.clone());
 
         let target_world_position = 
             self
@@ -71,61 +57,54 @@ impl BoardMovementManager {
             .bind()
             .get_graphics()
             .map_to_local(target_coordinate.to_godot_vector2i());
-        entity.set_world_position(target_world_position);
+        entity.bind_mut().set_world_position(target_world_position);
     }
 
-    pub(crate) fn add_entity_to_board_at_coordinate(&mut self, entity_reference: Rc<RefCell<Gd<BoardEntity>>>, coordinate: BoardCoordinate) {
-        {
-            let mut board = self.get_board().unwrap();
-            let mut board_binding = board.bind_mut();
-            let data_tile = board_binding.get_data_tile_mut(&coordinate);
-            data_tile.add_entity(entity_reference.clone());
+    pub(crate) fn add_entity_to_board_at_coordinate(&mut self, entity: &mut Gd<BoardEntity>, coordinate: BoardCoordinate) {
+        let mut data_tile = self
+            .get_board()
+            .unwrap()
+            .bind_mut()
+            .get_tile_at(&coordinate)
+            .unwrap();
+        if entity.get_parent().is_none() {
+            data_tile.bind_mut().add_entity_to_tile(entity);
         }
-
-        {
-            let mut entity_borrow = entity_reference.borrow_mut();
-            let mut entity = entity_borrow.bind_mut();
-            entity.set_coordinates(coordinate.clone());
+        DataTile::move_entity_to(entity, &mut data_tile);
         
-            let board = self.get_board().unwrap();
-            let board_binding = board.bind();
-            let draw_tile_board = board_binding.get_graphics();
-            let position = draw_tile_board.map_to_local(coordinate.to_godot_vector2i());
-            
-            entity.set_world_position(position);
-        }
+        entity.bind_mut().set_coordinates(coordinate.clone());
+
+        let world_position = self
+            .get_board()
+            .unwrap()
+            .bind_mut()
+            .get_graphics()
+            .map_to_local(coordinate.clone().to_godot_vector2i());
+        
+        entity.bind_mut().set_world_position(world_position);
     }
 
     fn process_interaction_of_entity_with_tile(
         &mut self,
-        entity_reference: Rc<RefCell<Gd<BoardEntity>>>,
+        entity: Gd<BoardEntity>,
         coordinate: BoardCoordinate,
     ) {
         
-        let mut board = self.get_board().unwrap();
-        let mut board = board.bind_mut();
-        let data_tile = board.get_data_tile_mut(&coordinate);
+        let mut data_tile = self.get_board().unwrap().bind_mut().get_tile_at(&coordinate).unwrap();
         
-        let entities_to_interact_with: Vec<_> = data_tile.get_entities();
-        let entities_to_interact_with: Vec<_> = entities_to_interact_with
-            .iter()
-            .filter(|e| !Rc::ptr_eq(e, &entity_reference))
+        let entities_to_interact_with = data_tile.bind_mut().get_entities();
+        let entities_to_interact_with: Array<_> = entities_to_interact_with
+            .iter_shared()
+            .filter(|e| *e != entity )
             .collect();
         
         if entities_to_interact_with.is_empty() {
             return;
         }
         
-        let mut entities_to_interact_with: Vec<_> = entities_to_interact_with
-            .iter()
-            .map(|e| e.borrow_mut())
-            .collect();
-        
-        let main_entity = entity_reference.borrow_mut();
-        
         entities_to_interact_with
-            .iter_mut()
-            .for_each(|e| e.bind_mut().interact_with(&main_entity));
+            .iter_shared()
+            .for_each(|mut e| e.bind_mut().interact_with(&entity));
     }
 }
 
