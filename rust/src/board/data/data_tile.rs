@@ -49,6 +49,10 @@ impl DataTile {
         self.entities.remove(position.unwrap());
         return true;
     }
+
+    pub(crate) fn get_entities(&self) -> Vec<Rc<RefCell<Gd<BoardEntity>>>> {
+        self.entities.clone()
+    }
 }
 
 pub(crate) fn generate_empty_board_data() -> [DataTile; BOARD_SIZE as usize] {

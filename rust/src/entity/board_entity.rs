@@ -16,9 +16,9 @@ impl BoardEntity {
     #[signal]
     pub(crate) fn on_interact(self_reference: Gd<BoardEntity>, interacted_with: Gd<BoardEntity>);
 
-    pub(crate) fn interact_with(&mut self, entity: Gd<BoardEntity>) {
+    pub(crate) fn interact_with(&mut self, entity: &Gd<BoardEntity>) {
         let gd_ref = self.to_gd();
-        self.signals().on_interact().emit(&gd_ref, &entity);
+        self.signals().on_interact().emit(&gd_ref, entity);
     }
 
     pub(crate) fn get_coordinates(&self) -> &BoardCoordinate {

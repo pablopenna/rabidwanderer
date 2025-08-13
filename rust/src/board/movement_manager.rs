@@ -95,6 +95,38 @@ impl BoardMovementManager {
             entity.set_world_position(position);
         }
     }
+
+    fn process_interaction_of_entity_with_tile(
+        &mut self,
+        entity_reference: Rc<RefCell<Gd<BoardEntity>>>,
+        coordinate: BoardCoordinate,
+    ) {
+        
+        let mut board = self.get_board().unwrap();
+        let mut board = board.bind_mut();
+        let data_tile = board.get_data_tile_mut(&coordinate);
+        
+        let entities_to_interact_with: Vec<_> = data_tile.get_entities();
+        let entities_to_interact_with: Vec<_> = entities_to_interact_with
+            .iter()
+            .filter(|e| !Rc::ptr_eq(e, &entity_reference))
+            .collect();
+        
+        if entities_to_interact_with.is_empty() {
+            return;
+        }
+        
+        let mut entities_to_interact_with: Vec<_> = entities_to_interact_with
+            .iter()
+            .map(|e| e.borrow_mut())
+            .collect();
+        
+        let main_entity = entity_reference.borrow_mut();
+        
+        entities_to_interact_with
+            .iter_mut()
+            .for_each(|e| e.bind_mut().interact_with(&main_entity));
+    }
 }
 
 
