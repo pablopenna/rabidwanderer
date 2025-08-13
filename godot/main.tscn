@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://c4mdemd284n0y"]
+[gd_scene load_steps=8 format=3 uid="uid://c4mdemd284n0y"]
 
 [ext_resource type="TileSet" uid="uid://ch3lkinfhmitw" path="res://resources/board_tileset.tres" id="2_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://2n6rh32qnx05" path="res://scenes/board_entities/player.tscn" id="2_h2yge"]
 [ext_resource type="PackedScene" uid="uid://cn54apgpqcv64" path="res://scenes/items/item_dummy.tscn" id="3_lquwl"]
 [ext_resource type="PackedScene" uid="uid://bqr368rvyyo2u" path="res://scenes/items/item_rusty_gauntlet.tscn" id="4_7mycd"]
+[ext_resource type="PackedScene" uid="uid://dqm3n1e4wlusu" path="res://scenes/board_entities/enemy/wolf.tscn" id="5_5vw27"]
 [ext_resource type="PackedScene" uid="uid://cirv8ed8ak827" path="res://scenes/items/item_rusty_plate.tscn" id="5_272bh"]
 [ext_resource type="PackedScene" uid="uid://bbtucxxldcnw" path="res://scenes/board_entities/floor_item.tscn" id="6_7mycd"]
 
@@ -20,6 +21,9 @@ rusty_plate_scene = ExtResource("5_272bh")
 
 [node name="FloorItemFactory" type="FloorItemFactory" parent="GameManager"]
 floor_item_board_entity_scene = ExtResource("6_7mycd")
+
+[node name="EnemyFactory" type="EnemyFactory" parent="GameManager"]
+wolf_enemy_scene = ExtResource("5_5vw27")
 
 [node name="Board" type="Board" parent="GameManager"]
 tile_set = ExtResource("2_0xm2m")
