@@ -58,7 +58,7 @@ impl GameManager {
 
     fn on_game_ready(&mut self) {
         self.place_player_in_starting_point();
-        for _ in 0..5  {
+        for _ in 0..10  {
             self.add_floor_item_to_random_tile()
         }
     }

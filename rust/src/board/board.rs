@@ -64,7 +64,7 @@ impl Board {
     pub(crate) fn board_setted_up();
 
     fn populate_board(&mut self) {
-        let blocks_to_place: u8 = 150;
+        let blocks_to_place: u8 = BOARD_SIZE as u8 - 5;
         let mut blocks_placed: u8 = 0;
         let draw_tile_board = &mut self.graphics.clone().upcast::<TileMapLayer>();
         let data_tile_board = &mut self.data;
