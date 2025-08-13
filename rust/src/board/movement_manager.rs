@@ -58,6 +58,8 @@ impl BoardMovementManager {
             .get_graphics()
             .map_to_local(target_coordinate.to_godot_vector2i());
         entity.bind_mut().set_world_position(target_world_position);
+
+        self.process_interaction_of_entity_with_tile(entity, target_coordinate);
     }
 
     pub(crate) fn add_entity_to_board_at_coordinate(&mut self, entity: &mut Gd<BoardEntity>, coordinate: BoardCoordinate) {
@@ -86,16 +88,15 @@ impl BoardMovementManager {
 
     fn process_interaction_of_entity_with_tile(
         &mut self,
-        entity: Gd<BoardEntity>,
+        entity: &mut Gd<BoardEntity>,
         coordinate: BoardCoordinate,
     ) {
-        
         let mut data_tile = self.get_board().unwrap().bind_mut().get_tile_at(&coordinate).unwrap();
         
         let entities_to_interact_with = data_tile.bind_mut().get_entities();
         let entities_to_interact_with: Array<_> = entities_to_interact_with
             .iter_shared()
-            .filter(|e| *e != entity )
+            .filter(|e| *e != *entity )
             .collect();
         
         if entities_to_interact_with.is_empty() {
