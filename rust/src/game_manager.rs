@@ -68,8 +68,8 @@ impl GameManager {
 
     fn place_player_in_starting_point(&mut self) {
         let board = self.board.get_property();
-        let board = board.unwrap();
-        let board = board.bind();
+        let mut board = board.unwrap();
+        let board = board.bind_mut();
         let traversable_coordinate = 
             board
             .get_first_traversable_tile_coordinates_in_board()
