@@ -32,7 +32,7 @@ impl BattleModule {
         let other_stats = other_battle_module.unwrap().bind_mut().get_stats();
 
         // mock logic
-        let winner: StringName = if self.stats > other_stats { other_entity.clone().get_name() } else { _this_entity.clone().get_name() };
+        let winner: StringName = if self.stats < other_stats { other_entity.clone().get_name() } else { _this_entity.clone().get_name() };
         godot_print!("{} wins", winner);
     }
 

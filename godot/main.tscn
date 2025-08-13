@@ -10,9 +10,10 @@
 
 [node name="Main" type="Node2D"]
 
-[node name="GameManager" type="GameManager" parent="." node_paths=PackedStringArray("board", "floor_item_factory")]
+[node name="GameManager" type="GameManager" parent="." node_paths=PackedStringArray("board", "floor_item_factory", "enemy_factory")]
 board = NodePath("Board")
 floor_item_factory = NodePath("FloorItemFactory")
+enemy_factory = NodePath("EnemyFactory")
 
 [node name="ItemFactory" type="ItemFactory" parent="GameManager"]
 dummy_item_scene = ExtResource("3_lquwl")

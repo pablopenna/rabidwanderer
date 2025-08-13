@@ -3,6 +3,7 @@ use godot::prelude::*;
 use crate::board::board::Board;
 use crate::board::movement_manager::BoardMovementManager;
 use crate::consts::groups::{get_player_node_from_tree, GAME_MANAGER_GROUP};
+use crate::enemy::factory::EnemyFactory;
 use crate::entity::board_entity::BoardEntity;
 use crate::entity::modules::item::floor_item_factory::FloorItemFactory;
 
@@ -16,6 +17,8 @@ pub(crate) struct GameManager {
     movement_manager: Gd<BoardMovementManager>,
     #[export]
     floor_item_factory: OnEditor<Gd<FloorItemFactory>>,
+    #[export]
+    enemy_factory: OnEditor<Gd<EnemyFactory>>,
 }
 
 #[godot_api]
@@ -26,6 +29,7 @@ impl INode for GameManager {
             movement_manager: BoardMovementManager::new_alloc(),
             base,
             floor_item_factory: OnEditor::default(),
+            enemy_factory: OnEditor::default(),
         }
     }
 
@@ -59,7 +63,8 @@ impl GameManager {
     fn on_game_ready(&mut self) {
         self.place_player_in_starting_point();
         for _ in 0..10  {
-            self.add_floor_item_to_random_tile()
+            self.add_floor_item_to_random_tile();
+            self.add_enemy_to_random_tile();
         }
     }
 
@@ -103,6 +108,22 @@ impl GameManager {
         let mut item = self.floor_item_factory.bind_mut().create_random_floor_item();
 
         self.movement_manager.bind_mut().add_entity_to_board_at_coordinate(&mut item, random_coordinate);
+    }
+
+    fn add_enemy_to_random_tile(&mut self) {
+        let random_coordinate = self
+            .get_board()
+            .unwrap()
+            .bind_mut()
+            .get_random_traversable_tile_in_board()
+            .unwrap()
+            .bind_mut()
+            .get_coordinates()
+            .clone();
+        
+        let mut enemy = self.enemy_factory.bind_mut().instance_random_enemy();
+
+        self.movement_manager.bind_mut().add_entity_to_board_at_coordinate(&mut enemy, random_coordinate);
     }
 }
 

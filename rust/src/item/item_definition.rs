@@ -25,7 +25,7 @@ impl ItemDefinition {
 
     pub(crate) fn random() -> Self {
         let mut rng = rand::rng();
-        let idx = rng.random_range(0..Self::RANDOM_POOL.len()-1);
+        let idx = rng.random_range(0..Self::RANDOM_POOL.len());
         Self::RANDOM_POOL[idx].clone()
     }
 }

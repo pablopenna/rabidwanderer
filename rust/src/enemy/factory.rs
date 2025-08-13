@@ -29,7 +29,12 @@ impl INode for EnemyFactory {
 }
 
 impl EnemyFactory {
-    pub(crate) fn instance_enemy(&self, def: &EnemyDefinition) -> Gd<BoardEntity> {
+    pub(crate) fn instance_random_enemy(&mut self) -> Gd<BoardEntity> {
+        let random_def = EnemyDefinition::random();
+        self.instance_enemy(&random_def)
+    }
+
+    fn instance_enemy(&self, def: &EnemyDefinition) -> Gd<BoardEntity> {
         let scene = self.get_scene_for_enemy(def);
         let enemy = scene.instantiate_as::<BoardEntity>();
         enemy
@@ -39,5 +44,5 @@ impl EnemyFactory {
         match def {
             EnemyDefinition::Wolf => self.wolf_enemy_scene.get_property().unwrap(),
         }
-    }
+    }    
 }
