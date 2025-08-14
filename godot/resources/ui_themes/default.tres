@@ -1,0 +1,33 @@
+[gd_resource type="Theme" load_steps=6 format=3 uid="uid://ryqkt6qqt8fd"]
+
+[ext_resource type="FontFile" uid="uid://bc0elrs647ofk" path="res://resources/fonts/monogram-extended.ttf" id="1_yomoi"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_yomoi"]
+color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_21kjh"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 1)
+corner_detail = 1
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yomoi"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qvflo"]
+bg_color = Color(1, 1, 1, 1)
+
+[resource]
+default_font = ExtResource("1_yomoi")
+HSeparator/constants/separation = 1
+HSeparator/styles/separator = SubResource("StyleBoxLine_yomoi")
+MarginContainer/constants/margin_left = 4
+MarginContainer/constants/margin_right = 4
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_21kjh")
+ProgressBar/styles/background = SubResource("StyleBoxFlat_yomoi")
+ProgressBar/styles/fill = SubResource("StyleBoxFlat_qvflo")
+VBoxContainer/constants/separation = 0

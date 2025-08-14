@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://w8or6a0027fd"]
+
+[ext_resource type="PackedScene" uid="uid://46plhxlvglgf" path="res://scenes/ui/overworld_ui.tscn" id="1_w6j4g"]
+
+[node name="UiRoot" type="CanvasLayer"]
+
+[node name="OverworldUi" parent="." instance=ExtResource("1_w6j4g")]

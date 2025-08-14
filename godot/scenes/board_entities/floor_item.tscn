@@ -5,7 +5,7 @@
 [node name="BoardEntity" type="BoardEntity"]
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(8, -4)
+position = Vector2(0, -4)
 texture = ExtResource("1_hqne8")
 
 [node name="FloorItemModule" type="FloorItemModule" parent="."]
