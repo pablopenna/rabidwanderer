@@ -62,7 +62,7 @@ impl BattleEngine {
         }
 
         if !self.turns_handler.bind_mut().are_there_turns_left() {
-            self.generate_new_turns();
+            self.generate_new_turns(vec!(self.player.clone().unwrap(), self.enemy.clone().unwrap()));
         }
 
         if self.current_turn.is_none() {
@@ -78,19 +78,18 @@ impl BattleEngine {
         current_turn.bind_mut().execute_turn();
     }
 
-    fn generate_new_turns(&mut self) {
+    fn generate_new_turns(&mut self, mut battlers: Vec<Gd<BattleEntity>>) {
         godot_print!("Generating new turns");
-        let enemy_turn = Turn::new(self.enemy.clone().unwrap());
-        self.turns_handler.bind_mut().add_turn_to_pool(enemy_turn);
-        
-        let player_turn = Turn::new(self.player.clone().unwrap());
-        self.turns_handler.bind_mut().add_turn_to_pool(player_turn);
+        battlers.sort_by(|a, b| {
+            let a_speed = a.bind().get_stats().unwrap().bind().get_speed();
+            let b_speed = b.bind().get_stats().unwrap().bind().get_speed();
+            a_speed.cmp(&b_speed)
+        });
 
-        let enemy_turn = Turn::new(self.enemy.clone().unwrap());
-        self.turns_handler.bind_mut().add_turn_to_pool(enemy_turn);
-        
-        let player_turn = Turn::new(self.player.clone().unwrap());
-        self.turns_handler.bind_mut().add_turn_to_pool(player_turn);
+        battlers.iter().for_each(|battler| {
+            let new_turn = Turn::new(battler.clone());
+            self.turns_handler.bind_mut().add_turn_to_pool(new_turn);
+        });
     }
 
     fn on_current_turn_done(&mut self) {

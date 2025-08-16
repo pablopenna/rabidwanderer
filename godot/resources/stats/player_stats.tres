@@ -3,6 +3,6 @@
 [resource]
 max_hp = 20
 current_hp = 20
-attack = 1
+attack = 2
 defense = 5
 speed = 5
