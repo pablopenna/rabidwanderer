@@ -12,7 +12,9 @@ pub(crate) struct BattleEntity {
     #[export]
     stats: OnEditor<Gd<BattleStats>>,
     #[export]
-    target: Option<Gd<BattleEntity>>
+    target: Option<Gd<BattleEntity>>,
+    #[export]
+    animation_player: OnEditor<Gd<AnimationPlayer>>
 }
 
 #[godot_api]
@@ -37,17 +39,20 @@ impl BattleEntity {
     pub(crate) fn act(&mut self) {
         // Once animations are added, these methods should be called from the animation.
         // This method then would only kickstart the animation
-        self.on_apply_damage();
-        
-        self.on_done_acting();
+        // self.on_apply_damage();
+        // self.on_done_acting();
+
+        self.get_animation_player().unwrap().play_ex().name("attack").done();
     }
 
+    #[func]
     fn on_apply_damage(&mut self) {
         godot_print!("I am {} and I'm attacking", self.base().get_name());
         let attack_damage = self.calculate_attack_damage();
         self.target.clone().unwrap().bind_mut().take_damage(attack_damage);
     }
 
+    #[func]
     fn on_done_acting(&mut self) {
         godot_print!("I am {} and I'm done", self.base().get_name());
         self.signals().done_acting().emit();
