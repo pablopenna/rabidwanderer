@@ -7,6 +7,7 @@ mod entity;
 mod camera;
 mod item;
 mod enemy;
+mod battle;
 
 struct MyExtension; // The name of the struct does not matter
 

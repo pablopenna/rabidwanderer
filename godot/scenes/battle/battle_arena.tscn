@@ -1,6 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://cf53m2g6f15q7"]
+[gd_scene load_steps=6 format=3 uid="uid://cf53m2g6f15q7"]
 
-[ext_resource type="Texture2D" uid="uid://cxkuapitpvj8g" path="res://art/knight2_outline.png" id="1_8rcu5"]
+[ext_resource type="Texture2D" uid="uid://lanl8u4hnmd2" path="res://art/knight2.png" id="1_8rcu5"]
+[ext_resource type="BattleStats" uid="uid://biudav16u8t20" path="res://resources/stats/player_stats.tres" id="1_i8s75"]
+[ext_resource type="Texture2D" uid="uid://chb5sg8jyoyjr" path="res://art/wolf.png" id="2_t5b27"]
+[ext_resource type="BattleStats" uid="uid://bav580sca56qc" path="res://resources/stats/wolf_stats.tres" id="3_onjye"]
 
 [sub_resource type="GDScript" id="GDScript_t5b27"]
 script/source = "extends Label
@@ -14,27 +17,45 @@ func _on_timer_timeout() -> void:
 
 [node name="BattleArena" type="Node2D"]
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(1, 40)
-texture = ExtResource("1_8rcu5")
-centered = false
-
-[node name="Sprite2D3" type="Sprite2D" parent="."]
-position = Vector2(110, 40)
-texture = ExtResource("1_8rcu5")
-centered = false
-flip_h = true
+[node name="ReferenceRect" type="ReferenceRect" parent="."]
+custom_minimum_size = Vector2(180, 100)
+offset_right = 180.0
+offset_bottom = 100.0
+border_width = 2.1
 
 [node name="Label" type="Label" parent="."]
-offset_left = 78.0
-offset_top = 37.0
-offset_right = 118.0
-offset_bottom = 60.0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 42.0
+offset_bottom = 25.0
 text = "0"
 script = SubResource("GDScript_t5b27")
 
 [node name="Timer" type="Timer" parent="Label"]
 wait_time = 0.1
 autostart = true
+
+[node name="BattleEngine" type="BattleEngine" parent="." node_paths=PackedStringArray("player", "enemy")]
+player = NodePath("Player")
+enemy = NodePath("Enemy")
+
+[node name="Player" type="BattleEntity" parent="BattleEngine" node_paths=PackedStringArray("target")]
+stats = ExtResource("1_i8s75")
+target = NodePath("../Enemy")
+position = Vector2(37, 55)
+
+[node name="Sprite2D" type="Sprite2D" parent="BattleEngine/Player"]
+texture = ExtResource("1_8rcu5")
+hframes = 4
+metadata/_edit_lock_ = true
+
+[node name="Enemy" type="BattleEntity" parent="BattleEngine" node_paths=PackedStringArray("target")]
+stats = ExtResource("3_onjye")
+target = NodePath("../Player")
+position = Vector2(121, 54)
+
+[node name="Sprite2D" type="Sprite2D" parent="BattleEngine/Enemy"]
+texture = ExtResource("2_t5b27")
+metadata/_edit_lock_ = true
 
 [connection signal="timeout" from="Label/Timer" to="Label" method="_on_timer_timeout"]
