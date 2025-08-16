@@ -1,7 +1,7 @@
 use godot::classes::*;
 use godot::prelude::*;
 
-use crate::battle::entity::BattleEntity;
+use crate::battle::entity::entity::BattleEntity;
 use crate::battle::turns::turn::Turn;
 
 // Turns are child nodes of this one

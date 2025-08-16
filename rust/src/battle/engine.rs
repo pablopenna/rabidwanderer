@@ -2,7 +2,7 @@ use godot::classes::object::ConnectFlags;
 use godot::classes::*;
 use godot::prelude::*;
 
-use crate::battle::entity::BattleEntity;
+use crate::battle::entity::container::BattleEntityContainer;
 use crate::battle::turns::turn::Turn;
 use crate::battle::turns::turns_handler::TurnsHandler;
 use crate::consts::groups::BATTLE_ENGINE_GROUP;
@@ -12,10 +12,9 @@ use crate::consts::groups::BATTLE_ENGINE_GROUP;
 pub struct BattleEngine {
     base: Base<Node>,
     #[export]
-    player: Option<Gd<BattleEntity>>,
+    turns_handler: OnEditor<Gd<TurnsHandler>>,
     #[export]
-    enemy: Option<Gd<BattleEntity>>,
-    turns_handler: Gd<TurnsHandler>,
+    battle_entity_container: OnEditor<Gd<BattleEntityContainer>>,
     battle_is_done: bool,
     current_turn: Option<Gd<Turn>>,
 }
@@ -24,10 +23,8 @@ pub struct BattleEngine {
 impl INode for BattleEngine {
     fn init(base: Base<Node>) -> Self {
         Self {
-            // battling_entities: OnReady::manual(),
-            player: None,
-            enemy: None,
-            turns_handler: TurnsHandler::new_alloc(),
+            turns_handler: OnEditor::default(),
+            battle_entity_container: OnEditor::default(),
             battle_is_done: true,
             current_turn: None,
             base
@@ -36,9 +33,6 @@ impl INode for BattleEngine {
 
     fn ready(&mut self) {
         self.base_mut().add_to_group(BATTLE_ENGINE_GROUP);
-
-        let turns_handler_node = self.turns_handler.clone().upcast::<Node>();
-        self.base_mut().add_child(&turns_handler_node);
     }
 }
 
@@ -47,8 +41,8 @@ impl INode for BattleEngine {
 impl BattleEngine {
     #[func]
     pub(crate) fn start_battle(&mut self) {
-        if self.player.is_none() || self.enemy.is_none() {
-            godot_error!("Missing battle entities!");
+        if self.battle_entity_container.bind().get_entity_count() < 2 {
+            godot_print!("Not enough entities to battle!");
             return;
         }
         
@@ -62,7 +56,9 @@ impl BattleEngine {
         }
 
         if !self.turns_handler.bind_mut().are_there_turns_left() {
-            self.turns_handler.bind_mut().generate_new_turns(vec!(self.player.clone().unwrap(), self.enemy.clone().unwrap()));
+            self.turns_handler.bind_mut().generate_new_turns(
+                Vec::from_godot(self.battle_entity_container.bind().get_all_entities())
+            );
         }
 
         if self.current_turn.is_none() {
@@ -92,8 +88,8 @@ impl BattleEngine {
     fn after_turn_cleanup(&mut self) {
         godot_print!("Last turn cleaned");
         self.current_turn = None;
-        if !self.player.clone().unwrap().bind().get_stats().unwrap().bind().is_alive() || !self.enemy.clone().unwrap().bind().get_stats().unwrap().bind().is_alive() {
-            godot_print!("One is dead...");
+        if self.battle_entity_container.clone().bind().get_alive_entities().len() <= 1 {
+            godot_print!("Only one is left standing...");
             self.battle_is_done = true;
         }
         self.update_battle();

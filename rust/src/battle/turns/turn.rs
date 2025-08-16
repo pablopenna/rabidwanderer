@@ -2,7 +2,7 @@ use godot::classes::object::ConnectFlags;
 use godot::classes::*;
 use godot::prelude::*;
 
-use crate::battle::entity::BattleEntity;
+use crate::battle::entity::entity::BattleEntity;
 
 #[derive(GodotClass)]
 #[class(base=Node)]

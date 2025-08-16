@@ -33,22 +33,31 @@ script = SubResource("GDScript_t5b27")
 wait_time = 0.1
 autostart = true
 
-[node name="BattleEngine" type="BattleEngine" parent="." node_paths=PackedStringArray("player", "enemy")]
-player = NodePath("Player")
-enemy = NodePath("Enemy")
-
-[node name="Player" parent="BattleEngine" node_paths=PackedStringArray("target") instance=ExtResource("1_t5b27")]
-target = NodePath("../Enemy")
-position = Vector2(37, 55)
-
-[node name="Enemy" parent="BattleEngine" node_paths=PackedStringArray("target") instance=ExtResource("2_goy4h")]
-target = NodePath("../Player")
-position = Vector2(121, 55)
-
 [node name="PlayerRefPosition" type="Node2D" parent="."]
 position = Vector2(37, 55)
 
 [node name="EnemyRefPosition" type="Node2D" parent="."]
+position = Vector2(121, 55)
+
+[node name="TurnsHandler" type="TurnsHandler" parent="."]
+
+[node name="BattleSetup" type="BattleSetup" parent="." node_paths=PackedStringArray("player_position_reference", "enemy_position_reference", "battle_entities_container")]
+player_position_reference = NodePath("../PlayerRefPosition")
+enemy_position_reference = NodePath("../EnemyRefPosition")
+battle_entities_container = NodePath("../BattleEntityContainer")
+
+[node name="BattleEngine" type="BattleEngine" parent="." node_paths=PackedStringArray("turns_handler", "battle_entity_container")]
+turns_handler = NodePath("../TurnsHandler")
+battle_entity_container = NodePath("../BattleEntityContainer")
+
+[node name="BattleEntityContainer" type="BattleEntityContainer" parent="."]
+
+[node name="Player" parent="BattleEntityContainer" node_paths=PackedStringArray("target") instance=ExtResource("1_t5b27")]
+target = NodePath("../Enemy")
+position = Vector2(37, 55)
+
+[node name="Enemy" parent="BattleEntityContainer" node_paths=PackedStringArray("target") instance=ExtResource("2_goy4h")]
+target = NodePath("../Player")
 position = Vector2(121, 55)
 
 [connection signal="timeout" from="Label/Timer" to="Label" method="_on_timer_timeout"]
