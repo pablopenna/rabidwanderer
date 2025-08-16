@@ -4,9 +4,9 @@
 [ext_resource type="Texture2D" uid="uid://lanl8u4hnmd2" path="res://art/knight2.png" id="2_ay4pv"]
 [ext_resource type="AnimationLibrary" uid="uid://cb1nh8pr3wlpq" path="res://resources/animations/player_library.res" id="3_gkjyt"]
 
-[node name="Player" type="BattleEntity" node_paths=PackedStringArray("target", "animation_player")]
+[node name="Player" type="BattleEntity" node_paths=PackedStringArray("animation_player")]
 stats = ExtResource("1_tdhhq")
-target = NodePath("")
+team = "Player"
 animation_player = NodePath("AnimationPlayer")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
