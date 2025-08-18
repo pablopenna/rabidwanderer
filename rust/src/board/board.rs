@@ -87,8 +87,8 @@ impl Board {
         }
     }
 
-    pub(crate) fn get_tile_at(&mut self, coord: &BoardCoordinate) -> Option<Gd<DataTile>> {
-        self.data.bind_mut().get_tile_at_index(coord.to_index())
+    pub(crate) fn get_tile_at(&self, coord: &BoardCoordinate) -> Option<Gd<DataTile>> {
+        self.data.bind().get_tile_at_index(coord.to_index())
     }
 
     pub(crate) fn get_first_traversable_tile_in_board(&mut self) -> Option<Gd<DataTile>> {

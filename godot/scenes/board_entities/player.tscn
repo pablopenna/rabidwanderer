@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://2n6rh32qnx05"]
+[gd_scene load_steps=6 format=3 uid="uid://2n6rh32qnx05"]
 
 [ext_resource type="Texture2D" uid="uid://cxkuapitpvj8g" path="res://art/knight2_outline.png" id="1_8t548"]
 [ext_resource type="Shader" uid="uid://2810ppb25wdd" path="res://shaders/remove_transparency.gdshader" id="1_sk03y"]
 [ext_resource type="Texture2D" uid="uid://dymke73h3lu3q" path="res://art/frame.png" id="3_euxjt"]
+[ext_resource type="PackedScene" uid="uid://0eo0rygr8gb2" path="res://scenes/battle_entities/player.tscn" id="4_f3bwa"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_f3bwa"]
 shader = ExtResource("1_sk03y")
@@ -23,3 +24,6 @@ texture = ExtResource("3_euxjt")
 [node name="InventoryModule" type="InventoryModule" parent="."]
 
 [node name="BattleModule" type="BattleModule" parent="."]
+battle_entity = ExtResource("4_f3bwa")
+
+[node name="BattleTriggerModule" type="BattleTriggerModule" parent="."]

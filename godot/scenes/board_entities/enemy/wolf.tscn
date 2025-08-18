@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://dqm3n1e4wlusu"]
+[gd_scene load_steps=5 format=3 uid="uid://dqm3n1e4wlusu"]
 
 [ext_resource type="Shader" uid="uid://2810ppb25wdd" path="res://shaders/remove_transparency.gdshader" id="1_dudxg"]
 [ext_resource type="Texture2D" uid="uid://chb5sg8jyoyjr" path="res://art/wolf.png" id="1_gf0hb"]
+[ext_resource type="PackedScene" uid="uid://chktskt814ykc" path="res://scenes/battle_entities/wolf.tscn" id="3_gu2wu"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_gu2wu"]
 shader = ExtResource("1_dudxg")
@@ -14,4 +15,4 @@ material = SubResource("ShaderMaterial_gu2wu")
 texture = ExtResource("1_gf0hb")
 
 [node name="BattleModule" type="BattleModule" parent="."]
-stats = 1
+battle_entity = ExtResource("3_gu2wu")

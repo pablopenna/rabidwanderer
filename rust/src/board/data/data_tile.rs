@@ -71,8 +71,8 @@ impl DataTile {
         children.contains(&entity.upcast::<Node>())
     }
 
-    pub(crate) fn get_entities(&mut self) -> Array<Gd<BoardEntity>> {
-        self.base_mut().get_children().iter_shared().map(|child| child.cast::<BoardEntity>()).collect()
+    pub(crate) fn get_entities(&self) -> Array<Gd<BoardEntity>> {
+        self.base().get_children().iter_shared().map(|child| child.cast::<BoardEntity>()).collect()
     }
 
     pub(crate) fn is_data_tile_traversable(tile: Option<Gd<DataTile>>) -> bool {

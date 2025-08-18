@@ -8,3 +8,4 @@
 [node name="OverworldUi" parent="." instance=ExtResource("1_w6j4g")]
 
 [node name="BattleUi" parent="." instance=ExtResource("2_kafpn")]
+visible = false

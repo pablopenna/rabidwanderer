@@ -32,6 +32,7 @@ ItemFactory="res://icon.svg"
 Item="res://icon.svg"
 InventoryModule="res://icon.svg"
 BattleModule="res://icon.svg"
+BattleTriggerModule="res://icon.svg"
 
 EnemyFactory="res://icon.svg"
 BattleEngine="res://icon.svg"

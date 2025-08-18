@@ -16,6 +16,12 @@ impl BoardEntity {
     #[signal]
     pub(crate) fn on_interact(self_reference: Gd<BoardEntity>, interacted_with: Gd<BoardEntity>);
 
+    #[signal]
+    pub(crate) fn moved_board_tile();
+
+    #[signal]
+    pub(crate) fn added_to_board();
+
     pub(crate) fn interact_with(&mut self, entity: &Gd<BoardEntity>) {
         let gd_ref = self.to_gd();
         self.signals().on_interact().emit(&gd_ref, entity);

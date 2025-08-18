@@ -59,7 +59,9 @@ impl BoardMovementManager {
             .map_to_local(target_coordinate.to_godot_vector2i());
         entity.bind_mut().set_world_position(target_world_position);
 
+        // TODO: refactor floor items to be scanned on the moved_board_tile signal and remove the following line
         self.process_interaction_of_entity_with_tile(entity, target_coordinate);
+        entity.signals().moved_board_tile().emit();
     }
 
     pub(crate) fn add_entity_to_board_at_coordinate(&mut self, entity: &mut Gd<BoardEntity>, coordinate: BoardCoordinate) {
@@ -84,6 +86,8 @@ impl BoardMovementManager {
             .map_to_local(coordinate.clone().to_godot_vector2i());
         
         entity.bind_mut().set_world_position(world_position);
+
+        entity.signals().added_to_board().emit();
     }
 
     fn process_interaction_of_entity_with_tile(
