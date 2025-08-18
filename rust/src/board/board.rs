@@ -10,6 +10,7 @@ use crate::board::data::data_tile_board::DataTileBoard;
 use crate::board::graphics::draw_tile_board::DrawTileBoard;
 use crate::board::graphics::utils as DrawBoardUtils;
 use crate::board::constants::*;
+use crate::consts::groups::BOARD_GROUP;
 
 #[derive(GodotClass)]
 #[class(base=Node2D)]
@@ -35,6 +36,8 @@ impl INode2D for Board {
     }
 
     fn ready(&mut self) {
+        self.base_mut().add_to_group(BOARD_GROUP);
+
         let tile_set = self.tile_set.to_godot();
         self.get_graphics().set_tile_set(&tile_set);
         
