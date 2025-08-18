@@ -72,7 +72,7 @@ impl BoardMovementManager {
         if entity.get_parent().is_none() {
             data_tile.bind_mut().add_entity_to_tile(entity);
         }
-        DataTile::move_entity_to(entity, &mut data_tile);
+        DataTile::move_entity_to_deferred(entity, &mut data_tile);
         
         entity.bind_mut().set_coordinates(coordinate.clone());
 

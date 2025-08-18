@@ -82,6 +82,13 @@ impl DataTile {
     pub(crate) fn move_entity_to(entity_to_move: &mut Gd<BoardEntity>, tile: &mut Gd<DataTile>) {
         let tile_node = tile.clone().upcast::<Node>();
         // If call is not deferred it will throw an error saying that player already has a parent (though it seems it works properly either way)
+        // entity_to_move.call_deferred("reparent", &[tile_node.to_variant()]);
+        entity_to_move.reparent(&tile_node);
+    }
+
+    pub(crate) fn move_entity_to_deferred(entity_to_move: &mut Gd<BoardEntity>, tile: &mut Gd<DataTile>) {
+        let tile_node = tile.clone().upcast::<Node>();
+        // If call is not deferred it will throw an error saying that player already has a parent (though it seems it works properly either way)
         entity_to_move.call_deferred("reparent", &[tile_node.to_variant()]);
     }
 }
