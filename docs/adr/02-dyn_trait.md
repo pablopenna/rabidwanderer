@@ -13,6 +13,7 @@ struct DataTile<'a'> {
     entities: Vec<Rc<RefCell<dyn BoardEntity>>>,
     ...
 }
+
 ```
 
 There is a second part to that, and that is the dynamic type of the referenced objects (`dyn BoardEntity`). What 
@@ -32,7 +33,8 @@ pub struct Player {
     ...
     base: Base<Node2D>,
 }
-```   
+
+```
 
 Whether we create an instance from a PackedScene or add a reference to the Player via the Godot editor should not matter and the issue should still be there:
 
@@ -56,8 +58,9 @@ impl GameManager {
     }
     ...
 }
-      
+
 ```
+
 It is **very important** to note (as this is part of why there is an issue) that the reference to the player 
 (and to any other entity) is `Rc<RefCell<Gd<Player>>>` and not `Rc<RefCell<Player>>`. This is because the
 player or any other entities are ultimately Godot objects. I have tried to store the reference to the Player 
@@ -155,10 +158,13 @@ If this is done, we could still keep the `entities` field in DataTile, which is 
 ### Resolution
 ~~Option A is prefered for now.~~
 Go with Option C to keep a Vector for entity references.
+
 Option A can still be an option (read Update2 under it).
 
 ## Consequences
 We cannot use Rust dynamic types (e.g. entity: dyn BoardEntity) as parameters while working with Godot as 
-they are not supported.
+they are not supported. In general, all structs should be derived from Godot ones.
+
+So far, the way to go around dynamic types (i.e. not being able to use interfaces) is using composition
 
 Most likely that implies that we cannot use traits aside from the Godot already-defined ones.
