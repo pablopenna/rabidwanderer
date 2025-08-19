@@ -18,7 +18,6 @@ pub(crate) struct BoardMovementManager {
 impl INode for BoardMovementManager {
     fn ready(&mut self) {
         // Adding to group crashes if called from within init()
-        // self.base_mut().add_to_group_ex(MOVEMENT_MANAGER_GROUP).persistent(true).done();
         self.base_mut().add_to_group(MOVEMENT_MANAGER_GROUP);
     }
 }
@@ -59,8 +58,6 @@ impl BoardMovementManager {
             .map_to_local(target_coordinate.to_godot_vector2i());
         entity.bind_mut().set_world_position(target_world_position);
 
-        // TODO: refactor floor items to be scanned on the moved_board_tile signal and remove the following line
-        self.process_interaction_of_entity_with_tile(entity, target_coordinate);
         entity.signals().moved_board_tile().emit();
     }
 
@@ -88,28 +85,6 @@ impl BoardMovementManager {
         entity.bind_mut().set_world_position(world_position);
 
         entity.signals().added_to_board().emit();
-    }
-
-    fn process_interaction_of_entity_with_tile(
-        &mut self,
-        entity: &mut Gd<BoardEntity>,
-        coordinate: BoardCoordinate,
-    ) {
-        let mut data_tile = self.get_board().unwrap().bind_mut().get_tile_at(&coordinate).unwrap();
-        
-        let entities_to_interact_with = data_tile.bind_mut().get_entities();
-        let entities_to_interact_with: Array<_> = entities_to_interact_with
-            .iter_shared()
-            .filter(|e| *e != *entity )
-            .collect();
-        
-        if entities_to_interact_with.is_empty() {
-            return;
-        }
-        
-        entities_to_interact_with
-            .iter_shared()
-            .for_each(|mut e| e.bind_mut().interact_with(&entity));
     }
 }
 

@@ -27,3 +27,6 @@ texture = ExtResource("3_euxjt")
 battle_entity = ExtResource("4_f3bwa")
 
 [node name="BattleTriggerModule" type="BattleTriggerModule" parent="."]
+
+[node name="PickupModule" type="PickupModule" parent="." node_paths=PackedStringArray("inventory")]
+inventory = NodePath("../InventoryModule")
