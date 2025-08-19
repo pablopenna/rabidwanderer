@@ -20,7 +20,7 @@ impl BattleModule {
         BoardEntity::get_first_child_of_type::<BattleModule>(&entity)
     }
 
-    fn get_battle_entity_instance(&mut self) -> Gd<BattleEntity> {
+    pub(crate) fn get_battle_entity_instance(&self) -> Gd<BattleEntity> {
         self.battle_entity.instantiate_as::<BattleEntity>()
     }
 }

@@ -31,12 +31,25 @@ pub(crate) struct BattleSetup {
 impl INode for BattleSetup {
     fn ready(&mut self) {
         self.base_mut().add_to_group(BATTLE_SETUP_GROUP);
+        
+        self.engine.signals().battle_ended().connect_other(self, Self::cleanup_combat);
     }
 }
 
 #[godot_api]
 impl BattleSetup {
     pub(crate) fn setup_combat_for_tile(&mut self, coord: &BoardCoordinate) {
+        let battle_entities = self.get_instances(coord);
+
+        let are_there_enemies = Team::are_there_entities_from_team(Team::Enemy, &battle_entities);
+        if !are_there_enemies { return; }
+        
+        self.set_instances_position(&battle_entities);
+        self.set_instances_targets(&battle_entities);
+        self.add_instances_to_container(&battle_entities);
+    }
+
+    fn get_instances(&mut self, coord: &BoardCoordinate) -> Array<Gd<BattleEntity>> {
         let tile = self.get_board().bind().get_tile_at(&coord).unwrap();
         let entities = tile.bind().get_entities();
         
@@ -46,23 +59,44 @@ impl BattleSetup {
             .map(|e| e.unwrap())
             .collect();
         
-        let scenes: Array<Gd<PackedScene>> = battle_modules.iter_shared()
-            .map(|e| e.bind().get_battle_entity())
-            .filter(|e| e.is_some())
-            .map(|e| e.unwrap())
-            .collect();
-        
-        let battle_entities: Array<Gd<BattleEntity>> = scenes.iter_shared()
-            .map(|e| e.instantiate_as::<BattleEntity>())
+        let battle_entities: Array<Gd<BattleEntity>> = battle_modules.iter_shared()
+            .map(|e| e.bind().get_battle_entity_instance())
             .collect();
 
-        let are_there_enemies = Team::are_there_entities_from_team(Team::Enemy, &battle_entities);
-        if !are_there_enemies { return; }
-        
-        battle_entities.iter_shared().for_each(
+        battle_entities
+    }
+
+    fn set_instances_position(&self, instances: &Array<Gd<BattleEntity>>) {
+        instances.iter_shared().for_each(|mut e| {
+            if Team::from_gstring(e.bind().get_team()) == Team::Player {
+                e.set_position(self.player_position_reference.get_position());
+            } else {
+                e.set_position(self.enemy_position_reference.get_position());
+            }
+        });
+    }
+
+    fn set_instances_targets(&self, instances: &Array<Gd<BattleEntity>>) {
+        let player_instances = Team::get_entities_from_team(Team::Player, instances);
+        let enemy_instances = Team::get_entities_from_team(Team::Enemy, instances);
+
+        instances.iter_shared().for_each(|mut e| {
+            if Team::from_gstring(e.bind().get_team()) == Team::Player {
+                e.bind_mut().set_target(Some(enemy_instances.clone().at(0)));
+            } else {
+                e.bind_mut().set_target(Some(player_instances.clone().at(0)));
+            }
+        });
+    }
+
+    fn add_instances_to_container(&mut self, instances: &Array<Gd<BattleEntity>>) {
+        instances.iter_shared().for_each(
             |e| self.container.bind_mut().add_entity(&e)
         );
-        //TODO: set targets for each battle_entity
+    }
+
+    pub(crate) fn cleanup_combat(&mut self) {
+        self.container.clone().bind_mut().remove_all_entities();
     }
 
     fn get_board(&mut self) -> Gd<Board> {

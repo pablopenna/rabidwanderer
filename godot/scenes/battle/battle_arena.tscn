@@ -32,9 +32,11 @@ autostart = true
 
 [node name="PlayerRefPosition" type="Node2D" parent="."]
 position = Vector2(37, 55)
+metadata/_edit_lock_ = true
 
 [node name="EnemyRefPosition" type="Node2D" parent="."]
 position = Vector2(121, 55)
+metadata/_edit_lock_ = true
 
 [node name="TurnsHandler" type="TurnsHandler" parent="."]
 

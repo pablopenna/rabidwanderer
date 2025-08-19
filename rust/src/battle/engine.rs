@@ -15,7 +15,6 @@ pub struct BattleEngine {
     turns_handler: OnEditor<Gd<TurnsHandler>>,
     #[export]
     battle_entity_container: OnEditor<Gd<BattleEntityContainer>>,
-    battle_is_done: bool,
     current_turn: Option<Gd<Turn>>,
 }
 
@@ -25,7 +24,6 @@ impl INode for BattleEngine {
         Self {
             turns_handler: OnEditor::default(),
             battle_entity_container: OnEditor::default(),
-            battle_is_done: true,
             current_turn: None,
             base
         }
@@ -39,6 +37,10 @@ impl INode for BattleEngine {
 
 #[godot_api]
 impl BattleEngine {
+
+    #[signal]
+    pub(crate) fn battle_ended();
+
     #[func]
     pub(crate) fn start_battle(&mut self) {
         if self.battle_entity_container.bind().get_entity_count() < 2 {
@@ -46,15 +48,10 @@ impl BattleEngine {
             return;
         }
         
-        self.battle_is_done = false;
         self.update_battle();
     }
 
     fn update_battle(&mut self) {
-        if self.battle_is_done {
-            return;
-        }
-
         if !self.turns_handler.bind_mut().are_there_turns_left() {
             self.turns_handler.bind_mut().generate_new_turns(
                 Vec::from_godot(self.battle_entity_container.bind().get_all_entities())
@@ -69,18 +66,16 @@ impl BattleEngine {
 
         let mut current_turn = self.current_turn.clone().unwrap();
         current_turn.signals().turn_ended().builder()
-            .flags(ConnectFlags::ONE_SHOT| ConnectFlags::DEFERRED)
+            .flags(ConnectFlags::ONE_SHOT | ConnectFlags::DEFERRED)
             .connect_other_mut(self, Self::on_current_turn_done);
         current_turn.bind_mut().execute_turn();
     }
 
     fn on_current_turn_done(&mut self) {
         let mut last_turn = self.current_turn.clone().unwrap();
-        
         last_turn.signals().tree_exited().builder()
             .flags(ConnectFlags::ONE_SHOT)
             .connect_other_mut(self, Self::after_turn_cleanup);
-        
         last_turn.queue_free();
         godot_print!("Cleaning last turn...");
     }
@@ -90,10 +85,14 @@ impl BattleEngine {
         self.current_turn = None;
         if self.battle_entity_container.clone().bind().get_alive_entities().len() <= 1 {
             godot_print!("Only one is left standing...");
-            self.battle_is_done = true;
+            self.on_battle_end();
+            return;
         }
+        
         self.update_battle();
     }
+
+    fn on_battle_end(&mut self) {
+        self.signals().battle_ended().emit();
+    }
 }
-
-
