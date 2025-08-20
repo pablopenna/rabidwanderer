@@ -4,6 +4,7 @@ use godot::prelude::*;
 use crate::entity::board_entity::BoardEntity;
 use crate::entity::modules::item::floor_item::FloorItemModule;
 use crate::item::item_definition::ItemDefinition;
+use crate::utils::get_first_child_of_type::get_first_child_of_type;
 
 #[derive(GodotClass)]
 #[class(base=Node)]
@@ -28,7 +29,7 @@ impl FloorItemFactory {
         let board_entity = self.floor_item_board_entity_scene.instantiate_as::<BoardEntity>();
         let board_entity = board_entity.upcast::<Node>();
         
-        let floor_item_module = BoardEntity::get_first_child_of_type::<FloorItemModule>(&board_entity);
+        let floor_item_module = get_first_child_of_type::<FloorItemModule>(&board_entity);
         let mut floor_item_module = floor_item_module.unwrap();
         let mut floor_item_module = floor_item_module.bind_mut();
        

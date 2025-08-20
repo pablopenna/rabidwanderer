@@ -34,7 +34,7 @@ InventoryModule="res://icon.svg"
 PickupModule="res://icon.svg"
 BattleModule="res://icon.svg"
 BattleTriggerModule="res://icon.svg"
-
+StatsModule="res://icon.svg"
 BaseStats="res://icon.svg"
 RealStats="res://icon.svg"
 

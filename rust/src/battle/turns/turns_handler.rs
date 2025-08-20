@@ -52,8 +52,8 @@ impl TurnsHandler {
     pub(crate) fn generate_new_turns(&mut self, mut battlers: Vec<Gd<BattleEntity>>) {
         godot_print!("Generating new turns");
         battlers.sort_by(|a, b| {
-            let a_speed = a.bind().get_stats().unwrap().bind().get_speed();
-            let b_speed = b.bind().get_stats().unwrap().bind().get_speed();
+            let a_speed = a.bind().get_stats().bind().get_speed();
+            let b_speed = b.bind().get_stats().bind().get_speed();
             a_speed.cmp(&b_speed)
         });
 

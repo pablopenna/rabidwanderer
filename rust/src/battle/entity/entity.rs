@@ -7,17 +7,30 @@ use crate::stats::real::RealStats;
 use crate::battle::team::Team;
 
 #[derive(GodotClass)]
-#[class(init, base=Node2D)]
+#[class(base=Node2D)]
 pub(crate) struct BattleEntity {
     base: Base<Node2D>,
-    #[export]
-    stats: OnEditor<Gd<RealStats>>,
+    #[var]
+    stats: Gd<RealStats>, // Stats are passed from Board Entity on instantiation so that they are preserved in between battles
     #[export]
     team: Team,
     #[export]
     target: Option<Gd<BattleEntity>>,
     #[export]
     animation_player: OnEditor<Gd<AnimationPlayer>>
+}
+
+#[godot_api]
+impl INode2D for BattleEntity {
+    fn init(base: Base<Node2D>) -> Self {
+        Self {
+            base,
+            stats: RealStats::new_gd(),
+            team: Team::Player,
+            target: None,
+            animation_player: OnEditor::default(),
+        }
+    }
 }
 
 #[godot_api]

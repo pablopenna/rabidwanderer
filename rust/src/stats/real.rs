@@ -4,31 +4,24 @@ use godot::prelude::*;
 use crate::stats::base::BaseStats;
 
 #[derive(GodotClass)]
-#[class(base=Node)]
+#[class(init, base=Resource)]
 pub(crate) struct RealStats {
-    base: Base<Node>,
+    base: Base<Resource>,
     #[export]
     base_stats: OnEditor<Gd<BaseStats>>,
     current_hp: u16,
 }
 
 #[godot_api]
-impl INode for RealStats {
-    fn init(base: Base<Node>) -> Self {
-        Self {
-            base,
-            base_stats: OnEditor::default(),
-            current_hp: 0,
-        }
-    }
-
-    fn ready(&mut self) {
-        self.current_hp = self.base_stats.bind().get_max_hp();
-    }
-}
-
-#[godot_api]
 impl RealStats {
+
+    pub(crate) fn new(base_stats: Gd<BaseStats>) -> Gd<Self> {
+        let mut new_stats = Self::new_gd();
+        new_stats.bind_mut().current_hp = base_stats.bind().get_max_hp();
+        new_stats.bind_mut().base_stats.init(base_stats);
+        
+        new_stats
+    }
 
     pub(crate) fn is_alive(&self) -> bool {
         self.current_hp > 0

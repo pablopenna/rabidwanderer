@@ -3,6 +3,7 @@ use godot::prelude::*;
 
 use crate::entity::board_entity::BoardEntity;
 use crate::item::item::Item;
+use crate::utils::get_first_child_of_type::get_first_child_of_type;
 
 const MAX_NUMBER_OF_ITEMS: i32 = 8;
 
@@ -44,6 +45,6 @@ impl InventoryModule {
 
     fn _get_inventory_module_from(entity: Gd<BoardEntity>) -> Option<Gd<InventoryModule>> {
         let node = entity.upcast::<Node>();
-        BoardEntity::get_first_child_of_type::<InventoryModule>(&node)
+        get_first_child_of_type::<InventoryModule>(&node)
     }
 }

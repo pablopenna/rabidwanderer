@@ -30,7 +30,7 @@ impl BattleEntityContainer {
     pub(crate) fn get_alive_entities(&self) -> Array<Gd<BattleEntity>> {
         self.base().get_children().iter_shared()
         .map(|child| child.cast::<BattleEntity>())
-        .filter(|entity| entity.bind().get_stats().unwrap().bind().is_alive())
+        .filter(|entity| entity.bind().get_stats().bind().is_alive())
         .collect()
     }
 

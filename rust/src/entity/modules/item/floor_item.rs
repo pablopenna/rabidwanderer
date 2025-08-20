@@ -6,6 +6,7 @@ use crate::entity::board_entity::BoardEntity;
 use crate::item::factory::ItemFactory;
 use crate::item::item::Item;
 use crate::item::item_definition::ItemDefinition;
+use crate::utils::get_first_child_of_type::get_first_child_of_type;
 
 #[derive(GodotClass)]
 #[class(base=Node)]
@@ -54,6 +55,6 @@ impl FloorItemModule {
     }
 
     pub(crate) fn get_floor_item_from_entity(entity: Gd<BoardEntity>) -> Option<Gd<FloorItemModule>> {
-        BoardEntity::get_first_child_of_type::<FloorItemModule>(&entity)
+        get_first_child_of_type::<FloorItemModule>(&entity)
     }
 }
