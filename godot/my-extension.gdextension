@@ -35,6 +35,9 @@ PickupModule="res://icon.svg"
 BattleModule="res://icon.svg"
 BattleTriggerModule="res://icon.svg"
 
+BaseStats="res://icon.svg"
+RealStats="res://icon.svg"
+
 EnemyFactory="res://icon.svg"
 BattleEngine="res://icon.svg"
 BattleEntity="res://icon.svg"

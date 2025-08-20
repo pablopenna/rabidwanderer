@@ -1,8 +1,0 @@
-[gd_resource type="BattleStats" format=3 uid="uid://biudav16u8t20"]
-
-[resource]
-max_hp = 20
-current_hp = 20
-attack = 2
-defense = 5
-speed = 5

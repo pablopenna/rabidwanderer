@@ -10,6 +10,7 @@ mod camera;
 mod item;
 mod enemy;
 mod battle;
+mod stats;
 mod global_signals;
 
 struct MyExtension; // The name of the struct does not matter

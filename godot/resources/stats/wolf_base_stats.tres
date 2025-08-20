@@ -1,0 +1,6 @@
+[gd_resource type="BaseStats" format=3 uid="uid://dwyarotcmspp8"]
+
+[resource]
+max_hp = 5
+attack = 2
+speed = 3

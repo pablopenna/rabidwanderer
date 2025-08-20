@@ -3,7 +3,7 @@ use godot::prelude::*;
 
 use rand::Rng;
 
-use crate::battle::stats::BattleStats;
+use crate::stats::real::RealStats;
 use crate::battle::team::Team;
 
 #[derive(GodotClass)]
@@ -11,7 +11,7 @@ use crate::battle::team::Team;
 pub(crate) struct BattleEntity {
     base: Base<Node2D>,
     #[export]
-    stats: OnEditor<Gd<BattleStats>>,
+    stats: OnEditor<Gd<RealStats>>,
     #[export]
     team: Team,
     #[export]

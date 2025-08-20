@@ -1,0 +1,6 @@
+[gd_resource type="BaseStats" format=3 uid="uid://d4co0ma3vjrnx"]
+
+[resource]
+max_hp = 10
+attack = 2
+speed = 3
