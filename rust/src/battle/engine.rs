@@ -3,9 +3,11 @@ use godot::classes::*;
 use godot::prelude::*;
 
 use crate::battle::entity::container::BattleEntityContainer;
+use crate::battle::team::Team;
 use crate::battle::turns::turn::Turn;
 use crate::battle::turns::turns_handler::TurnsHandler;
 use crate::consts::groups::BATTLE_ENGINE_GROUP;
+use crate::global_signals::GlobalSignals;
 
 #[derive(GodotClass)]
 #[class(base=Node)]
@@ -83,9 +85,13 @@ impl BattleEngine {
     fn after_turn_cleanup(&mut self) {
         godot_print!("Last turn cleaned");
         self.current_turn = None;
-        if self.battle_entity_container.clone().bind().get_alive_entities().len() <= 1 {
+        let alive_entities = self.battle_entity_container.clone().bind().get_alive_entities();
+        if alive_entities.len() <= 1 {
             godot_print!("Only one is left standing...");
             self.on_battle_end();
+            if Team::from_gstring(alive_entities.at(0).bind().get_team()) == Team::Enemy {
+                GlobalSignals::get_singleton().signals().player_died().emit();
+            }
             return;
         }
         
