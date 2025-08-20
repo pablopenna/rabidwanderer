@@ -47,11 +47,12 @@ metadata/_edit_lock_ = true
 
 [node name="TurnsHandler" type="TurnsHandler" parent="."]
 
-[node name="BattleSetup" type="BattleSetup" parent="." node_paths=PackedStringArray("player_position_reference", "enemy_position_reference", "container", "engine")]
+[node name="BattleSetup" type="BattleSetup" parent="." node_paths=PackedStringArray("player_position_reference", "enemy_position_reference", "container", "engine", "turns_handler")]
 player_position_reference = NodePath("../PlayerRefPosition")
 enemy_position_reference = NodePath("../EnemyRefPosition")
 container = NodePath("../BattleEntityContainer")
 engine = NodePath("../BattleEngine")
+turns_handler = NodePath("../TurnsHandler")
 
 [node name="BattleEngine" type="BattleEngine" parent="." node_paths=PackedStringArray("turns_handler", "battle_entity_container")]
 turns_handler = NodePath("../TurnsHandler")

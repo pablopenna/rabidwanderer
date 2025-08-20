@@ -62,4 +62,11 @@ impl TurnsHandler {
             self.add_turn_to_pool(new_turn);
         });
     }
+
+    pub(crate) fn remove_all_turns(&mut self) {
+        let children = self.base_mut().get_children();
+        children.iter_shared().for_each(
+            |child| self.base_mut().remove_child(&child)
+        );
+    }
 }

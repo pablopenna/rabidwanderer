@@ -5,6 +5,7 @@ use crate::battle::engine::BattleEngine;
 use crate::battle::entity::container::BattleEntityContainer;
 use crate::battle::entity::entity::BattleEntity;
 use crate::battle::team::Team;
+use crate::battle::turns::turns_handler::TurnsHandler;
 use crate::board::board::Board;
 use crate::board::coordinate::BoardCoordinate;
 use crate::consts::groups::get_board_node_from_tree;
@@ -23,6 +24,8 @@ pub(crate) struct BattleSetup {
     container: OnEditor<Gd<BattleEntityContainer>>,
     #[export]
     engine: OnEditor<Gd<BattleEngine>>,
+    #[export]
+    turns_handler: OnEditor<Gd<TurnsHandler>>,
     board: Option<Gd<Board>>,
 
 }
@@ -97,6 +100,7 @@ impl BattleSetup {
 
     pub(crate) fn cleanup_combat(&mut self) {
         self.container.clone().bind_mut().remove_all_entities();
+        self.turns_handler.clone().bind_mut().remove_all_turns();
     }
 
     fn get_board(&mut self) -> Gd<Board> {
