@@ -1,3 +1,4 @@
+# DEPRECATED - migrated to Rust (BattleUi)
 extends Control
 
 @export var subviewport: SubViewport

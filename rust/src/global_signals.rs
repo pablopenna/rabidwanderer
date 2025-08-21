@@ -8,8 +8,22 @@ pub(crate) struct GlobalSignals {
 
 #[godot_api]
 impl GlobalSignals {
+
+    // General
     #[signal]
     pub(crate) fn player_died();
+
+    // Board
+
+    // Battle
+    #[signal]
+    pub(crate) fn battle_set_up();
+    #[signal]
+    pub(crate) fn battle_finished();
+    #[signal]
+    pub(crate) fn battle_ui_shown();
+    #[signal]
+    pub(crate) fn battle_ui_hid();
 
     pub(crate) fn get_singleton() -> Gd<GlobalSignals> {
         godot::classes::Engine::singleton().get_singleton("GlobalSignals").unwrap().cast::<GlobalSignals>()

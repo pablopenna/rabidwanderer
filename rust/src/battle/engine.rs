@@ -33,15 +33,14 @@ impl INode for BattleEngine {
 
     fn ready(&mut self) {
         self.base_mut().add_to_group(BATTLE_ENGINE_GROUP);
+
+        GlobalSignals::get_singleton().signals().battle_ui_shown().connect_other(self, Self::start_battle);
     }
 }
 
 
 #[godot_api]
 impl BattleEngine {
-
-    #[signal]
-    pub(crate) fn battle_ended();
 
     #[func]
     pub(crate) fn start_battle(&mut self) {
@@ -99,6 +98,6 @@ impl BattleEngine {
     }
 
     fn on_battle_end(&mut self) {
-        self.signals().battle_ended().emit();
+        GlobalSignals::get_singleton().signals().battle_finished().emit();
     }
 }

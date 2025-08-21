@@ -1,7 +1,6 @@
 use godot::classes::*;
 use godot::prelude::*;
 
-use crate::battle::engine::BattleEngine;
 use crate::battle::entity::container::BattleEntityContainer;
 use crate::battle::entity::entity::BattleEntity;
 use crate::battle::team::Team;
@@ -11,6 +10,7 @@ use crate::board::coordinate::BoardCoordinate;
 use crate::consts::groups::get_board_node_from_tree;
 use crate::consts::groups::BATTLE_SETUP_GROUP;
 use crate::entity::modules::battle::battle::BattleModule;
+use crate::global_signals::GlobalSignals;
 
 #[derive(GodotClass)]
 #[class(init, base=Node)]
@@ -23,8 +23,6 @@ pub(crate) struct BattleSetup {
     #[export]
     container: OnEditor<Gd<BattleEntityContainer>>,
     #[export]
-    engine: OnEditor<Gd<BattleEngine>>,
-    #[export]
     turns_handler: OnEditor<Gd<TurnsHandler>>,
     board: Option<Gd<Board>>,
 
@@ -34,8 +32,8 @@ pub(crate) struct BattleSetup {
 impl INode for BattleSetup {
     fn ready(&mut self) {
         self.base_mut().add_to_group(BATTLE_SETUP_GROUP);
-        
-        self.engine.signals().battle_ended().connect_other(self, Self::cleanup_combat);
+
+        GlobalSignals::get_singleton().signals().battle_finished().connect_other(self, Self::cleanup_combat);
     }
 }
 
@@ -44,12 +42,15 @@ impl BattleSetup {
     pub(crate) fn setup_combat_for_tile(&mut self, coord: &BoardCoordinate) {
         let battle_entities = self.get_instances(coord);
 
+        // This check is enough as this method should be called by the player each time it moves, meaning the player should always be among the entities
         let are_there_enemies = Team::are_there_entities_from_team(Team::Enemy, &battle_entities);
         if !are_there_enemies { return; }
         
         self.set_instances_position(&battle_entities);
         self.set_instances_targets(&battle_entities);
         self.add_instances_to_container(&battle_entities);
+
+        GlobalSignals::get_singleton().signals().battle_set_up().emit();
     }
 
     fn get_instances(&mut self, coord: &BoardCoordinate) -> Array<Gd<BattleEntity>> {
