@@ -14,6 +14,8 @@ pub(crate) struct RealStats {
 
 #[godot_api]
 impl RealStats {
+    #[signal]
+    pub(crate) fn no_hp_left();
 
     pub(crate) fn new(base_stats: Gd<BaseStats>) -> Gd<Self> {
         let mut new_stats = Self::new_gd();
@@ -33,6 +35,9 @@ impl RealStats {
 
     pub(crate) fn set_current_hp(&mut self, hp: u16) {
         self.current_hp = hp;
+        if self.current_hp <= 0 {
+            self.signals().no_hp_left().emit();
+        }
     }
 
     pub(crate) fn get_attack(&self) -> u16 {

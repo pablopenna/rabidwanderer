@@ -21,3 +21,6 @@ stats = NodePath("../StatsModule")
 
 [node name="StatsModule" type="StatsModule" parent="."]
 base_stats = ExtResource("4_px3ij")
+
+[node name="DeathModule" type="DeathModule" parent="." node_paths=PackedStringArray("stats")]
+stats = NodePath("../StatsModule")

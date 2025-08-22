@@ -38,12 +38,22 @@ impl INode for StatsModule {
     }
 
     fn ready(&mut self) {
-        self.real_stats.init(RealStats::new(self.base_stats.get_property().unwrap()))
+        self.real_stats.init(RealStats::new(self.base_stats.get_property().unwrap()));
+
+        self.real_stats.signals().no_hp_left().connect_other(self, Self::on_real_stats_no_hp_left);
     }
 }
 
+#[godot_api]
 impl StatsModule {
+    #[signal]
+    pub(crate) fn no_hp_left();
+
     pub(crate) fn get_stats(&self) -> Gd<RealStats> {
         self.real_stats.get_property()
+    }
+
+    fn on_real_stats_no_hp_left(&mut self) {
+        self.signals().no_hp_left().emit();
     }
 }

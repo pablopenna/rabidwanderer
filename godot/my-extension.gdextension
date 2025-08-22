@@ -37,6 +37,7 @@ BattleTriggerModule="res://icon.svg"
 StatsModule="res://icon.svg"
 BaseStats="res://icon.svg"
 RealStats="res://icon.svg"
+DeathModule="res://icon.svg"
 
 EnemyFactory="res://icon.svg"
 BattleEngine="res://icon.svg"
