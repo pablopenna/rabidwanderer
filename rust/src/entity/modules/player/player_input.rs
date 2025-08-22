@@ -4,6 +4,7 @@ use godot::prelude::*;
 use crate::consts::groups::get_movement_manager_node_from_tree;
 use crate::board::movement_manager::BoardMovementManager;
 use crate::entity::board_entity::BoardEntity;
+use crate::global_signals::GlobalSignals;
 
 #[derive(GodotClass)]
 #[class(base=Node2D)]
@@ -36,8 +37,11 @@ impl INode2D for PlayerInputModule {
 
         let node = self.base().clone().upcast::<Node>();
         self.movement_manager = Some(get_movement_manager_node_from_tree(node));
+
+        GlobalSignals::get_singleton().signals().player_died().connect_other(self, Self::disable);
     }
 
+    // https://docs.godotengine.org/en/stable/tutorials/inputs/inputevent.html
     fn unhandled_input(&mut self, event: Gd<InputEvent>) {
         if !event.is_action(INPUT_LEFT)
             && !event.is_action(INPUT_RIGHT)
@@ -65,5 +69,11 @@ impl INode2D for PlayerInputModule {
             &mut entity,
             direction
         );
+    }
+}
+
+impl PlayerInputModule {
+    fn disable(&mut self) {
+        self.base_mut().set_process_unhandled_input(false);
     }
 }

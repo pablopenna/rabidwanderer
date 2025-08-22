@@ -1,6 +1,45 @@
-[gd_resource type="Theme" load_steps=6 format=3 uid="uid://ryqkt6qqt8fd"]
+[gd_resource type="Theme" load_steps=9 format=3 uid="uid://ryqkt6qqt8fd"]
 
 [ext_resource type="FontFile" uid="uid://bc0elrs647ofk" path="res://resources/fonts/monogram-extended.ttf" id="1_yomoi"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uasyd"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+corner_detail = 1
+expand_margin_left = 6.0
+expand_margin_right = 6.0
+expand_margin_bottom = 2.0
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8wyej"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+corner_detail = 1
+expand_margin_left = 6.0
+expand_margin_right = 6.0
+expand_margin_bottom = 2.0
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ubaui"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+corner_detail = 1
+expand_margin_left = 6.0
+expand_margin_right = 6.0
+expand_margin_bottom = 2.0
+anti_aliasing = false
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_yomoi"]
 color = Color(1, 1, 1, 1)
@@ -23,6 +62,12 @@ bg_color = Color(1, 1, 1, 1)
 
 [resource]
 default_font = ExtResource("1_yomoi")
+Button/colors/font_color = Color(1, 1, 1, 1)
+Button/colors/font_hover_color = Color(1, 1, 1, 1)
+Button/colors/font_pressed_color = Color(0, 0, 0, 1)
+Button/styles/hover = SubResource("StyleBoxFlat_uasyd")
+Button/styles/normal = SubResource("StyleBoxFlat_8wyej")
+Button/styles/pressed = SubResource("StyleBoxFlat_ubaui")
 HSeparator/constants/separation = 1
 HSeparator/styles/separator = SubResource("StyleBoxLine_yomoi")
 MarginContainer/constants/margin_left = 4

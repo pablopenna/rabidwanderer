@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://w8or6a0027fd"]
+[gd_scene load_steps=4 format=3 uid="uid://w8or6a0027fd"]
 
 [ext_resource type="PackedScene" uid="uid://46plhxlvglgf" path="res://scenes/ui/overworld_ui.tscn" id="1_w6j4g"]
 [ext_resource type="PackedScene" uid="uid://dlarfobhyq70c" path="res://scenes/ui/battle_ui.tscn" id="2_kafpn"]
+[ext_resource type="PackedScene" uid="uid://cpq17ncy1yhm2" path="res://scenes/ui/game_over_ui.tscn" id="3_f5wd2"]
 
 [node name="UiRoot" type="CanvasLayer"]
 
@@ -9,3 +10,5 @@
 
 [node name="BattleUi" parent="." instance=ExtResource("2_kafpn")]
 visible = false
+
+[node name="GameOverUi" parent="." instance=ExtResource("3_f5wd2")]
