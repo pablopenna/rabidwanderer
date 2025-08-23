@@ -48,6 +48,7 @@ impl BattleEngine {
             godot_print!("Not enough entities to battle!");
             return;
         }
+        GlobalSignals::get_singleton().signals().battle_started().emit();
         
         self.update_battle();
     }

@@ -1,3 +1,4 @@
+use godot::classes::object::ConnectFlags;
 use godot::classes::*;
 use godot::prelude::*;
 
@@ -10,6 +11,7 @@ use crate::global_signals::GlobalSignals;
 #[class(base=Node2D)]
 pub struct PlayerInputModule {
     entity_to_move: Option<Gd<BoardEntity>>,
+    is_entity_dead: bool,
     movement_manager: Option<Gd<BoardMovementManager>>,
     base: Base<Node2D>,
 }
@@ -24,6 +26,7 @@ impl INode2D for PlayerInputModule {
     fn init(base: Base<Node2D>) -> Self {
         Self {
             entity_to_move: Option::None,
+            is_entity_dead: false,
             movement_manager: Option::None,
             base
         }
@@ -38,9 +41,13 @@ impl INode2D for PlayerInputModule {
         let node = self.base().clone().upcast::<Node>();
         self.movement_manager = Some(get_movement_manager_node_from_tree(node));
 
-        GlobalSignals::get_singleton().signals().game_over().connect_other(self, Self::disable);
-        // GlobalSignals::get_singleton().signals().battle_started().connect_other(self, Self::disable);
-        // GlobalSignals::get_singleton().signals().battle_finished().connect_other(self, Self::enable);
+        GlobalSignals::get_singleton().signals().game_over().connect_other(self, Self::on_entity_death);
+        GlobalSignals::get_singleton().signals().battle_finished().connect_other(self, Self::enable);
+        // If the deferred flag is not used here, a borrower exception occurs at runtime. Unsure why.
+        GlobalSignals::get_singleton().signals().battle_started().builder()
+        .flags(ConnectFlags::DEFERRED)
+        .connect_other_mut(self, Self::disable);
+        
     }
 
     // https://docs.godotengine.org/en/stable/tutorials/inputs/inputevent.html
@@ -76,11 +83,18 @@ impl INode2D for PlayerInputModule {
 
 impl PlayerInputModule {
     fn disable(&mut self) {
-        // self.base_mut().call_deferred("set_process_unhandled_input", &[false.to_variant()]);
         self.base_mut().set_process_unhandled_input(false);
     }
 
     fn enable(&mut self) {
+        if self.is_entity_dead {
+            return;    
+        }
         self.base_mut().set_process_unhandled_input(true);
+    }
+
+    fn on_entity_death(&mut self) {
+        self.is_entity_dead = true;
+        self.disable();
     }
 }
