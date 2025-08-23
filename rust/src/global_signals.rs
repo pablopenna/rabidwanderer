@@ -11,7 +11,7 @@ impl GlobalSignals {
 
     // General
     #[signal]
-    pub(crate) fn player_died();
+    pub(crate) fn game_over();
 
     // Board
 
@@ -19,7 +19,11 @@ impl GlobalSignals {
     #[signal]
     pub(crate) fn battle_set_up();
     #[signal]
+    pub(crate) fn battle_started();
+    #[signal]
     pub(crate) fn battle_finished();
+
+    // UI
     #[signal]
     pub(crate) fn battle_ui_shown();
     #[signal]

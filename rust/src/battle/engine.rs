@@ -88,9 +88,6 @@ impl BattleEngine {
         if alive_entities.len() <= 1 {
             godot_print!("Only one is left standing...");
             self.on_battle_end();
-            if Team::from_gstring(alive_entities.at(0).bind().get_team()) == Team::Enemy {
-                GlobalSignals::get_singleton().signals().player_died().emit();
-            }
             return;
         }
         

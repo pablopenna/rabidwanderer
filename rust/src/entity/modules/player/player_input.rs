@@ -38,7 +38,9 @@ impl INode2D for PlayerInputModule {
         let node = self.base().clone().upcast::<Node>();
         self.movement_manager = Some(get_movement_manager_node_from_tree(node));
 
-        GlobalSignals::get_singleton().signals().player_died().connect_other(self, Self::disable);
+        GlobalSignals::get_singleton().signals().game_over().connect_other(self, Self::disable);
+        // GlobalSignals::get_singleton().signals().battle_started().connect_other(self, Self::disable);
+        // GlobalSignals::get_singleton().signals().battle_finished().connect_other(self, Self::enable);
     }
 
     // https://docs.godotengine.org/en/stable/tutorials/inputs/inputevent.html
@@ -74,6 +76,11 @@ impl INode2D for PlayerInputModule {
 
 impl PlayerInputModule {
     fn disable(&mut self) {
+        // self.base_mut().call_deferred("set_process_unhandled_input", &[false.to_variant()]);
         self.base_mut().set_process_unhandled_input(false);
+    }
+
+    fn enable(&mut self) {
+        self.base_mut().set_process_unhandled_input(true);
     }
 }

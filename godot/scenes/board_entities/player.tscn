@@ -35,3 +35,6 @@ base_stats = ExtResource("5_6cxh0")
 
 [node name="PickupModule" type="PickupModule" parent="." node_paths=PackedStringArray("inventory")]
 inventory = NodePath("../InventoryModule")
+
+[node name="GameOverModule" type="GameOverModule" parent="." node_paths=PackedStringArray("stats")]
+stats = NodePath("../StatsModule")

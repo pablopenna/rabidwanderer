@@ -6,7 +6,7 @@ script/source = "extends Label
 @onready var counter = 0
 
 func _ready() -> void:
-	GlobalSignals.player_died.connect(_on_player_died)
+	GlobalSignals.game_over.connect(_on_player_died)
 
 func _on_timer_timeout() -> void:
 	counter += 1
