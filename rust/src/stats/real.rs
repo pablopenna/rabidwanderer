@@ -16,6 +16,8 @@ pub(crate) struct RealStats {
 impl RealStats {
     #[signal]
     pub(crate) fn no_hp_left();
+    #[signal]
+    pub(crate) fn hp_changed(new_hp: u16);
 
     pub(crate) fn new(base_stats: Gd<BaseStats>) -> Gd<Self> {
         let mut new_stats = Self::new_gd();
@@ -35,9 +37,14 @@ impl RealStats {
 
     pub(crate) fn set_current_hp(&mut self, hp: u16) {
         self.current_hp = hp;
+        self.signals().hp_changed().emit(hp);
         if self.current_hp <= 0 {
             self.signals().no_hp_left().emit();
         }
+    }
+
+    pub(crate) fn get_max_hp(&self) -> u16 {
+        self.base_stats.bind().get_max_hp()
     }
 
     pub(crate) fn get_attack(&self) -> u16 {
