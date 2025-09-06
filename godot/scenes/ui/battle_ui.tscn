@@ -1,6 +1,5 @@
-[gd_scene load_steps=3 format=3 uid="uid://dlarfobhyq70c"]
+[gd_scene load_steps=2 format=3 uid="uid://dlarfobhyq70c"]
 
-[ext_resource type="Theme" uid="uid://ryqkt6qqt8fd" path="res://resources/ui_themes/default.tres" id="1_2hywk"]
 [ext_resource type="PackedScene" uid="uid://cf53m2g6f15q7" path="res://scenes/battle/battle_arena.tscn" id="2_uu5og"]
 
 [node name="BattleUi" type="BattleUi" node_paths=PackedStringArray("subviewport")]
@@ -10,7 +9,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_2hywk")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
 layout_mode = 1

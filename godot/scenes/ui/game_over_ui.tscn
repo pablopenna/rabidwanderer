@@ -1,6 +1,5 @@
-[gd_scene load_steps=4 format=3 uid="uid://cpq17ncy1yhm2"]
+[gd_scene load_steps=3 format=3 uid="uid://cpq17ncy1yhm2"]
 
-[ext_resource type="Theme" uid="uid://ryqkt6qqt8fd" path="res://resources/ui_themes/default.tres" id="1_u4odh"]
 [ext_resource type="Script" uid="uid://dk7683squax5o" path="res://scripts/game_over_ui.gd" id="2_sxdiq"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_yoora"]
@@ -20,7 +19,6 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_u4odh")
 script = ExtResource("2_sxdiq")
 
 [node name="Panel" type="PanelContainer" parent="."]

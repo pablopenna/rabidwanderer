@@ -21,6 +21,10 @@ window/size/viewport_width=400
 window/size/viewport_height=300
 window/stretch/mode="viewport"
 
+[gui]
+
+theme/custom="uid://ryqkt6qqt8fd"
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
