@@ -17,7 +17,9 @@ pub(crate) struct BattleEntity {
     #[export]
     target: Option<Gd<BattleEntity>>,
     #[export]
-    animation_player: OnEditor<Gd<AnimationPlayer>>
+    animation_player: OnEditor<Gd<AnimationPlayer>>,
+    #[export]
+    sprite: OnEditor<Gd<Sprite2D>>
 }
 
 #[godot_api]
@@ -29,6 +31,7 @@ impl INode2D for BattleEntity {
             team: Team::Player,
             target: None,
             animation_player: OnEditor::default(),
+            sprite: OnEditor::default(),
         }
     }
 }
@@ -58,7 +61,35 @@ impl BattleEntity {
         // self.on_apply_damage();
         // self.on_done_acting();
 
-        self.get_animation_player().unwrap().play_ex().name("attack").done();
+        let mut tween = self.base_mut().create_tween().unwrap();
+        tween.tween_property(
+            &self.sprite.get_property().unwrap(),
+            "scale", 
+            &Vector2{x: 2.0, y: 2.0}.to_variant(), 
+            1.0
+        );
+        // tween.parallel().unwrap().tween_property(
+        //     &self.sprite.get_property().unwrap(),
+        //     "frame", 
+        //     &Variant::from(3),
+        //     1.0
+        // );
+        tween.tween_property(
+            &self.sprite.get_property().unwrap(),
+            "scale", 
+            &Vector2{x: 1.0, y: 1.0}.to_variant(), 
+            1.0
+        );
+        // tween.parallel().unwrap().tween_property(
+        //     &self.sprite.get_property().unwrap(),
+        //     "frame", 
+        //     &Variant::from(0), 
+        //     1.0
+        // );
+        tween.tween_callback(&Callable::from_object_method(&self.to_gd(), "on_apply_damage"));
+        tween.tween_callback(&Callable::from_object_method(&self.to_gd(), "on_done_acting")).unwrap().set_delay(1.0);
+
+        //self.get_animation_player().unwrap().play_ex().name("attack").done();
     }
 
     #[func]
