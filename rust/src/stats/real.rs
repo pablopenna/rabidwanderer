@@ -1,7 +1,11 @@
 use godot::classes::*;
 use godot::prelude::*;
 
+use rand::Rng;
+
 use crate::stats::base::BaseStats;
+
+const DAMAGE_VARIATION_RATIO: f32 = 0.1;
 
 #[derive(GodotClass)]
 #[class(init, base=Resource)]
@@ -49,6 +53,16 @@ impl RealStats {
 
     pub(crate) fn get_attack(&self) -> u16 {
         self.base_stats.bind().get_attack()
+    }
+
+    pub(crate) fn calculate_attack_damage(&self) -> u16 {
+        let base_damage = self.get_attack();
+        let mut rng = rand::rng();
+        let variation: f32 = base_damage as f32 * DAMAGE_VARIATION_RATIO;
+
+        let randomized_damage = base_damage as f32 + rng.random_range(-variation..variation);
+
+        randomized_damage.round() as u16
     }
 
     pub(crate) fn get_speed(&self) -> u16 {

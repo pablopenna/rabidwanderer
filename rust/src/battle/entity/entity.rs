@@ -1,8 +1,6 @@
 use godot::classes::*;
 use godot::prelude::*;
 
-use rand::Rng;
-
 use crate::stats::real::RealStats;
 use crate::battle::team::Team;
 
@@ -95,7 +93,7 @@ impl BattleEntity {
     #[func]
     fn on_apply_damage(&mut self) {
         godot_print!("I am {} and I'm attacking", self.base().get_name());
-        let attack_damage = self.calculate_attack_damage();
+        let attack_damage = self.stats.bind().calculate_attack_damage();
         self.target.clone().unwrap().bind_mut().take_damage(attack_damage);
     }
 
@@ -104,16 +102,4 @@ impl BattleEntity {
         godot_print!("I am {} and I'm done", self.base().get_name());
         self.signals().done_acting().emit();
     }
-
-    fn calculate_attack_damage(&self) -> u16 {
-        let base_damage = self.stats.bind().get_attack();
-        let mut rng = rand::rng();
-        let variation_ratio: f32 = base_damage as f32 * 0.1;
-
-        let randomized_damage = base_damage as f32 + rng.random_range(-variation_ratio..variation_ratio);
-
-        randomized_damage.round() as u16
-    }
 }
-
-
