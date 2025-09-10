@@ -2,7 +2,7 @@ use godot::prelude::*;
 
 #[derive(GodotConvert, Var, Export, PartialEq, Default)]
 #[godot(via = GString)]
-pub enum Stat {
+pub(crate) enum Stat {
     MaxHp,
     #[default]
     Attack,

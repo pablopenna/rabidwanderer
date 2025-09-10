@@ -37,6 +37,7 @@ BattleTriggerModule="res://icon.svg"
 StatsModule="res://icon.svg"
 BaseStats="res://icon.svg"
 RealStats="res://icon.svg"
+StatModifier="res://icon.svg"
 DeathModule="res://icon.svg"
 GameOverModule="res://icon.svg"
 
