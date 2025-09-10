@@ -1,3 +1,6 @@
 [gd_scene format=3 uid="uid://cn54apgpqcv64"]
 
 [node name="ItemDummy" type="Item"]
+
+[node name="StatModifier" type="StatModifier" parent="."]
+mod_type = "CUSTOM"

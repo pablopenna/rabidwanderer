@@ -1,6 +1,7 @@
 use godot::classes::*;
 use godot::prelude::*;
 
+use crate::entity::modules::item::inventory::InventoryModule;
 use crate::stats::base::BaseStats;
 use crate::stats::real::RealStats;
 
@@ -24,6 +25,8 @@ pub struct StatsModule {
     #[export]
     base_stats: OnEditor<Gd<BaseStats>>,
     real_stats: OnReady<Gd<RealStats>>,
+    #[export]
+    inventory: Option<Gd<InventoryModule>>, // Required to get the stats modifiers from the items
     base: Base<Node>,
 }
 
@@ -34,11 +37,17 @@ impl INode for StatsModule {
             base,
             base_stats: OnEditor::default(),
             real_stats: OnReady::manual(),
+            inventory: None,
         }
     }
 
     fn ready(&mut self) {
-        self.real_stats.init(RealStats::new(self.base_stats.get_property().unwrap()));
+        self.real_stats.init(
+            RealStats::new(
+                self.base_stats.get_property().unwrap(),
+                self.inventory.clone(),
+            )
+        );
 
         self.real_stats.signals().no_hp_left().connect_other(self, Self::on_real_stats_no_hp_left);
     }

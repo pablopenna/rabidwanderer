@@ -28,8 +28,9 @@ texture = ExtResource("3_euxjt")
 battle_entity = ExtResource("4_f3bwa")
 stats = NodePath("../StatsModule")
 
-[node name="StatsModule" type="StatsModule" parent="."]
+[node name="StatsModule" type="StatsModule" parent="." node_paths=PackedStringArray("inventory")]
 base_stats = ExtResource("5_6cxh0")
+inventory = NodePath("../InventoryModule")
 
 [node name="BattleTriggerModule" type="BattleTriggerModule" parent="."]
 

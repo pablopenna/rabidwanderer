@@ -25,6 +25,10 @@ impl InventoryModule {
         self.base().get_child_count() < MAX_NUMBER_OF_ITEMS
     }
 
+    pub(crate) fn get_items(&self) -> Array<Gd<Item>> {
+        self.base().get_children().iter_shared().map(|child| child.cast::<Item>()).collect()
+    }
+
     pub(crate) fn _add_item_if_has_room(&mut self, item: Gd<Item>) -> bool {
         let mut result = false;
         if self.has_room() {

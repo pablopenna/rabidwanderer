@@ -2,3 +2,6 @@
 
 [node name="ItemRustyGauntlet" type="Item"]
 definition = "RustyGauntlet"
+
+[node name="StatModifier" type="StatModifier" parent="."]
+value = 5.0

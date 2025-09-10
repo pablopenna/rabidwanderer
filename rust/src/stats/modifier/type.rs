@@ -8,3 +8,9 @@ pub(crate) enum ModifierType {
     PERCENTAGE, // +10% attack
     CUSTOM, // (base_attack) => *custom logic* => modified attack
 }
+
+impl ModifierType {
+    pub(crate) fn from_gstring(mod_type: GString) -> ModifierType {
+        ModifierType::from_variant(&mod_type.to_variant())
+    }
+}

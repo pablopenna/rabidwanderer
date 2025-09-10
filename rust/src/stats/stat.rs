@@ -8,3 +8,9 @@ pub(crate) enum Stat {
     Attack,
     Speed,
 }
+
+impl Stat {
+    pub(crate) fn from_gstring(stat: GString) -> Stat {
+        Stat::from_variant(&stat.to_variant())
+    }
+}

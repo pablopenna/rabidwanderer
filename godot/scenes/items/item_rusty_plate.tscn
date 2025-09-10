@@ -2,3 +2,11 @@
 
 [node name="ItemRustyPlate" type="Item"]
 definition = "RustyPlate"
+
+[node name="StatModifier" type="StatModifier" parent="."]
+stat = "MaxHp"
+value = 5.0
+
+[node name="StatModifier2" type="StatModifier" parent="."]
+stat = "Speed"
+value = -1.0
