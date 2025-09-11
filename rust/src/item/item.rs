@@ -13,7 +13,9 @@ use crate::stats::stat::Stat;
 #[class(base=Node)]
 pub(crate) struct Item {
     #[export]
-    definition: ItemDefinition,
+    name: ItemDefinition,
+    #[export]
+    icon: OnEditor<Gd<Texture2D>>,
     base: Base<Node>,
 }
 
@@ -21,7 +23,8 @@ pub(crate) struct Item {
 impl INode for Item {
     fn init(base: Base<Node>) -> Self {
         Self {
-            definition: ItemDefinition::Dummy, // default, to be overriden later
+            name: ItemDefinition::Dummy, // default, to be overriden later
+            icon: OnEditor::default(),
             base
         }
     }
