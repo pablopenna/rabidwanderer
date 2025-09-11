@@ -1,5 +1,7 @@
 use godot::prelude::*;
 
+use crate::item::item::Item;
+
 #[derive(GodotClass)]
 #[class(init, base=Object)]
 pub(crate) struct GlobalSignals {
@@ -28,6 +30,9 @@ impl GlobalSignals {
     pub(crate) fn battle_ui_shown();
     #[signal]
     pub(crate) fn battle_ui_hid();
+
+    #[signal]
+    pub(crate) fn inventory_ui_item_added(item: Gd<Item>);
 
     pub(crate) fn get_singleton() -> Gd<GlobalSignals> {
         godot::classes::Engine::singleton().get_singleton("GlobalSignals").unwrap().cast::<GlobalSignals>()

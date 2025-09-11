@@ -12,6 +12,7 @@ mod enemy;
 mod battle;
 mod stats;
 mod global_signals;
+mod ui;
 mod utils;
 
 struct MyExtension; // The name of the struct does not matter

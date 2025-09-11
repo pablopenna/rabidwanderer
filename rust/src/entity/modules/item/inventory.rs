@@ -14,11 +14,19 @@ pub struct InventoryModule {
     base: Base<Node>,
 }
 
+#[godot_api]
 impl InventoryModule {
+    #[signal]
+    pub(crate) fn item_added(item: Gd<Item>);
+    // #[signal]
+    // fn item_removed(item: Gd<Item>);
+    // #[signal]
+    // fn inventory_changed(inventory: Gd<InventoryModule>);
 
     pub(crate) fn add_item(&mut self, item: Gd<Item>) {
-        let item_node = item.upcast::<Node>();
+        let item_node = item.clone().upcast::<Node>();
         self.base_mut().add_child(&item_node);
+        self.signals().item_added().emit(&item);
     }
 
     pub(crate) fn has_room(&self) -> bool {

@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://dws2rgn1avuv4"]
+
+[node name="InventoryUI" type="MarginContainer"]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Bag"
+
+[node name="GridContainer" type="InventoryUiDisplay" parent="VBoxContainer"]
+layout_mode = 2
+columns = 2
