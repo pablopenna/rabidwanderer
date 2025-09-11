@@ -1,6 +1,9 @@
-[gd_scene format=3 uid="uid://cn54apgpqcv64"]
+[gd_scene load_steps=2 format=3 uid="uid://cn54apgpqcv64"]
+
+[ext_resource type="Texture2D" uid="uid://dymke73h3lu3q" path="res://art/frame.png" id="1_2r037"]
 
 [node name="ItemDummy" type="Item"]
+icon = ExtResource("1_2r037")
 
 [node name="StatModifier" type="StatModifier" parent="."]
 mod_type = "CUSTOM"

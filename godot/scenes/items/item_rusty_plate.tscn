@@ -1,7 +1,10 @@
-[gd_scene format=3 uid="uid://cirv8ed8ak827"]
+[gd_scene load_steps=2 format=3 uid="uid://cirv8ed8ak827"]
+
+[ext_resource type="Texture2D" uid="uid://b222y88yek756" path="res://art/rusty_plate.png" id="1_mmc48"]
 
 [node name="ItemRustyPlate" type="Item"]
-definition = "RustyPlate"
+name = "RustyPlate"
+icon = ExtResource("1_mmc48")
 
 [node name="StatModifier" type="StatModifier" parent="."]
 stat = "MaxHp"

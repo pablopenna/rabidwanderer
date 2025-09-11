@@ -1,7 +1,10 @@
-[gd_scene format=3 uid="uid://bqr368rvyyo2u"]
+[gd_scene load_steps=2 format=3 uid="uid://bqr368rvyyo2u"]
+
+[ext_resource type="Texture2D" uid="uid://dw43dsrma6760" path="res://art/rusty_gauntlet.png" id="1_81r3p"]
 
 [node name="ItemRustyGauntlet" type="Item"]
-definition = "RustyGauntlet"
+name = "RustyGauntlet"
+icon = ExtResource("1_81r3p")
 
 [node name="StatModifier" type="StatModifier" parent="."]
 value = 5.0
