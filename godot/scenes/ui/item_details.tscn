@@ -11,13 +11,20 @@ anchor_bottom = 0.5
 offset_left = -50.0
 offset_top = -32.0
 offset_right = 50.0
-offset_bottom = 67.0
+offset_bottom = 66.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="ItemDetailsUi" type="ItemDetailsUi" parent="." node_paths=PackedStringArray("panel", "title", "icon", "modifiers_text_container", "close_button")]
+panel = NodePath("..")
+title = NodePath("../MarginContainer/VBoxContainer/TitleContainer/Title")
+icon = NodePath("../MarginContainer/VBoxContainer/MarginContainer/ItemIcon")
+modifiers_text_container = NodePath("../MarginContainer/VBoxContainer/ModifierTextContainer")
+close_button = NodePath("../MarginContainer/VBoxContainer/CloseButton")
+
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
-theme_override_constants/margin_top = -4
+theme_override_constants/margin_bottom = 4
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2

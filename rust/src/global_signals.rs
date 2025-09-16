@@ -33,6 +33,8 @@ impl GlobalSignals {
 
     #[signal]
     pub(crate) fn inventory_ui_item_added(item: Gd<Item>);
+    #[signal]
+    pub(crate) fn inventory_ui_item_clicked(item: Gd<Item>);
 
     pub(crate) fn get_singleton() -> Gd<GlobalSignals> {
         godot::classes::Engine::singleton().get_singleton("GlobalSignals").unwrap().cast::<GlobalSignals>()

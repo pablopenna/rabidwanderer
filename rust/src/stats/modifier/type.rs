@@ -13,4 +13,8 @@ impl ModifierType {
     pub(crate) fn from_gstring(mod_type: GString) -> ModifierType {
         ModifierType::from_variant(&mod_type.to_variant())
     }
+
+    pub(crate) fn to_gstring(mod_type: ModifierType) -> GString {
+        mod_type.to_godot()
+    }
 }

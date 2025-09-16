@@ -24,13 +24,23 @@ impl InventoryUiDisplay {
     }
 
     fn on_item_added_to_inventory(&mut self, item: Gd<Item>) {
-        let texture = item.bind().get_icon();
         let mut display = TextureRect::new_alloc();
-
+        
+        let texture = item.bind().get_icon();
         if texture.is_some() {
             display.set_texture(&texture.unwrap())
         }
 
+        display.signals().gui_input().connect_other(self, move |self_ref, event| {
+            self_ref.on_display_gui_event(event, &item);
+        });
+
         self.base_mut().add_child(&display);
+    }
+
+    fn on_display_gui_event(&mut self, event: Gd<InputEvent>, item: &Gd<Item>) {
+        if event.is_pressed() {
+            GlobalSignals::get_singleton().signals().inventory_ui_item_clicked().emit(item);
+        }
     }
 }
