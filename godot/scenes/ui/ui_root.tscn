@@ -12,3 +12,4 @@
 visible = false
 
 [node name="GameOverUi" parent="." instance=ExtResource("3_f5wd2")]
+visible = false

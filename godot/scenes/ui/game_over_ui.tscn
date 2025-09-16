@@ -6,7 +6,6 @@
 font_size = 48
 
 [node name="GameOverUi" type="Control"]
-visible = false
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5

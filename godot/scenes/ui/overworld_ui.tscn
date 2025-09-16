@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://46plhxlvglgf"]
+[gd_scene load_steps=4 format=3 uid="uid://46plhxlvglgf"]
 
 [ext_resource type="PackedScene" uid="uid://dws2rgn1avuv4" path="res://scenes/ui/overworld_inventory_ui.tscn" id="1_limgt"]
+[ext_resource type="PackedScene" uid="uid://bxe82y021xka8" path="res://scenes/ui/item_details.tscn" id="2_h6d8d"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_h6d8d"]
 
@@ -125,3 +126,7 @@ step = 1.0
 value = 50.0
 fill_mode = 3
 show_percentage = false
+
+[node name="ItemDetails" parent="." instance=ExtResource("2_h6d8d")]
+layout_mode = 0
+anchors_preset = 0
