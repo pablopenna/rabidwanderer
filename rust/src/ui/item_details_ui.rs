@@ -6,6 +6,7 @@ use crate::item::item::Item;
 use crate::item::item_definition::ItemDefinition;
 use crate::stats::modifier::modifier::StatModifier;
 use crate::stats::modifier::r#type::ModifierType;
+use crate::stats::stat::Stat;
 
 #[derive(GodotClass)]
 #[class(init, base=Node)]
@@ -70,9 +71,10 @@ impl ItemDetailsUi {
     fn create_label_for_modifier(&mut self, modifier: Gd<StatModifier>) {
         let mod_type = ModifierType::from_gstring(modifier.bind().get_mod_type());
         let mod_value = modifier.bind().get_value();
+        let mod_stat = Stat::from_gstring(modifier.bind().get_stat()).get_display_name();
         let mod_text = match mod_type {
-            ModifierType::FLAT => format!("+ {}", mod_value),
-            ModifierType::PERCENTAGE => format!("* {}", mod_value),
+            ModifierType::FLAT => format!("+ {} {}", mod_value, mod_stat),
+            ModifierType::PERCENTAGE => format!("* {} {}", mod_value, mod_stat),
             _ => format!("?"),
         };
 
