@@ -6,7 +6,7 @@ use crate::stats::real::RealStats;
 const HEIGHT_PX: f32 = 10.;
 const WIDTH_PX: f32 = 40.;
 const X_POSITION_OFFSET: f32 = 0.;
-const Y_POSITION_OFFSET: f32 = -20.;
+const Y_POSITION_OFFSET: f32 = -30.;
 
 // This class should be a module/node under the battle-entity (i.e. the direct parent should be the battle entity being tracked).
 #[derive(GodotClass)]
@@ -28,7 +28,9 @@ impl IProgressBar for HpBar {
     }
 
     fn ready(&mut self) {
-        self.update_label_text();
+        // Size of these UI elements is not updated until they are added to the tree.
+        // This assumes that the setup() method is called before adding HpBar to the tree.
+        self.center_progress_bar();
         self.update_label_position();
     }
 }
@@ -39,7 +41,6 @@ impl HpBar {
         self.setup_hp_values(stats_to_track);
         self.setup_progress_bar_properties();
         self.setup_label();
-        godot_print!("setting up hp bar!");
     }
 
     fn setup_hp_values(&mut self, stats_to_track: Gd<RealStats>) {
@@ -62,16 +63,22 @@ impl HpBar {
     fn setup_label(&mut self) {
         let label_ref = &self.hp_label.clone();
         self.base_mut().add_child(label_ref);
-
         self.update_label_text();
-        self.update_label_position();
+    }
+
+    fn center_progress_bar(&mut self) {
+        let size = self.base().get_size();
+        let position = self.base().get_position();
+
+        self.base_mut().set_position(Vector2 {
+            x: position.x - size.x * 0.5,
+            y: position.y
+        });
     }
 
     // place on top of the progress bar
     fn update_label_position(&mut self) {
-        // let progress_bar_size = self.base().get_size();
         let label_size = self.hp_label.get_size();
-        godot_print!("{}", label_size);
 
         self.hp_label.set_position(Vector2 {x:0.0, y:-label_size.y}); // position should be relative to progress bar as this is its child
     }
@@ -88,7 +95,6 @@ impl HpBar {
     fn on_hp_changed(&mut self, new_hp: u16) {
         self.base_mut().set_value(new_hp as f64);
         self.update_label_text();
-        self.update_label_position();
     }
 }
 
