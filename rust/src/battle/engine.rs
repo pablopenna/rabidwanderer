@@ -4,8 +4,8 @@ use godot::prelude::*;
 
 use crate::battle::entity::container::BattleEntityContainer;
 use crate::battle::team::Team;
-use crate::battle::turns::turn::Turn;
-use crate::battle::turns::turns_handler::TurnsHandler;
+use crate::battle::turns::action::Action;
+use crate::battle::turns::turn_handler::TurnHandler;
 use crate::consts::groups::BATTLE_ENGINE_GROUP;
 use crate::global_signals::GlobalSignals;
 
@@ -14,19 +14,19 @@ use crate::global_signals::GlobalSignals;
 pub struct BattleEngine {
     base: Base<Node>,
     #[export]
-    turns_handler: OnEditor<Gd<TurnsHandler>>,
+    turn_handler: OnEditor<Gd<TurnHandler>>,
     #[export]
     battle_entity_container: OnEditor<Gd<BattleEntityContainer>>,
-    current_turn: Option<Gd<Turn>>,
+    current_action: Option<Gd<Action>>,
 }
 
 #[godot_api]
 impl INode for BattleEngine {
     fn init(base: Base<Node>) -> Self {
         Self {
-            turns_handler: OnEditor::default(),
+            turn_handler: OnEditor::default(),
             battle_entity_container: OnEditor::default(),
-            current_turn: None,
+            current_action: None,
             base
         }
     }
@@ -54,37 +54,38 @@ impl BattleEngine {
     }
 
     fn update_battle(&mut self) {
-        if !self.turns_handler.bind_mut().are_there_turns_left() {
-            self.turns_handler.bind_mut().generate_new_turns(
+        if !self.turn_handler.bind_mut().are_there_actions_left_in_turn() {
+            godot_print!("new turn!");
+            self.turn_handler.bind_mut().generate_new_turn(
                 Vec::from_godot(self.battle_entity_container.bind().get_all_entities())
             );
         }
 
-        if self.current_turn.is_none() {
-            godot_print!("Getting new turn!");
-            let turn = self.turns_handler.bind_mut().get_next_turn_from_pool();
-            self.current_turn = Some(turn.unwrap());
+        if self.current_action.is_none() {
+            godot_print!("Getting new action!");
+            let action = self.turn_handler.bind_mut().get_next_action_from_turn();
+            self.current_action = Some(action.unwrap());
         }
 
-        let mut current_turn = self.current_turn.clone().unwrap();
-        current_turn.signals().turn_ended().builder()
+        let mut current_action = self.current_action.clone().unwrap();
+        current_action.signals().turn_ended().builder()
             .flags(ConnectFlags::ONE_SHOT | ConnectFlags::DEFERRED)
-            .connect_other_mut(self, Self::on_current_turn_done);
-        current_turn.bind_mut().execute_turn();
+            .connect_other_mut(self, Self::on_current_action_done);
+        current_action.bind_mut().execute_action();
     }
 
-    fn on_current_turn_done(&mut self) {
-        let mut last_turn = self.current_turn.clone().unwrap();
+    fn on_current_action_done(&mut self) {
+        let mut last_turn = self.current_action.clone().unwrap();
         last_turn.signals().tree_exited().builder()
             .flags(ConnectFlags::ONE_SHOT)
-            .connect_other_mut(self, Self::after_turn_cleanup);
+            .connect_other_mut(self, Self::after_action_cleanup);
         last_turn.queue_free();
-        godot_print!("Cleaning last turn...");
+        godot_print!("Cleaning last action...");
     }
 
-    fn after_turn_cleanup(&mut self) {
+    fn after_action_cleanup(&mut self) {
         godot_print!("Last turn cleaned");
-        self.current_turn = None;
+        self.current_action = None;
         let alive_entities = self.battle_entity_container.clone().bind().get_alive_entities();
         if alive_entities.len() <= 1 {
             godot_print!("Only one is left standing...");

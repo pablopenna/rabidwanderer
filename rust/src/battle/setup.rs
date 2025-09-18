@@ -4,7 +4,7 @@ use godot::prelude::*;
 use crate::battle::entity::container::BattleEntityContainer;
 use crate::battle::entity::entity::BattleEntity;
 use crate::battle::team::Team;
-use crate::battle::turns::turns_handler::TurnsHandler;
+use crate::battle::turns::turn_handler::TurnHandler;
 use crate::board::board::Board;
 use crate::board::coordinate::BoardCoordinate;
 use crate::consts::groups::get_board_node_from_tree;
@@ -23,7 +23,7 @@ pub(crate) struct BattleSetup {
     #[export]
     container: OnEditor<Gd<BattleEntityContainer>>,
     #[export]
-    turns_handler: OnEditor<Gd<TurnsHandler>>,
+    turns_handler: OnEditor<Gd<TurnHandler>>,
     board: Option<Gd<Board>>,
 
 }
@@ -101,7 +101,7 @@ impl BattleSetup {
 
     pub(crate) fn cleanup_combat(&mut self) {
         self.container.clone().bind_mut().remove_all_entities();
-        self.turns_handler.clone().bind_mut().remove_all_turns();
+        self.turns_handler.clone().bind_mut().remove_all_actions_from_turn();
     }
 
     fn get_board(&mut self) -> Gd<Board> {

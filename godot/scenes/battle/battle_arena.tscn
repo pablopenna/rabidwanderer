@@ -45,16 +45,16 @@ metadata/_edit_lock_ = true
 position = Vector2(121, 55)
 metadata/_edit_lock_ = true
 
-[node name="TurnsHandler" type="TurnsHandler" parent="."]
+[node name="TurnHandler" type="TurnHandler" parent="."]
 
 [node name="BattleSetup" type="BattleSetup" parent="." node_paths=PackedStringArray("player_position_reference", "enemy_position_reference", "container", "turns_handler")]
 player_position_reference = NodePath("../PlayerRefPosition")
 enemy_position_reference = NodePath("../EnemyRefPosition")
 container = NodePath("../BattleEntityContainer")
-turns_handler = NodePath("../TurnsHandler")
+turns_handler = NodePath("../TurnHandler")
 
-[node name="BattleEngine" type="BattleEngine" parent="." node_paths=PackedStringArray("turns_handler", "battle_entity_container")]
-turns_handler = NodePath("../TurnsHandler")
+[node name="BattleEngine" type="BattleEngine" parent="." node_paths=PackedStringArray("turn_handler", "battle_entity_container")]
+turn_handler = NodePath("../TurnHandler")
 battle_entity_container = NodePath("../BattleEntityContainer")
 
 [node name="BattleEntityContainer" type="BattleEntityContainer" parent="."]

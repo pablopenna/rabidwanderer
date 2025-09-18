@@ -6,42 +6,35 @@ use crate::battle::entity::entity::BattleEntity;
 
 #[derive(GodotClass)]
 #[class(base=Node)]
-pub(crate) struct Turn {
+pub(crate) struct Action {
     base: Base<Node>,
     actor: Option<Gd<BattleEntity>>,
-    is_in_progress: bool,
 }
 
 #[godot_api]
-impl INode for Turn {
+impl INode for Action {
     fn init(base: Base<Node>) -> Self {
         Self {
             base,
             actor: None,
-            is_in_progress: false,
         }
     }
 }
 
 #[godot_api]
-impl Turn {
+impl Action {
     #[signal]
     pub(crate) fn turn_ended();
 
     pub(crate) fn new(actor: Gd<BattleEntity>) -> Gd<Self>{
-        let mut new_turn = Turn::new_alloc();
+        let mut new_turn = Action::new_alloc();
         new_turn.bind_mut().actor = Some(actor);
 
         new_turn
     }
 
-    pub(crate) fn is_in_progress(&self) -> bool {
-        self.is_in_progress
-    }
-
-    pub(crate) fn execute_turn(&mut self) {
-        godot_print!("Executing turn {}", self.base().get_name());
-        self.is_in_progress = true;
+    pub(crate) fn execute_action(&mut self) {
+        godot_print!("Executing action {}", self.base().get_name());
         
         self.actor.clone().unwrap().signals().done_acting().builder()
             // IMPORTANT: If the DEFERRED flag is not used here, a bind_mut() exception will happen
@@ -49,16 +42,13 @@ impl Turn {
             // causing finish_turn to be called then and finding the the mut lock on its own Tile instance 
             // has not been released yet.
             .flags(ConnectFlags::ONE_SHOT| ConnectFlags::DEFERRED)
-            .connect_other_mut(self, Self::finish_turn);
-        // self.actor.clone().unwrap().signals().done_acting().connect_other(self, Self::finish_turn);
+            .connect_other_mut(self, Self::finish_action);
 
         self.actor.clone().unwrap().bind_mut().act();
-
-        // self.finish_turn();
     }
 
-    pub(crate) fn finish_turn(&mut self) {
-        godot_print!("Finishing turn {}", self.base().get_name());
+    pub(crate) fn finish_action(&mut self) {
+        godot_print!("Finishing action {}", self.base().get_name());
         self.signals().turn_ended().emit();
         // self.base_mut().call_deferred("queue_free", &[]);
     }
