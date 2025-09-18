@@ -41,6 +41,7 @@ impl Action {
             // I think it is caused by: actor.act() finish almost inmediately, 
             // causing finish_turn to be called then and finding the the mut lock on its own Tile instance 
             // has not been released yet.
+            // Update: see https://github.com/godot-rust/gdext/issues/1318
             .flags(ConnectFlags::ONE_SHOT| ConnectFlags::DEFERRED)
             .connect_other_mut(self, Self::finish_action);
 
