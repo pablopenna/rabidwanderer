@@ -15,12 +15,12 @@ z_index = 1
 material = SubResource("ShaderMaterial_gu2wu")
 texture = ExtResource("1_gf0hb")
 
-[node name="BattleModule" type="BattleModule" parent="." node_paths=PackedStringArray("stats")]
-battle_entity = ExtResource("3_gu2wu")
-stats = NodePath("../StatsModule")
-
 [node name="StatsModule" type="StatsModule" parent="."]
 base_stats = ExtResource("4_px3ij")
+
+[node name="BattleModule" type="BattleModule" parent="." node_paths=PackedStringArray("stats")]
+battle_entity_scene = ExtResource("3_gu2wu")
+stats = NodePath("../StatsModule")
 
 [node name="DeathModule" type="DeathModule" parent="." node_paths=PackedStringArray("stats")]
 stats = NodePath("../StatsModule")

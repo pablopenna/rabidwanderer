@@ -27,13 +27,13 @@ texture = ExtResource("3_euxjt")
 [node name="LinkInventoryToUiModule" type="LinkInventoryToUiModule" parent="." node_paths=PackedStringArray("inventory")]
 inventory = NodePath("../InventoryModule")
 
-[node name="BattleModule" type="BattleModule" parent="." node_paths=PackedStringArray("stats")]
-battle_entity = ExtResource("4_f3bwa")
-stats = NodePath("../StatsModule")
-
 [node name="StatsModule" type="StatsModule" parent="." node_paths=PackedStringArray("inventory")]
 base_stats = ExtResource("5_6cxh0")
 inventory = NodePath("../InventoryModule")
+
+[node name="BattleModule" type="BattleModule" parent="." node_paths=PackedStringArray("stats")]
+battle_entity_scene = ExtResource("4_f3bwa")
+stats = NodePath("../StatsModule")
 
 [node name="BattleTriggerModule" type="BattleTriggerModule" parent="."]
 

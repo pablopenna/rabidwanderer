@@ -9,25 +9,45 @@ use crate::stats::real::RealStats;
 use crate::utils::get_first_child_of_type::get_first_child_of_type;
 
 #[derive(GodotClass)]
-#[class(init, base=Node)]
+#[class(base=Node)]
 pub struct BattleModule {
     #[export]
-    battle_entity: OnEditor<Gd<PackedScene>>,
+    battle_entity_scene: OnEditor<Gd<PackedScene>>,
+    battle_entity_instance: OnReady<Gd<BattleEntity>>,
     #[export]
-    stats: OnEditor<Gd<StatsModule>>,
+    stats: OnEditor<Gd<StatsModule>>, // IMPORTANT: StatsModule needs to be a child previous to this module so its ready is called first. If not, an OnReady error will be thrown 
     base: Base<Node>,
 }
 
 #[godot_api]
-impl INode for BattleModule {}
+impl INode for BattleModule {
+    fn init(base: Base<Node>) -> Self {
+        Self {
+            battle_entity_scene: OnEditor::default(),
+            battle_entity_instance: OnReady::manual(),
+            stats: OnEditor::default(),
+            base,
+        }
+    }
 
+    fn ready(&mut self) {
+        let instance = self.generate_instance();
+        self.battle_entity_instance.init(instance);
+    }
+}
+
+#[godot_api]
 impl BattleModule {
     pub(crate) fn get_battle_module_from_entity(entity: Gd<BoardEntity>) -> Option<Gd<BattleModule>> {
         get_first_child_of_type::<BattleModule>(&entity)
     }
 
     pub(crate) fn get_battle_entity_instance(&self) -> Gd<BattleEntity> {
-        let mut new_instance = self.battle_entity.instantiate_as::<BattleEntity>();
+        self.battle_entity_instance.get_property()
+    }
+
+    fn generate_instance(&mut self) -> Gd<BattleEntity> {
+        let mut new_instance = self.battle_entity_scene.instantiate_as::<BattleEntity>();
         let real_stats = self.stats.bind().get_stats();
 
         add_stats_to_entity(real_stats.clone(), &mut new_instance);
@@ -35,7 +55,6 @@ impl BattleModule {
 
         new_instance
     }
-
 }
 
 fn add_stats_to_entity(stats: Gd<RealStats>, entity: &mut Gd<BattleEntity>) {
