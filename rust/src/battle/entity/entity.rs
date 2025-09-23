@@ -1,6 +1,8 @@
 use godot::classes::*;
 use godot::prelude::*;
 
+use crate::skill::get_implementation::get_skill_implementation;
+use crate::skill::skill_definition::SkillDefinition;
 use crate::stats::real::RealStats;
 use crate::battle::team::Team;
 
@@ -17,7 +19,7 @@ pub(crate) struct BattleEntity {
     #[export]
     animation_player: OnEditor<Gd<AnimationPlayer>>,
     #[export]
-    sprite: OnEditor<Gd<Sprite2D>>
+    sprite: OnEditor<Gd<Sprite2D>>,
 }
 
 #[godot_api]
@@ -88,6 +90,16 @@ impl BattleEntity {
         tween.tween_callback(&Callable::from_object_method(&self.to_gd(), "on_done_acting")).unwrap().set_delay(1.0);
 
         //self.get_animation_player().unwrap().play_ex().name("attack").done();
+    }
+
+    #[func(gd_self)]
+    pub(crate) fn act_with_skill(mut this: Gd<Self>) {
+        let mut skill = get_skill_implementation(SkillDefinition::Tackle);
+        this.add_child(&skill);
+        // let skill_callable = Callable::from_object_method(&self.to_gd(), "cast_skill");
+        // let skill_callable_with_args = skill_callable.bind(&[skill.to_variant()]);
+        
+        skill.dyn_bind_mut().cast(this.clone(), this.bind().target.clone().unwrap());
     }
 
     #[func]

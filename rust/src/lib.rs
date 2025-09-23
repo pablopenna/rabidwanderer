@@ -8,6 +8,7 @@ mod board;
 mod entity;
 mod camera;
 mod item;
+mod skill;
 mod enemy;
 mod battle;
 mod stats;

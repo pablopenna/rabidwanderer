@@ -54,3 +54,6 @@ InventoryUiDisplay="res://icon.svg"
 LinkInventoryToUiModule="res://icon.svg"
 ItemDetailsUi="res://icon.svg"
 HpBar="res://icon.svg"
+
+SkillFactory="res://icon.svg"
+Skill="res://icon.svg"

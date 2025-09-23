@@ -45,7 +45,8 @@ impl Action {
             .flags(ConnectFlags::ONE_SHOT| ConnectFlags::DEFERRED)
             .connect_other_mut(self, Self::finish_action);
 
-        self.actor.clone().unwrap().bind_mut().act();
+        // self.actor.clone().unwrap().bind_mut().act();
+        BattleEntity::act_with_skill(self.actor.clone().unwrap());
     }
 
     pub(crate) fn finish_action(&mut self) {
