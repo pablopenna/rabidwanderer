@@ -57,3 +57,5 @@ HpBar="res://icon.svg"
 
 SkillFactory="res://icon.svg"
 Skill="res://icon.svg"
+SkillAnimation="res://icon.svg"
+SkillAnimationFactory="res://icon.svg"

@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://cf53m2g6f15q7"]
+[gd_scene load_steps=3 format=3 uid="uid://cf53m2g6f15q7"]
+
+[ext_resource type="PackedScene" uid="uid://bg3xduyjujhlq" path="res://scenes/skill_animations/bite.tscn" id="1_8rcu5"]
 
 [sub_resource type="GDScript" id="GDScript_t5b27"]
 script/source = "extends Label
@@ -58,5 +60,8 @@ turn_handler = NodePath("../TurnHandler")
 battle_entity_container = NodePath("../BattleEntityContainer")
 
 [node name="BattleEntityContainer" type="BattleEntityContainer" parent="."]
+
+[node name="SkillAnimationFactory" type="SkillAnimationFactory" parent="."]
+bite_animation_scene = ExtResource("1_8rcu5")
 
 [connection signal="timeout" from="Label/Timer" to="Label" method="_on_timer_timeout"]

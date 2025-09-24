@@ -1,6 +1,6 @@
 use godot::{classes::Node, obj::Gd};
 
-use crate::{battle::{engine::BattleEngine, setup::BattleSetup}, board::{board::Board, movement_manager::BoardMovementManager}, enemy::factory::EnemyFactory, entity::board_entity::BoardEntity, game_manager::GameManager, item::factory::ItemFactory, skill::skill_factory::SkillFactory};
+use crate::{battle::{engine::BattleEngine, setup::BattleSetup}, board::{board::Board, movement_manager::BoardMovementManager}, enemy::factory::EnemyFactory, entity::board_entity::BoardEntity, game_manager::GameManager, item::factory::ItemFactory, skill::{animations::skill_animation_factory::SkillAnimationFactory, skill_factory::SkillFactory}};
 
 pub(crate) const MOVEMENT_MANAGER_GROUP: &str = "MovementManager";
 // IMPORTANT: make sure the Player scene has the Player group assigned
@@ -8,6 +8,7 @@ pub(crate) const PLAYER_GROUP: &str = "Player";
 pub(crate) const GAME_MANAGER_GROUP: &str = "GameManager";
 pub(crate) const ITEM_FACTORY_GROUP: &str = "ItemFactory";
 pub(crate) const SKILL_FACTORY_GROUP: &str = "SkillFactory";
+pub(crate) const SKILL_ANIMATION_FACTORY_GROUP: &str = "SkillAnimationFactory";
 pub(crate) const ENEMY_FACTORY_GROUP: &str = "EnemyFactory";
 pub(crate) const BATTLE_ENGINE_GROUP: &str = "BattleEngine";
 pub(crate) const BATTLE_SETUP_GROUP: &str = "BattleSetup";
@@ -61,4 +62,9 @@ pub(crate) fn get_board_node_from_tree(node: Gd<Node>) -> Gd<Board> {
 pub(crate) fn get_skill_factory_node_from_tree(node: Gd<Node>) -> Gd<SkillFactory> {
     let board = get_node_in_group_from_tree(node, SKILL_FACTORY_GROUP);
     board.cast::<SkillFactory>()
+}
+
+pub(crate) fn get_skill_animation_factory_node_from_tree(node: Gd<Node>) -> Gd<SkillAnimationFactory> {
+    let board = get_node_in_group_from_tree(node, SKILL_ANIMATION_FACTORY_GROUP);
+    board.cast::<SkillAnimationFactory>()
 }
