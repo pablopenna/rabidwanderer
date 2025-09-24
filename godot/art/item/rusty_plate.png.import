@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dab8btyq08g5g"
-path="res://.godot/imported/coin.png-7a22d78603b91b8bca023a7cd8e523dd.ctex"
+uid="uid://b222y88yek756"
+path="res://.godot/imported/rusty_plate.png-9142336adb3c0bd8f70dde892205cbbe.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/coin.png"
-dest_files=["res://.godot/imported/coin.png-7a22d78603b91b8bca023a7cd8e523dd.ctex"]
+source_file="res://art/item/rusty_plate.png"
+dest_files=["res://.godot/imported/rusty_plate.png-9142336adb3c0bd8f70dde892205cbbe.ctex"]
 
 [params]
 

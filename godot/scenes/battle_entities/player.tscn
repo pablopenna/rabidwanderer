@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://0eo0rygr8gb2"]
 
-[ext_resource type="Texture2D" uid="uid://lanl8u4hnmd2" path="res://art/knight2.png" id="2_ay4pv"]
+[ext_resource type="Texture2D" uid="uid://lanl8u4hnmd2" path="res://art/entity/knight2.png" id="2_ay4pv"]
 [ext_resource type="AnimationLibrary" uid="uid://cb1nh8pr3wlpq" path="res://resources/animations/player_library.res" id="3_gkjyt"]
 
 [node name="Player" type="BattleEntity" node_paths=PackedStringArray("animation_player", "sprite")]

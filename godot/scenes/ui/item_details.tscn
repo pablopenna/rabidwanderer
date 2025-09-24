@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bxe82y021xka8"]
 
-[ext_resource type="Texture2D" uid="uid://dw43dsrma6760" path="res://art/rusty_gauntlet.png" id="1_m43ra"]
+[ext_resource type="Texture2D" uid="uid://dw43dsrma6760" path="res://art/item/rusty_gauntlet.png" id="1_m43ra"]
 
 [node name="Panel" type="PanelContainer"]
 anchors_preset = 8

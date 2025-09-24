@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dw43dsrma6760"
-path="res://.godot/imported/rusty_gauntlet.png-95a36d34e11dcb626b2f37197e1e2854.ctex"
+uid="uid://cihsaqwhnr2cv"
+path="res://.godot/imported/skeleton.png-2995e36c3cd9c981414a402b333d8d8b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/rusty_gauntlet.png"
-dest_files=["res://.godot/imported/rusty_gauntlet.png-95a36d34e11dcb626b2f37197e1e2854.ctex"]
+source_file="res://art/entity/skeleton.png"
+dest_files=["res://.godot/imported/skeleton.png-2995e36c3cd9c981414a402b333d8d8b.ctex"]
 
 [params]
 

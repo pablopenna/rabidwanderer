@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bbvfrkxp0v2vu"
-path="res://.godot/imported/battle_knight2.png-70773a556c15fd6a98c8249498bc53e5.ctex"
+uid="uid://cxkuapitpvj8g"
+path="res://.godot/imported/knight2_outline.png-a1bf5548af2923b45114457c90592bb8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/battle_knight2.png"
-dest_files=["res://.godot/imported/battle_knight2.png-70773a556c15fd6a98c8249498bc53e5.ctex"]
+source_file="res://art/entity/knight2_outline.png"
+dest_files=["res://.godot/imported/knight2_outline.png-a1bf5548af2923b45114457c90592bb8.ctex"]
 
 [params]
 

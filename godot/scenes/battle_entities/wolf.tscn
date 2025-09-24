@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://chktskt814ykc"]
 
-[ext_resource type="Texture2D" uid="uid://chb5sg8jyoyjr" path="res://art/wolf.png" id="2_fems2"]
+[ext_resource type="Texture2D" uid="uid://chb5sg8jyoyjr" path="res://art/entity/wolf.png" id="2_fems2"]
 [ext_resource type="AnimationLibrary" uid="uid://d02urngyn0vvo" path="res://resources/animations/enemy_library.res" id="3_jwryq"]
 
 [node name="Wolf" type="BattleEntity" node_paths=PackedStringArray("animation_player", "sprite")]

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cn35qdoqn7qvo"
-path="res://.godot/imported/goblin2.png-d281b2e9a1ed9559202ceb40acdc9be4.ctex"
+uid="uid://bbvfrkxp0v2vu"
+path="res://.godot/imported/battle_knight2.png-cde89e86e68aab38f1a06265177fe160.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/goblin2.png"
-dest_files=["res://.godot/imported/goblin2.png-d281b2e9a1ed9559202ceb40acdc9be4.ctex"]
+source_file="res://art/entity/battle_knight2.png"
+dest_files=["res://.godot/imported/battle_knight2.png-cde89e86e68aab38f1a06265177fe160.ctex"]
 
 [params]
 

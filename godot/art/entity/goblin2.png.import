@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c5hdykf4k1a2x"
-path="res://.godot/imported/punch_barrage.png-4594cab1b7aa1e0ff5d0c327c4d6d3bb.ctex"
+uid="uid://cn35qdoqn7qvo"
+path="res://.godot/imported/goblin2.png-ee7b7a670afa39e15cf115153bcca92d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/punch_barrage.png"
-dest_files=["res://.godot/imported/punch_barrage.png-4594cab1b7aa1e0ff5d0c327c4d6d3bb.ctex"]
+source_file="res://art/entity/goblin2.png"
+dest_files=["res://.godot/imported/goblin2.png-ee7b7a670afa39e15cf115153bcca92d.ctex"]
 
 [params]
 

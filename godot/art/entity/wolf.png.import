@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b222y88yek756"
-path="res://.godot/imported/rusty_plate.png-536d5f4331bac8b1e8db94ad9a4593c3.ctex"
+uid="uid://chb5sg8jyoyjr"
+path="res://.godot/imported/wolf.png-a62c4c930d528027ebf53726016bd237.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/rusty_plate.png"
-dest_files=["res://.godot/imported/rusty_plate.png-536d5f4331bac8b1e8db94ad9a4593c3.ctex"]
+source_file="res://art/entity/wolf.png"
+dest_files=["res://.godot/imported/wolf.png-a62c4c930d528027ebf53726016bd237.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dyy7pcx4wyyfo"
-path="res://.godot/imported/knight_outline.png-9531344aac25deaf7aa53966f08a5521.ctex"
+uid="uid://u8bvm4xwrtq4"
+path="res://.godot/imported/bite.png-c6275618ce78a59a1d5cfabfe79e3899.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/knight_outline.png"
-dest_files=["res://.godot/imported/knight_outline.png-9531344aac25deaf7aa53966f08a5521.ctex"]
+source_file="res://art/skill/bite.png"
+dest_files=["res://.godot/imported/bite.png-c6275618ce78a59a1d5cfabfe79e3899.ctex"]
 
 [params]
 
