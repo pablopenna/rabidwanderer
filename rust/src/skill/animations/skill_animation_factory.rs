@@ -25,8 +25,8 @@ impl INode for SkillAnimationFactory {
 }
 
 impl SkillAnimationFactory {
-    fn get_animation(&self, def: &SkillAnimationName) -> Gd<SkillAnimation> {
-        let scene = match def {
+    pub(crate) fn get_animation(&self, animation_name: SkillAnimationName) -> Gd<SkillAnimation> {
+        let scene = match animation_name {
             SkillAnimationName::Bite => self.get_bite_animation_scene(),
         };
 

@@ -94,7 +94,7 @@ impl BattleEntity {
 
     #[func(gd_self)]
     pub(crate) fn act_with_skill(mut this: Gd<Self>) {
-        let mut skill = get_skill_implementation(SkillDefinition::Tackle);
+        let mut skill = get_skill_implementation(SkillDefinition::Bite);
         this.add_child(&skill);
         // let skill_callable = Callable::from_object_method(&self.to_gd(), "cast_skill");
         // let skill_callable_with_args = skill_callable.bind(&[skill.to_variant()]);

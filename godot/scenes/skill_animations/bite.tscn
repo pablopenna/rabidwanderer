@@ -1,7 +1,7 @@
 [gd_scene load_steps=2 format=3 uid="uid://bg3xduyjujhlq"]
 
-[ext_resource type="Texture2D" uid="uid://b0wrafvjrir3c" path="res://art/skill/bite_v2.png" id="1_0mi04"]
+[ext_resource type="Texture2D" uid="uid://b0wrafvjrir3c" path="res://art/skill/bite_v2.png" id="1_e4h53"]
 
 [node name="Bite" type="SkillAnimation"]
-texture = ExtResource("1_0mi04")
+texture = ExtResource("1_e4h53")
 hframes = 5
