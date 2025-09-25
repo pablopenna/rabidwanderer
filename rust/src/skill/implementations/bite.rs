@@ -8,12 +8,12 @@ use crate::skill::skill_implementation::SkillImplementation;
 
 #[derive(GodotClass)]
 #[class(base=Node,init)]
-pub(crate) struct BiteSkill {
+pub(crate) struct BiteSkillImplementation {
     base: Base<Node>
 }
 
 #[godot_dyn]
-impl SkillImplementation for BiteSkill {
+impl SkillImplementation for BiteSkillImplementation {
     fn cast(&mut self, user: Gd<BattleEntity>, target: Gd<BattleEntity>) {
         godot_print!("biteada de manual");
         let node = self.base_mut().clone().upcast::<Node>();

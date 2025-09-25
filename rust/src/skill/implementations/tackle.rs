@@ -6,12 +6,12 @@ use crate::skill::skill_implementation::SkillImplementation;
 
 #[derive(GodotClass)]
 #[class(base=Node,init)]
-pub(crate) struct TackleSkill {
+pub(crate) struct TackleSkillImplementation {
     base: Base<Node>
 }
 
 #[godot_dyn]
-impl SkillImplementation for TackleSkill {
+impl SkillImplementation for TackleSkillImplementation {
     // https://github.com/godot-rust/gdext/issues/1318
     // https://godot-rust.github.io/docs/gdext/master/godot/prelude/attr.godot_api.html#associated-functions-and-methods
     // Calling tween_property on the user.sprite triggers an already_bound error. Using #[func(gd_self)] fixes the issue.

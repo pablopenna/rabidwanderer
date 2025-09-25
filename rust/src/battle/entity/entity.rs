@@ -1,6 +1,7 @@
 use godot::classes::*;
 use godot::prelude::*;
 
+use crate::entity::modules::skill::skill_container::SkillContainerModule;
 use crate::skill::get_implementation::get_skill_implementation;
 use crate::skill::skill_definition::SkillDefinition;
 use crate::stats::real::RealStats;
@@ -12,6 +13,8 @@ pub(crate) struct BattleEntity {
     base: Base<Node2D>,
     #[var]
     stats: Gd<RealStats>, // Stats are passed from Board Entity on instantiation so that they are preserved in between battles
+    #[var]
+    skills: Gd<SkillContainerModule>, // Same as stats
     #[export]
     team: Team,
     #[export]
@@ -28,6 +31,7 @@ impl INode2D for BattleEntity {
         Self {
             base,
             stats: RealStats::new_gd(),
+            skills: SkillContainerModule::new_alloc(),
             team: Team::Player,
             target: None,
             animation_player: OnEditor::default(),
@@ -93,8 +97,19 @@ impl BattleEntity {
     }
 
     #[func(gd_self)]
-    pub(crate) fn act_with_skill(mut this: Gd<Self>) {
+    pub(crate) fn act_with_skill_hardcoded(mut this: Gd<Self>) {
         let mut skill = get_skill_implementation(SkillDefinition::Bite);
+        this.add_child(&skill);
+        // let skill_callable = Callable::from_object_method(&self.to_gd(), "cast_skill");
+        // let skill_callable_with_args = skill_callable.bind(&[skill.to_variant()]);
+        
+        skill.dyn_bind_mut().cast(this.clone(), this.bind().target.clone().unwrap());
+    }
+
+    #[func(gd_self)]
+    pub(crate) fn act_with_skill(mut this: Gd<Self>) {
+        let skill_definition = this.bind().get_skills().bind().get_skills().at(0).bind().get_name();
+        let mut skill = get_skill_implementation(SkillDefinition::from_gstring(skill_definition));
         this.add_child(&skill);
         // let skill_callable = Callable::from_object_method(&self.to_gd(), "cast_skill");
         // let skill_callable_with_args = skill_callable.bind(&[skill.to_variant()]);

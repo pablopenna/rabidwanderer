@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://dqm3n1e4wlusu"]
+[gd_scene load_steps=7 format=3 uid="uid://dqm3n1e4wlusu"]
 
 [ext_resource type="Shader" uid="uid://2810ppb25wdd" path="res://shaders/remove_transparency.gdshader" id="1_dudxg"]
 [ext_resource type="Texture2D" uid="uid://chb5sg8jyoyjr" path="res://art/entity/wolf.png" id="1_gf0hb"]
 [ext_resource type="PackedScene" uid="uid://chktskt814ykc" path="res://scenes/battle_entities/wolf.tscn" id="3_gu2wu"]
+[ext_resource type="PackedScene" uid="uid://ci6hqdfbamf88" path="res://scenes/skills/bite.tscn" id="4_b4p1p"]
 [ext_resource type="BaseStats" uid="uid://dwyarotcmspp8" path="res://resources/stats/wolf_base_stats.tres" id="4_px3ij"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_gu2wu"]
@@ -18,9 +19,14 @@ texture = ExtResource("1_gf0hb")
 [node name="StatsModule" type="StatsModule" parent="."]
 base_stats = ExtResource("4_px3ij")
 
-[node name="BattleModule" type="BattleModule" parent="." node_paths=PackedStringArray("stats")]
-battle_entity_scene = ExtResource("3_gu2wu")
-stats = NodePath("../StatsModule")
-
 [node name="DeathModule" type="DeathModule" parent="." node_paths=PackedStringArray("stats")]
 stats = NodePath("../StatsModule")
+
+[node name="SkillContainerModule" type="SkillContainerModule" parent="."]
+
+[node name="Bite" parent="SkillContainerModule" instance=ExtResource("4_b4p1p")]
+
+[node name="BattleModule" type="BattleModule" parent="." node_paths=PackedStringArray("stats", "skills")]
+battle_entity_scene = ExtResource("3_gu2wu")
+stats = NodePath("../StatsModule")
+skills = NodePath("../SkillContainerModule")

@@ -59,3 +59,7 @@ SkillFactory="res://icon.svg"
 Skill="res://icon.svg"
 SkillAnimation="res://icon.svg"
 SkillAnimationFactory="res://icon.svg"
+SkillContainerModule="res://icon.svg"
+
+TackleSkillImplementation="res://icon.svg"
+BiteSkillImplementation="res://icon.svg"

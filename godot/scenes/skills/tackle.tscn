@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bsnwk2cjc7bym"]
+
+[ext_resource type="Texture2D" uid="uid://dab8btyq08g5g" path="res://art/item/coin.png" id="1_1b3pi"]
+
+[node name="Tackle" type="Skill"]
+icon = ExtResource("1_1b3pi")
