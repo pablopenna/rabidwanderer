@@ -5,3 +5,4 @@ pub(crate) mod get_implementation;
 pub(crate) mod skill_implementation;
 pub(crate) mod implementations;
 pub(crate) mod animations;
+pub(crate) mod chooser;

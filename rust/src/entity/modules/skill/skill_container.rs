@@ -33,6 +33,14 @@ impl SkillContainerModule {
         self.base().get_children().iter_shared().map(|child| child.cast::<Skill>()).collect()
     }
 
+    pub(crate) fn get_skill_at(&self, index: usize) -> Gd<Skill> {
+        self.base().get_children().get(index).unwrap().cast::<Skill>()
+    }
+
+    pub(crate) fn get_number_of_skills(&self) -> usize {
+        self.base().get_children().len()
+    }
+
     pub(crate) fn _remove_skill(&mut self, index: usize) {
         let children = self.base().get_children();
         let child_to_remove = children.get(index);

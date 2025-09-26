@@ -3,7 +3,8 @@
 [ext_resource type="Texture2D" uid="uid://lanl8u4hnmd2" path="res://art/entity/knight2.png" id="2_ay4pv"]
 [ext_resource type="AnimationLibrary" uid="uid://cb1nh8pr3wlpq" path="res://resources/animations/player_library.res" id="3_gkjyt"]
 
-[node name="Player" type="BattleEntity" node_paths=PackedStringArray("animation_player", "sprite")]
+[node name="Player" type="BattleEntity" node_paths=PackedStringArray("skill_chooser", "animation_player", "sprite")]
+skill_chooser = NodePath("FirstSkillChooser")
 animation_player = NodePath("AnimationPlayer")
 sprite = NodePath("Sprite2D")
 
@@ -16,3 +17,5 @@ metadata/_edit_lock_ = true
 libraries = {
 &"": ExtResource("3_gkjyt")
 }
+
+[node name="FirstSkillChooser" type="FirstSkillChooser" parent="."]
