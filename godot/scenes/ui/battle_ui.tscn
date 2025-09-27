@@ -1,5 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://dlarfobhyq70c"]
+[gd_scene load_steps=6 format=3 uid="uid://dlarfobhyq70c"]
 
+[ext_resource type="Texture2D" uid="uid://b7xa22vrbjk3j" path="res://art/tombstone.png" id="2_ebl3e"]
 [ext_resource type="PackedScene" uid="uid://cf53m2g6f15q7" path="res://scenes/battle/battle_arena.tscn" id="2_uu5og"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2hywk"]
@@ -13,15 +14,32 @@ corner_detail = 1
 
 [sub_resource type="CurveTexture" id="CurveTexture_2hywk"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uoy4w"]
+content_margin_left = 12.0
+content_margin_top = 6.0
+content_margin_right = 12.0
+content_margin_bottom = 6.0
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 1
+
 [node name="BattleUi" type="BattleUi" node_paths=PackedStringArray("subviewport")]
-subviewport = NodePath("PanelContainer/SubViewportContainer/SubViewport")
+subviewport = NodePath("VBoxContainer/BattleViewContainer/SubViewportContainer/SubViewport")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -29,27 +47,63 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -90.0
-offset_top = -50.0
+offset_top = -150.0
 offset_right = 90.0
-offset_bottom = 50.0
+offset_bottom = 150.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 19
+alignment = 1
+
+[node name="BattleViewContainer" type="PanelContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(180, 100)
+layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_2hywk")
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="PanelContainer"]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="VBoxContainer/BattleViewContainer"]
 layout_mode = 2
-stretch = true
 
-[node name="SubViewport" type="SubViewport" parent="PanelContainer/SubViewportContainer"]
+[node name="SubViewport" type="SubViewport" parent="VBoxContainer/BattleViewContainer/SubViewportContainer"]
 handle_input_locally = false
 canvas_item_default_texture_filter = 0
-size = Vector2i(178, 98)
-render_target_update_mode = 4
+size = Vector2i(180, 100)
 
-[node name="BattleArena" parent="PanelContainer/SubViewportContainer/SubViewport" instance=ExtResource("2_uu5og")]
+[node name="BattleArena" parent="VBoxContainer/BattleViewContainer/SubViewportContainer/SubViewport" instance=ExtResource("2_uu5og")]
 
-[node name="Background" type="Sprite2D" parent="PanelContainer/SubViewportContainer/SubViewport"]
+[node name="Background" type="Sprite2D" parent="VBoxContainer/BattleViewContainer/SubViewportContainer/SubViewport"]
 z_index = -999
 position = Vector2(89.25, 49)
 scale = Vector2(179.5, 298)
 texture = SubResource("CurveTexture_2hywk")
+
+[node name="SkillsPanelContainer" type="PanelContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_uoy4w")
+
+[node name="SkillsGrid" type="GridContainer" parent="VBoxContainer/SkillsPanelContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 12
+columns = 4
+
+[node name="ColorRect" type="TextureRect" parent="VBoxContainer/SkillsPanelContainer/SkillsGrid"]
+layout_mode = 2
+texture = ExtResource("2_ebl3e")
+
+[node name="ColorRect2" type="TextureRect" parent="VBoxContainer/SkillsPanelContainer/SkillsGrid"]
+layout_mode = 2
+texture = ExtResource("2_ebl3e")
+
+[node name="ColorRect3" type="TextureRect" parent="VBoxContainer/SkillsPanelContainer/SkillsGrid"]
+layout_mode = 2
+texture = ExtResource("2_ebl3e")
+
+[node name="ColorRect4" type="TextureRect" parent="VBoxContainer/SkillsPanelContainer/SkillsGrid"]
+layout_mode = 2
+texture = ExtResource("2_ebl3e")
+
+[node name="ColorRect5" type="TextureRect" parent="VBoxContainer/SkillsPanelContainer/SkillsGrid"]
+layout_mode = 2
+texture = ExtResource("2_ebl3e")
