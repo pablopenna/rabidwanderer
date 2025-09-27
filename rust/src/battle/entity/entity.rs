@@ -70,13 +70,12 @@ impl BattleEntity {
         let skill_chooser_node = this.bind().get_skill_chooser().unwrap();
         
         let mut skill_chooser: DynGd<Node, dyn SkillChooser> = skill_chooser_node.to_variant().to();
-        let skill_definition = skill_chooser.dyn_bind_mut().choose(&skills_container, &target);
-        let mut skill = get_skill_implementation(skill_definition);
-        this.add_child(&skill);
-        // let skill_callable = Callable::from_object_method(&self.to_gd(), "cast_skill");
-        // let skill_callable_with_args = skill_callable.bind(&[skill.to_variant()]);
+        let mut skill = skill_chooser.dyn_bind_mut().choose(&skills_container, &target);
         
         skill.dyn_bind_mut().cast(this.clone(), this.bind().target.clone().unwrap());
+
+        // let skill_callable = Callable::from_object_method(&self.to_gd(), "cast_skill");
+        // let skill_callable_with_args = skill_callable.bind(&[skill.to_variant()]);
     }
 
     #[func]

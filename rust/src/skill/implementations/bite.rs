@@ -14,15 +14,15 @@ pub(crate) struct BiteSkillImplementation {
 
 #[godot_dyn]
 impl SkillImplementation for BiteSkillImplementation {
-    fn cast(&mut self, user: Gd<BattleEntity>, target: Gd<BattleEntity>) {
+    fn cast(&mut self, mut user: Gd<BattleEntity>, target: Gd<BattleEntity>) {
         godot_print!("biteada de manual");
         let node = self.base_mut().clone().upcast::<Node>();
         let animation_factory = get_skill_animation_factory_node_from_tree(node);
         let mut animation = animation_factory.bind().get_animation(SkillAnimationName::Bite);
-        self.base_mut().add_child(&animation);
+        user.add_child(&animation);
 
         animation.bind_mut().adapt_facing_direction_to_target(&user, &target);
-        animation.set_position(target.get_position());
+        animation.set_global_position(target.get_global_position());
         
         let mut tween = self.base_mut().create_tween().unwrap();
         tween.tween_property(
