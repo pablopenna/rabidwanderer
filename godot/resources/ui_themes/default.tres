@@ -1,9 +1,9 @@
 [gd_resource type="Theme" load_steps=9 format=3 uid="uid://ryqkt6qqt8fd"]
 
-[ext_resource type="StyleBox" uid="uid://du14jmkbqinjy" path="res://resources/ui_themes/style_box_hover.tres" id="1_8wyej"]
+[ext_resource type="StyleBox" uid="uid://du14jmkbqinjy" path="res://resources/ui_themes/button_hover.tres" id="1_8wyej"]
 [ext_resource type="FontFile" uid="uid://bc0elrs647ofk" path="res://resources/fonts/monogram-extended.ttf" id="1_yomoi"]
-[ext_resource type="StyleBox" uid="uid://cn0s3k044283i" path="res://resources/ui_themes/style_box_flat.tres" id="2_ubaui"]
-[ext_resource type="StyleBox" uid="uid://bqb6tq0yfbuew" path="res://resources/ui_themes/style_box_pressed.tres" id="3_k53md"]
+[ext_resource type="StyleBox" uid="uid://cn0s3k044283i" path="res://resources/ui_themes/button_flat.tres" id="2_ubaui"]
+[ext_resource type="StyleBox" uid="uid://bqb6tq0yfbuew" path="res://resources/ui_themes/button_pressed.tres" id="3_k53md"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_yomoi"]
 color = Color(1, 1, 1, 1)
