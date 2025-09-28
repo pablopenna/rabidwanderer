@@ -67,6 +67,7 @@ layout_mode = 2
 handle_input_locally = false
 canvas_item_default_texture_filter = 0
 size = Vector2i(180, 100)
+render_target_update_mode = 4
 
 [node name="BattleArena" parent="VBoxContainer/BattleViewContainer/SubViewportContainer/SubViewport" instance=ExtResource("2_uu5og")]
 

@@ -4,7 +4,7 @@
 [ext_resource type="AnimationLibrary" uid="uid://cb1nh8pr3wlpq" path="res://resources/animations/player_library.res" id="3_gkjyt"]
 
 [node name="Player" type="BattleEntity" node_paths=PackedStringArray("skill_chooser", "animation_player", "sprite")]
-skill_chooser = NodePath("FirstSkillChooser")
+skill_chooser = NodePath("SkillChooser")
 animation_player = NodePath("AnimationPlayer")
 sprite = NodePath("Sprite2D")
 
@@ -18,4 +18,7 @@ libraries = {
 &"": ExtResource("3_gkjyt")
 }
 
-[node name="FirstSkillChooser" type="FirstSkillChooser" parent="."]
+[node name="SkillChooser" type="SkillChooser" parent="."]
+
+[node name="FirstSkillChooser" type="FirstSkillChooser" parent="SkillChooser" node_paths=PackedStringArray("skill_chooser")]
+skill_chooser = NodePath("..")

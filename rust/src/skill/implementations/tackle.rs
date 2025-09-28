@@ -18,6 +18,8 @@ impl SkillImplementation for TackleSkillImplementation {
     fn cast(&mut self, user: Gd<BattleEntity>, target: Gd<BattleEntity>) {
         godot_print!("tackleada de manual");
         let mut tween = self.base_mut().create_tween().unwrap();
+        // let skill_callable = Callable::from_object_method(&self.to_gd(), "cast_skill");
+        // let skill_callable_with_args = skill_callable.bind(&[skill.to_variant()]);
         tween.tween_property(
             &user.bind().get_sprite().unwrap(),
             "scale", 

@@ -61,5 +61,8 @@ SkillAnimation="res://icon.svg"
 SkillAnimationFactory="res://icon.svg"
 SkillContainerModule="res://icon.svg"
 
+SkillChooser="res://icon.svg"
+FirstSkillChooser="res://icon.svg"
+
 TackleSkillImplementation="res://icon.svg"
 BiteSkillImplementation="res://icon.svg"

@@ -5,6 +5,7 @@ use crate::entity::modules::skill::skill_container::SkillContainerModule;
 use crate::skill::chooser::skill_chooser::SkillChooser;
 use crate::skill::get_implementation::get_skill_implementation;
 use crate::skill::skill_definition::SkillDefinition;
+use crate::skill::skill_implementation::SkillImplementation;
 use crate::stats::real::RealStats;
 use crate::battle::team::Team;
 
@@ -17,7 +18,7 @@ pub(crate) struct BattleEntity {
     #[var]
     skills: Gd<SkillContainerModule>, // Same as stats
     #[export]
-    skill_chooser: OnEditor<DynGd<Node, dyn SkillChooser>>,
+    skill_chooser: OnEditor<Gd<SkillChooser>>,
     #[export]
     team: Team,
     #[export]
@@ -64,18 +65,23 @@ impl BattleEntity {
     }
 
     #[func(gd_self)]
-    pub(crate) fn act_with_skill(mut this: Gd<Self>) {
+    pub(crate) fn act_with_skill(this: Gd<Self>) {
         let skills_container = this.bind().get_skills();
         let target = this.bind().get_target().unwrap();
-        let skill_chooser_node = this.bind().get_skill_chooser().unwrap();
+        let skill_chooser = this.bind().get_skill_chooser().unwrap();
         
-        let mut skill_chooser: DynGd<Node, dyn SkillChooser> = skill_chooser_node.to_variant().to();
-        let mut skill = skill_chooser.dyn_bind_mut().choose(&skills_container, &target);
-        
-        skill.dyn_bind_mut().cast(this.clone(), this.bind().target.clone().unwrap());
+        // Passing the "this" variable as parameter to connect_other gives compilation error
+        // Workaround is using connect() with a closure + "move" keyword. Source:
+        // https://github.com/godot-rust/gdext/issues/1318#issuecomment-3306720324
+        skill_chooser.signals().skill_chosen().connect( move |skill| 
+            Self::on_skill_chosen(this.clone(), skill)
+        );
+        skill_chooser.signals().choose_skill().emit(&skills_container, &target);
+    }
 
-        // let skill_callable = Callable::from_object_method(&self.to_gd(), "cast_skill");
-        // let skill_callable_with_args = skill_callable.bind(&[skill.to_variant()]);
+    #[func(gd_self)]
+    fn on_skill_chosen(this: Gd<Self>, mut skill: DynGd<Node, dyn SkillImplementation>) {
+        skill.dyn_bind_mut().cast(this.clone(), this.bind().target.clone().unwrap());
     }
 
     #[func]

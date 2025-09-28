@@ -4,20 +4,31 @@ use godot::prelude::*;
 use crate::battle::entity::entity::BattleEntity;
 use crate::entity::modules::skill::skill_container::SkillContainerModule;
 use crate::skill::chooser::skill_chooser::SkillChooser;
-use crate::skill::skill_implementation::SkillImplementation;
 
 #[derive(GodotClass)]
 #[class(base=Node,init)]
 pub(crate) struct FirstSkillChooser {
-    base: Base<Node>
+    base: Base<Node>,
+    #[export]
+    skill_chooser: OnEditor<Gd<SkillChooser>>,
 }
 
-#[godot_dyn]
-impl SkillChooser for FirstSkillChooser {
-    fn choose(&mut self, skill_pool: &Gd<SkillContainerModule>, _target: &Gd<BattleEntity>) -> DynGd<Node, dyn SkillImplementation> {
+#[godot_api]
+impl INode for FirstSkillChooser {
+    fn ready(&mut self) {
+        self.setup();
+    }
+}
+
+impl FirstSkillChooser {
+    fn setup(&mut self) {
+        self.get_skill_chooser().unwrap().signals().choose_skill().connect_other(self, Self::choose);
+    }
+
+    fn choose(&mut self, skill_pool: Gd<SkillContainerModule>, target: Gd<BattleEntity>) {
         let mut skill = skill_pool.bind().get_skill_at(0);
         let implementation = skill.bind_mut().get_implementation();
 
-        implementation
+        self.get_skill_chooser().unwrap().signals().skill_chosen().emit(&implementation);
     }
 }
