@@ -1,3 +1,4 @@
+use godot::classes::object::ConnectFlags;
 use godot::classes::*;
 use godot::prelude::*;
 
@@ -73,7 +74,9 @@ impl BattleEntity {
         // Passing the "this" variable as parameter to connect_other gives compilation error
         // Workaround is using connect() with a closure + "move" keyword. Source:
         // https://github.com/godot-rust/gdext/issues/1318#issuecomment-3306720324
-        skill_chooser.signals().skill_chosen().connect( move |skill| 
+        skill_chooser.signals().skill_chosen().builder()
+        .flags(ConnectFlags::ONE_SHOT)
+        .connect( move |skill| 
             Self::on_skill_chosen(this.clone(), skill)
         );
         skill_chooser.signals().choose_skill().emit(&skills_container, &target);
