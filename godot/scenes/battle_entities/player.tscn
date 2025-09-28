@@ -20,5 +20,5 @@ libraries = {
 
 [node name="SkillChooser" type="SkillChooser" parent="."]
 
-[node name="FirstSkillChooser" type="FirstSkillChooser" parent="SkillChooser" node_paths=PackedStringArray("skill_chooser")]
+[node name="UiSkillChooser" type="UiSkillChooser" parent="SkillChooser" node_paths=PackedStringArray("skill_chooser")]
 skill_chooser = NodePath("..")

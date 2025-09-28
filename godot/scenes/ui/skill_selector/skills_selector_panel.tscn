@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://b11bkbxrski81"]
+
+[ext_resource type="StyleBox" uid="uid://bgbygdy4e64li" path="res://resources/ui_themes/skill_container.tres" id="1_bl84r"]
+[ext_resource type="PackedScene" uid="uid://cei1r1x4rlter" path="res://scenes/ui/skill_selector/skill_button.tscn" id="2_e8lxb"]
+
+[node name="SkillsSelectorPanel" type="PanelContainer"]
+size_flags_horizontal = 4
+theme_override_styles/panel = ExtResource("1_bl84r")
+
+[node name="SkillSelectorContainer" type="SkillSelectorContainer" parent="."]
+skill_button_template = ExtResource("2_e8lxb")
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 12
+columns = 4

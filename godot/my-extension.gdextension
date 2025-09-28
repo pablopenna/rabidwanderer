@@ -53,6 +53,8 @@ BattleUi="res://icon.svg"
 InventoryUiDisplay="res://icon.svg"
 LinkInventoryToUiModule="res://icon.svg"
 ItemDetailsUi="res://icon.svg"
+SkillSelectorContainer="res://icon.svg"
+SkillButton="res://icon.svg"
 HpBar="res://icon.svg"
 
 SkillFactory="res://icon.svg"
@@ -63,6 +65,7 @@ SkillContainerModule="res://icon.svg"
 
 SkillChooser="res://icon.svg"
 FirstSkillChooser="res://icon.svg"
+UiSkillChooser="res://icon.svg"
 
 TackleSkillImplementation="res://icon.svg"
 BiteSkillImplementation="res://icon.svg"

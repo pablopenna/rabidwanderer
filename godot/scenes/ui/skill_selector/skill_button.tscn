@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://cei1r1x4rlter"]
+
+[ext_resource type="Texture2D" uid="uid://b7xa22vrbjk3j" path="res://art/tombstone.png" id="1_hrvhf"]
+
+[node name="SkillButton" type="SkillButton"]
+offset_right = 18.0
+offset_bottom = 18.0
+icon = ExtResource("1_hrvhf")
+icon_alignment = 1

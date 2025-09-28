@@ -1,6 +1,6 @@
 use godot::prelude::*;
 
-use crate::item::item::Item;
+use crate::{entity::modules::skill::skill_container::SkillContainerModule, item::item::Item, skill::skill::Skill};
 
 #[derive(GodotClass)]
 #[class(init, base=Object)]
@@ -30,6 +30,11 @@ impl GlobalSignals {
     pub(crate) fn battle_ui_shown();
     #[signal]
     pub(crate) fn battle_ui_hid();
+
+    #[signal]
+    pub(crate) fn show_skills_in_battle_ui(skills: Gd<SkillContainerModule>);
+    #[signal]
+    pub(crate) fn skill_chosen_in_battle_ui(skill: Gd<Skill>);
 
     #[signal]
     pub(crate) fn inventory_ui_item_added(item: Gd<Item>);
