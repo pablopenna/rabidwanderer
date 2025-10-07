@@ -41,6 +41,11 @@ impl GlobalSignals {
     #[signal]
     pub(crate) fn inventory_ui_item_clicked(item: Gd<Item>);
 
+    #[signal]
+    pub(crate) fn show_tooltip(content: GString);
+    #[signal]
+    pub(crate) fn hide_tooltip();
+
     pub(crate) fn get_singleton() -> Gd<GlobalSignals> {
         godot::classes::Engine::singleton().get_singleton("GlobalSignals").unwrap().cast::<GlobalSignals>()
     }

@@ -5,6 +5,20 @@ extends PanelContainer
 
 const OFFSET: Vector2 = Vector2.ONE * 5.0
 
+func _ready() -> void:
+	setup()
+
+func setup() -> void:
+	GlobalSignals.show_tooltip.connect(
+		func(text: String): 
+			$RichTextLabel.text = text
+			self.visible = true
+	)
+	
+	GlobalSignals.hide_tooltip.connect(
+		func(): self.visible = false
+	)
+
 func _input(event: InputEvent) -> void:
 	if visible and event is InputEventMouseMotion:
 		global_position = get_global_mouse_position() + OFFSET
