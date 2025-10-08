@@ -15,8 +15,7 @@
             ],
             "program": "this-is-overriden",
             "linux": {
-                "program": "/home/pablo/apps/godot",
-                // "program": "/usr/bin/echo",
+                "program": "/opt/__my_files__/apps/godot/godot",
             },
             "windows": {
                 "program": "D:\\__root\\apps\\Godot\\Godot.exe",
