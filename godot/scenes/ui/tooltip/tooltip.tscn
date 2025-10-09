@@ -7,6 +7,8 @@
 clip_contents = true
 offset_right = 107.0
 offset_bottom = 90.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
 mouse_filter = 2
 theme_override_styles/panel = ExtResource("1_mtwet")
 script = ExtResource("2_b5j4s")
@@ -21,4 +23,3 @@ Tackle
 aaa aa
 aaa
 "
-fit_content = true

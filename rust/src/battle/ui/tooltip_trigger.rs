@@ -7,6 +7,8 @@ use crate::global_signals::GlobalSignals;
 #[class(init, base=Control)]
 pub struct TooltipTrigger {
     base: Base<Control>,
+    #[export(multiline)]
+    text: GString,
 }
 
 #[godot_api]
@@ -20,8 +22,8 @@ impl IControl for TooltipTrigger {
 impl TooltipTrigger {
 
     fn setup(&mut self) {
-        self.signals().mouse_entered().connect(|| {
-            GlobalSignals::get_singleton().signals().show_tooltip().emit("meow");
+        self.signals().mouse_entered().connect_self(| this | {
+            GlobalSignals::get_singleton().signals().show_tooltip().emit(&this.get_text());
         });
         
         self.signals().mouse_exited().connect(|| {
