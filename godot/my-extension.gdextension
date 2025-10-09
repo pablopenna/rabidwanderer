@@ -56,6 +56,7 @@ ItemDetailsUi="res://icon.svg"
 SkillSelectorContainer="res://icon.svg"
 SkillButton="res://icon.svg"
 HpBar="res://icon.svg"
+TooltipTrigger="res://icon.svg"
 
 SkillFactory="res://icon.svg"
 Skill="res://icon.svg"

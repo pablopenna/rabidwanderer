@@ -1,7 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://0eo0rygr8gb2"]
+[gd_scene load_steps=3 format=3 uid="uid://0eo0rygr8gb2"]
 
 [ext_resource type="Texture2D" uid="uid://lanl8u4hnmd2" path="res://art/entity/knight2.png" id="2_ay4pv"]
-[ext_resource type="PackedScene" uid="uid://cb0ucuq6rr24d" path="res://scenes/ui/tooltip/tooltip_trigger.tscn" id="2_tdhhq"]
 [ext_resource type="AnimationLibrary" uid="uid://cb1nh8pr3wlpq" path="res://resources/animations/player_library.res" id="3_gkjyt"]
 
 [node name="Player" type="BattleEntity" node_paths=PackedStringArray("skill_chooser", "animation_player", "sprite")]
@@ -14,11 +13,16 @@ texture = ExtResource("2_ay4pv")
 hframes = 4
 metadata/_edit_lock_ = true
 
-[node name="TooltipTrigger" parent="Sprite2D" instance=ExtResource("2_tdhhq")]
+[node name="TooltipTrigger" type="TooltipTrigger" parent="Sprite2D"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 offset_left = -8.0
 offset_top = -8.0
 offset_right = -8.0
 offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
