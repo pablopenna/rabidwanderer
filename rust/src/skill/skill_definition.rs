@@ -16,6 +16,20 @@ impl SkillDefinition {
         }
     }
 
+    pub(crate) fn get_description(&self) -> &'static str {
+        match self {
+            SkillDefinition::Tackle => 
+                "Furiously charges dealing average damage",
+            SkillDefinition::Bite => 
+                "Omn nom nom nom
+                ...
+                Chomp
+                ...
+                *gulp*
+                ",
+        }
+    }
+
     const RANDOM_POOL: [SkillDefinition; 2] = [
         SkillDefinition::Tackle,
         SkillDefinition::Bite,

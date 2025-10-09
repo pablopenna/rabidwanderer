@@ -7,3 +7,13 @@ offset_right = 18.0
 offset_bottom = 18.0
 icon = ExtResource("1_hrvhf")
 icon_alignment = 1
+
+[node name="SkillTooltipTrigger" type="SkillTooltipTrigger" parent="." node_paths=PackedStringArray("skill_button")]
+skill_button = NodePath("..")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
