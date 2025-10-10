@@ -4,6 +4,8 @@ extends PanelContainer
 # Panel + RichText Label - https://www.youtube.com/watch?v=6OyPgL2Elpw
 
 const OFFSET: Vector2 = Vector2.ONE * 5.0
+@export
+var label: RichTextLabel
 
 func _ready() -> void:
 	setup()
@@ -11,7 +13,7 @@ func _ready() -> void:
 func setup() -> void:
 	GlobalSignals.show_tooltip.connect(
 		func(text: String): 
-			$RichTextLabel.text = text
+			label.text = text
 			self.visible = true
 	)
 	

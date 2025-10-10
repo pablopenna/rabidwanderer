@@ -3,23 +3,21 @@
 [ext_resource type="StyleBox" uid="uid://3e1sn4mlr5ju" path="res://resources/ui_themes/tooltip_panel_style.tres" id="1_mtwet"]
 [ext_resource type="Script" uid="uid://bn1u1h0c1g4vw" path="res://scripts/tooltip.gd" id="2_b5j4s"]
 
-[node name="Tooltip" type="PanelContainer"]
-clip_contents = true
+[node name="Tooltip" type="PanelContainer" node_paths=PackedStringArray("label")]
 offset_right = 107.0
 offset_bottom = 90.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
 mouse_filter = 2
 theme_override_styles/panel = ExtResource("1_mtwet")
 script = ExtResource("2_b5j4s")
+label = NodePath("RichTextLabel")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
 layout_mode = 2
 mouse_filter = 2
 bbcode_enabled = true
-text = "[img]res://art/tombstone.png[/img] [b]Tackle[/b]
-----
-Tackle
-aaa aa
-aaa
-"
+fit_content = true
+scroll_active = false
+autowrap_mode = 2
+autowrap_trim_flags = 0
+shortcut_keys_enabled = false
+justification_flags = 0

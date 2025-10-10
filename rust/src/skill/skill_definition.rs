@@ -19,14 +19,9 @@ impl SkillDefinition {
     pub(crate) fn get_description(&self) -> &'static str {
         match self {
             SkillDefinition::Tackle => 
-                "Furiously charges dealing average damage",
+                "[img]res://art/tombstone.png[/img]Furiously charges at the enemy dealing average damage",
             SkillDefinition::Bite => 
-                "Omn nom nom nom
-                ...
-                Chomp
-                ...
-                *gulp*
-                ",
+                "Omn nom nom nom\n...\nChomp\n...\n*gulp*",
         }
     }
 
