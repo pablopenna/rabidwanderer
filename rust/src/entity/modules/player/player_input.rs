@@ -39,7 +39,7 @@ impl INode2D for PlayerInputModule {
         self.entity_to_move = Some(entity);
 
         let node = self.base().clone().upcast::<Node>();
-        self.movement_manager = Some(get_movement_manager_node_from_tree(node));
+        self.movement_manager = Some(get_movement_manager_node_from_tree(&node));
 
         GlobalSignals::get_singleton().signals().game_over().connect_other(self, Self::on_entity_death);
         GlobalSignals::get_singleton().signals().battle_finished().connect_other(self, Self::enable);

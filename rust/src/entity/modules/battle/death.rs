@@ -24,7 +24,7 @@ impl INode for DeathModule {
     }
 
     fn ready(&mut self) {
-        let parent = self.base_mut().to_godot().upcast::<Node>().get_parent().unwrap();
+        let parent = self.base_mut().to_godot().clone().upcast::<Node>().get_parent().unwrap();
         self.entity.init(parent.cast::<BoardEntity>()); 
 
         self.stats.signals().no_hp_left().connect_other(self, Self::on_no_hp_left);

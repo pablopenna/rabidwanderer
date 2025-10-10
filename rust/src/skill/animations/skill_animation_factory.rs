@@ -19,7 +19,7 @@ pub(crate) struct SkillAnimationFactory {
 #[godot_api]
 impl INode for SkillAnimationFactory {
     fn ready(&mut self) {
-        let mut node = self.base_mut().to_godot().upcast::<Node>();
+        let mut node = self.base_mut().to_godot().clone().upcast::<Node>();
         node.add_to_group(SKILL_ANIMATION_FACTORY_GROUP);
     }
 }

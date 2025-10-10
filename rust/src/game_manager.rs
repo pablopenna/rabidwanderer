@@ -35,8 +35,7 @@ impl INode for GameManager {
 
     fn ready(&mut self) {
         {
-            let mut node = self.base().to_godot().upcast::<Node>();
-            node.add_to_group(GAME_MANAGER_GROUP);
+            self.base_mut().add_to_group(GAME_MANAGER_GROUP);
         }
         
         {
@@ -89,8 +88,8 @@ impl GameManager {
     }
 
     fn get_player_ref(&self) -> Gd<BoardEntity> {
-        let node = self.base().to_godot().upcast::<Node>();
-        let player = get_player_node_from_tree(node);
+        let node = self.base().to_godot().clone().upcast::<Node>();
+        let player = get_player_node_from_tree(&node);
         player
     }
 

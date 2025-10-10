@@ -16,7 +16,7 @@ pub struct BattleTriggerModule {
 #[godot_api]
 impl INode for BattleTriggerModule {
     fn ready(&mut self) {
-        let parent = self.base_mut().to_godot().upcast::<Node>().get_parent().unwrap();
+        let parent = self.base_mut().to_godot().clone().upcast::<Node>().get_parent().unwrap();
         self.entity = Some(parent.cast::<BoardEntity>());
 
         self.entity.clone().unwrap().signals()
@@ -35,7 +35,7 @@ impl BattleTriggerModule {
 
     fn get_battle_setup_node(&mut self) -> Gd<BattleSetup> {
         if self.battle_setup.is_none() {
-            self.battle_setup = Some(get_battle_setup_node_from_tree(self.base().clone().upcast::<Node>()));
+            self.battle_setup = Some(get_battle_setup_node_from_tree(&self.base().clone().upcast::<Node>()));
         }
 
         self.battle_setup.clone().unwrap()

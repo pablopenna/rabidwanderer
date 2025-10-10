@@ -17,7 +17,7 @@ impl SkillImplementation for BiteSkillImplementation {
     fn cast(&mut self, mut user: Gd<BattleEntity>, target: Gd<BattleEntity>) {
         godot_print!("biteada de manual");
         let node = self.base_mut().clone().upcast::<Node>();
-        let animation_factory = get_skill_animation_factory_node_from_tree(node);
+        let animation_factory = get_skill_animation_factory_node_from_tree(&node);
         let mut animation = animation_factory.bind().get_animation(SkillAnimationName::Bite);
         user.add_child(&animation);
 

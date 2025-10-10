@@ -29,11 +29,11 @@ impl INode for FloorItemModule {
     }
 
     fn ready(&mut self) {
-        let node = self.base_mut().to_godot().upcast::<Node>();
-        let factory = get_item_factory_node_from_tree(node);
+        let node = self.base().to_godot().clone().upcast::<Node>();
+        let factory = get_item_factory_node_from_tree(&node);
         self.factory.init(factory);
 
-        let parent = self.base_mut().to_godot().upcast::<Node>().get_parent().unwrap();
+        let parent = node.get_parent().unwrap();
         self.entity.init(parent.cast::<BoardEntity>());
     }
 }

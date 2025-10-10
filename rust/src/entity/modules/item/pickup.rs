@@ -63,7 +63,7 @@ impl PickupModule {
 
     fn get_board(&mut self) -> Gd<Board> {
         if self.board.is_none() {
-            self.board = Some(get_board_node_from_tree(self.base().clone().upcast::<Node>()));
+            self.board = Some(get_board_node_from_tree(&self.base()));
         }
 
         self.board.clone().unwrap()

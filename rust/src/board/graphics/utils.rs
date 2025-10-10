@@ -4,7 +4,7 @@ use godot::obj::Gd;
 
 use crate::board::graphics::draw_tile::{DrawTile, FOUR_WAY_DRAW_TILE};
 
-pub(crate) fn verify_tile_set_exists(tile_map_layer: Gd<TileMapLayer>) {
+pub(crate) fn verify_tile_set_exists(tile_map_layer: &Gd<TileMapLayer>) {
     if tile_map_layer.get_tile_set().is_none() {
         panic!("No tileset provided for the board!");
     }

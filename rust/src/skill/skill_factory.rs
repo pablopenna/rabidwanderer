@@ -26,7 +26,7 @@ impl INode for SkillFactory {
     }
 
     fn ready(&mut self) {
-        let mut node = self.base_mut().to_godot().upcast::<Node>();
+        let mut node = self.base_mut().to_godot().clone().upcast::<Node>();
         node.add_to_group(SKILL_FACTORY_GROUP);
     }
 }

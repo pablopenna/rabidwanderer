@@ -29,7 +29,7 @@ impl INode for ItemFactory {
     }
 
     fn ready(&mut self) {
-        let mut node = self.base_mut().to_godot().upcast::<Node>();
+        let mut node = self.base_mut().to_godot().clone().upcast::<Node>();
         node.add_to_group(ITEM_FACTORY_GROUP);
     }
 }

@@ -23,12 +23,13 @@ impl ICamera2D for BoardCamera {
 
     fn process(&mut self, delta: f32) {
         self.focus_target.clone().inspect(|target| {
-            let mut cam = self.base_mut().to_godot();
+            let focus_move_speed = self.focus_move_speed;
+            let mut cam = self.base_mut();
             
             let original_position = cam.get_position();
             let target_position = original_position.lerp(
                 target.get_position(), 
-                self.focus_move_speed * delta
+                focus_move_speed * delta
             );
 
             cam.set_position(target_position);

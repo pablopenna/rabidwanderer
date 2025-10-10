@@ -39,7 +39,7 @@ impl INode2D for Board {
         self.base_mut().add_to_group(BOARD_GROUP);
 
         let tile_set = self.tile_set.to_godot();
-        self.get_graphics().set_tile_set(&tile_set);
+        self.get_graphics().set_tile_set(tile_set);
         
         let graphics_node = self.get_graphics().upcast::<Node>();
         self.base_mut().add_child(&graphics_node);
