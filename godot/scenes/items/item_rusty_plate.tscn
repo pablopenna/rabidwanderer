@@ -12,4 +12,4 @@ value = 5.0
 
 [node name="StatModifier2" type="StatModifier" parent="."]
 stat = "Speed"
-value = -1.0
+value = -2.0
