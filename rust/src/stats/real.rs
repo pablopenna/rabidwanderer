@@ -81,7 +81,7 @@ impl RealStats {
         let damage = if self.inventory.is_none() {
             base_damage
         } else {
-            self.get_attack_from_items(base_damage)
+            self.get_stat_from_items(Stat::Attack, base_damage)
         };
         
         let mut rng = rand::rng();
@@ -91,34 +91,34 @@ impl RealStats {
         randomized_damage.round() as u16
     }
 
-    fn get_attack_from_items(&self, base_damage: u16) -> u16 {
+    fn get_stat_from_items(&self, base_stat: Stat, value_of_base_stat: u16) -> u16 {
         let items = self.inventory.clone().unwrap().bind().get_items();
-        let attack_modifiers_from_items: Array<Gd<StatModifier>> = items.iter_shared().flat_map(
+        let modifiers_from_items: Array<Gd<StatModifier>> = items.iter_shared().flat_map(
             |item| {
-                let modifiers = item.bind().get_modifiers_for_stat(Stat::Attack);
+                let modifiers = item.bind().get_modifiers_for_stat(&base_stat);
                 modifiers.iter_shared().collect::<Vec<_>>()
             }
         ).collect();
 
-        let mut mod_damage = base_damage;
-        attack_modifiers_from_items.iter_shared().for_each(|r#mod| {
+        let mut modified_value = value_of_base_stat;
+        modifiers_from_items.iter_shared().for_each(|r#mod| {
             let r#type = ModifierType::from_gstring(r#mod.bind().get_mod_type());
             match r#type {
                 ModifierType::FLAT => {
-                    mod_damage = (mod_damage as i16 + r#mod.bind().get_value().round() as i16) as u16;
+                    modified_value = (modified_value as i16 + r#mod.bind().get_value().round() as i16) as u16;
                 },
                 ModifierType::PERCENTAGE => {
-                    mod_damage += ( mod_damage as f32 * r#mod.bind().get_value() ).round() as u16;
+                    modified_value += ( modified_value as f32 * r#mod.bind().get_value() ).round() as u16;
                 },
                 ModifierType::CUSTOM => {
                     let custom_modifier = CustomModifier::from_gstring(r#mod.bind().get_custom_implementation());
                     let custom_modifier_logic = get_implementation_for_custom_modifier(custom_modifier);
-                    mod_damage = (mod_damage as i16 + custom_modifier_logic(mod_damage)) as u16
+                    modified_value = (modified_value as i16 + custom_modifier_logic(modified_value)) as u16
                 },
             }
         });
 
-        mod_damage
+        modified_value
     }
 
     pub(crate) fn get_speed(&self) -> u16 {

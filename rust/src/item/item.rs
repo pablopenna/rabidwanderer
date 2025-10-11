@@ -36,8 +36,8 @@ impl Item {
         self.base().get_children().iter_shared().map(|child| child.cast::<StatModifier>()).collect()
     }
 
-    pub(crate) fn get_modifiers_for_stat(&self, stat: Stat) -> Array<Gd<StatModifier>> {
+    pub(crate) fn get_modifiers_for_stat(&self, stat: &Stat) -> Array<Gd<StatModifier>> {
         let mods = self.get_all_modifiers();
-        mods.iter_shared().filter(|r#mod| Stat::from_gstring(r#mod.bind().get_stat()) == stat).collect()
+        mods.iter_shared().filter(|r#mod| Stat::from_gstring(r#mod.bind().get_stat()) == *stat).collect()
     }
 }
