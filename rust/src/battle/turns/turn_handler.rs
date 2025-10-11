@@ -3,6 +3,7 @@ use godot::prelude::*;
 
 use crate::battle::entity::entity::BattleEntity;
 use crate::battle::turns::action::Action;
+use crate::stats::stat::Stat;
 
 // This class represents a turn, where each battler performs at least one action.
 // Actions are child nodes of this one.
@@ -53,8 +54,8 @@ impl TurnHandler {
     pub(crate) fn generate_new_turn(&mut self, mut battlers: Vec<Gd<BattleEntity>>) {
         godot_print!("Generating actions for new turn");
         battlers.sort_by(|a, b| {
-            let a_speed = a.bind().get_stats().bind().get_speed();
-            let b_speed = b.bind().get_stats().bind().get_speed();
+            let a_speed = a.bind().get_stats().bind().get_stat(Stat::Speed);
+            let b_speed = b.bind().get_stats().bind().get_stat(Stat::Speed);
             a_speed.cmp(&b_speed)
         });
 

@@ -68,30 +68,30 @@ impl RealStats {
         }
     }
 
-    pub(crate) fn get_max_hp(&self) -> u16 {
-        self.base_stats.bind().get_max_hp()
+    pub(crate) fn get_stat(&self, stat: Stat) -> i16 {
+        let base_value = self.get_base_stat(&stat) as i16;
+        let modifier = self.get_modifier_from_items(&stat);
+        let stat_value =  base_value + modifier;
+        if stat == Stat::Attack {
+            return stat_value + Self::add_randomization_to(stat_value, DAMAGE_VARIATION_RATIO);
+        }
+        stat_value
     }
 
-    pub(crate) fn get_attack(&self) -> u16 {
-        self.base_stats.bind().get_attack()
+    fn get_base_stat(&self, stat: &Stat) -> u16 {
+        match stat {
+            Stat::Attack => self.base_stats.bind().get_attack(),
+            Stat::Speed => self.base_stats.bind().get_speed(),
+            Stat::MaxHp => self.base_stats.bind().get_max_hp(),
+        }
     }
 
-    pub(crate) fn calculate_attack_damage(&self) -> u16 {
-        let base_damage = self.get_attack();
-        let damage = if self.inventory.is_none() {
-            base_damage
-        } else {
-            self.get_stat_from_items(Stat::Attack, base_damage)
-        };
+    // Retuns i16 instead of u16 because stats modifiers can be negative, but base stats are always equal or higher than 0
+    fn get_modifier_from_items(&self, base_stat: &Stat) -> i16 {
+        if self.inventory.is_none() {
+            return 0;
+        }
         
-        let mut rng = rand::rng();
-        let variation: f32 = damage as f32 * DAMAGE_VARIATION_RATIO;
-        let randomized_damage = damage as f32 + rng.random_range(-variation..variation);
-
-        randomized_damage.round() as u16
-    }
-
-    fn get_stat_from_items(&self, base_stat: Stat, value_of_base_stat: u16) -> u16 {
         let items = self.inventory.clone().unwrap().bind().get_items();
         let modifiers_from_items: Array<Gd<StatModifier>> = items.iter_shared().flat_map(
             |item| {
@@ -100,20 +100,20 @@ impl RealStats {
             }
         ).collect();
 
-        let mut modified_value = value_of_base_stat;
+        let mut modified_value: i16 = 0;
         modifiers_from_items.iter_shared().for_each(|r#mod| {
             let r#type = ModifierType::from_gstring(r#mod.bind().get_mod_type());
             match r#type {
                 ModifierType::FLAT => {
-                    modified_value = (modified_value as i16 + r#mod.bind().get_value().round() as i16) as u16;
+                    modified_value = modified_value + r#mod.bind().get_value().round() as i16;
                 },
                 ModifierType::PERCENTAGE => {
-                    modified_value += ( modified_value as f32 * r#mod.bind().get_value() ).round() as u16;
+                    modified_value += (modified_value as f32 * r#mod.bind().get_value()).round() as i16;
                 },
                 ModifierType::CUSTOM => {
                     let custom_modifier = CustomModifier::from_gstring(r#mod.bind().get_custom_implementation());
                     let custom_modifier_logic = get_implementation_for_custom_modifier(custom_modifier);
-                    modified_value = (modified_value as i16 + custom_modifier_logic(modified_value)) as u16
+                    modified_value = modified_value + custom_modifier_logic(modified_value)
                 },
             }
         });
@@ -121,7 +121,11 @@ impl RealStats {
         modified_value
     }
 
-    pub(crate) fn get_speed(&self) -> u16 {
-        self.base_stats.bind().get_speed()
+    fn add_randomization_to(value: i16, ratio: f32) -> i16 {
+        let mut rng = rand::rng();
+        let variation: f32 = value as f32 * ratio;
+        let randomized_value = value as f32 + rng.random_range(-variation..variation);
+
+        randomized_value.round() as i16
     }
 }

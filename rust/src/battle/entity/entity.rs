@@ -4,11 +4,10 @@ use godot::prelude::*;
 
 use crate::entity::modules::skill::skill_container::SkillContainerModule;
 use crate::skill::chooser::skill_chooser::SkillChooser;
-use crate::skill::get_implementation::get_skill_implementation;
-use crate::skill::skill_definition::SkillDefinition;
 use crate::skill::skill_implementation::SkillImplementation;
 use crate::stats::real::RealStats;
 use crate::battle::team::Team;
+use crate::stats::stat::Stat;
 
 #[derive(GodotClass)]
 #[class(base=Node2D)]
@@ -90,8 +89,8 @@ impl BattleEntity {
     #[func]
     fn on_apply_damage(&mut self) {
         godot_print!("I am {} and I'm attacking", self.base().get_name());
-        let attack_damage = self.stats.bind().calculate_attack_damage();
-        self.target.clone().unwrap().bind_mut().take_damage(attack_damage);
+        let attack_damage = self.stats.bind().get_stat(Stat::Attack);
+        self.target.clone().unwrap().bind_mut().take_damage(attack_damage.max(0) as u16);
     }
 
     #[func]

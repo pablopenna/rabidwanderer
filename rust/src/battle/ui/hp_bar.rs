@@ -2,6 +2,7 @@ use godot::classes::*;
 use godot::prelude::*;
 
 use crate::stats::real::RealStats;
+use crate::stats::stat::Stat;
 
 const HEIGHT_PX: f32 = 10.;
 const WIDTH_PX: f32 = 40.;
@@ -48,7 +49,7 @@ impl HpBar {
         // default 'changed' signal from Resource cannot be used for custom properties of custom Resources - https://docs.godotengine.org/en/stable/classes/class_resource.html#class-resource-signal-changed
         self.tracked_stats.as_ref().unwrap().signals().hp_changed().connect_other(self, Self::on_hp_changed);
 
-        let max_hp = self.tracked_stats.as_ref().unwrap().bind().get_max_hp();
+        let max_hp = self.tracked_stats.as_ref().unwrap().bind().get_stat(Stat::MaxHp);
         self.base_mut().set_max(max_hp as f64); 
         let current_hp = self.tracked_stats.as_ref().unwrap().bind().get_current_hp();
         self.base_mut().set_value(current_hp as f64); 
@@ -86,7 +87,7 @@ impl HpBar {
     fn update_label_text(&mut self) {
         let stats = self.tracked_stats.clone().unwrap();
         let current_hp = stats.bind().get_current_hp();
-        let max_hp = stats.bind().get_max_hp();
+        let max_hp = stats.bind().get_stat(Stat::MaxHp);
         let label_text = format!("{}/{}", current_hp, max_hp);
         
         self.hp_label.set_text(&label_text);
