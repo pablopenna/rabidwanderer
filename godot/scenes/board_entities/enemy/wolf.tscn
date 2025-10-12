@@ -26,7 +26,14 @@ stats = NodePath("../StatsModule")
 
 [node name="Bite" parent="SkillContainerModule" instance=ExtResource("4_b4p1p")]
 
-[node name="BattleModule" type="BattleModule" parent="." node_paths=PackedStringArray("stats", "skills")]
+[node name="SkillResourceModule" type="SkillResourceModule" parent="." node_paths=PackedStringArray("implementation")]
+implementation = NodePath("CooldownTracker")
+
+[node name="CooldownTracker" type="CooldownTracker" parent="SkillResourceModule" node_paths=PackedStringArray("skills_container")]
+skills_container = NodePath("../../SkillContainerModule")
+
+[node name="BattleModule" type="BattleModule" parent="." node_paths=PackedStringArray("stats", "skills", "skill_resources")]
 battle_entity_scene = ExtResource("3_gu2wu")
 stats = NodePath("../StatsModule")
 skills = NodePath("../SkillContainerModule")
+skill_resources = NodePath("../SkillResourceModule")

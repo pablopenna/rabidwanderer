@@ -3,6 +3,7 @@ use godot::prelude::*;
 
 use crate::battle::entity::entity::BattleEntity;
 use crate::entity::modules::skill::skill_container::SkillContainerModule;
+use crate::skill::skill_definition::SkillDefinition;
 use crate::skill::skill_implementation::SkillImplementation;
 
 
@@ -34,5 +35,5 @@ impl SkillChooser {
 
     // emited by the child of this node once a skill is chosen. The battle entity emiting the signal above should listen to this
     #[signal]
-    pub(crate) fn skill_chosen(skill: DynGd<Node, dyn SkillImplementation>);
+    pub(crate) fn skill_chosen(skill_name: SkillDefinition, skill_implementation: DynGd<Node, dyn SkillImplementation>);
 }

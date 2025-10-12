@@ -3,7 +3,9 @@ use godot::classes::*;
 use godot::prelude::*;
 
 use crate::entity::modules::skill::skill_container::SkillContainerModule;
+use crate::entity::modules::skill::skill_resource::SkillResourceModule;
 use crate::skill::chooser::skill_chooser::SkillChooser;
+use crate::skill::skill_definition::SkillDefinition;
 use crate::skill::skill_implementation::SkillImplementation;
 use crate::stats::real::RealStats;
 use crate::battle::team::Team;
@@ -19,6 +21,8 @@ pub(crate) struct BattleEntity {
     skills: Gd<SkillContainerModule>, // Same as stats
     #[export]
     skill_chooser: OnEditor<Gd<SkillChooser>>,
+    #[var]
+    skill_resource: Gd<SkillResourceModule>, // Same as stats
     #[export]
     team: Team,
     #[export]
@@ -37,6 +41,7 @@ impl INode2D for BattleEntity {
             stats: RealStats::new_gd(),
             skills: SkillContainerModule::new_alloc(),
             skill_chooser: OnEditor::default(),
+            skill_resource: SkillResourceModule::new_alloc(),
             team: Team::Player,
             target: None,
             animation_player: OnEditor::default(),
@@ -75,14 +80,22 @@ impl BattleEntity {
         // https://github.com/godot-rust/gdext/issues/1318#issuecomment-3306720324
         skill_chooser.signals().skill_chosen().builder()
         .flags(ConnectFlags::ONE_SHOT)
-        .connect( move |skill| 
-            Self::on_skill_chosen(this.clone(), skill)
+        .connect( move |skill_name, skill_implementation| 
+            Self::on_skill_chosen(this.clone(), skill_name, skill_implementation)
         );
         skill_chooser.signals().choose_skill().emit(&skills_container, &target);
     }
 
     #[func(gd_self)]
-    fn on_skill_chosen(this: Gd<Self>, mut skill: DynGd<Node, dyn SkillImplementation>) {
+    fn on_skill_chosen(mut this: Gd<Self>, skill_name: SkillDefinition, mut skill: DynGd<Node, dyn SkillImplementation>) {
+        let skill_resource = this.bind().get_skill_resource();
+        if !skill_resource.bind().has_resources_to_cast(skill_name.clone()) {
+            // TODO: do not lose action
+            godot_print!("[{}] resources to cast {} are not enough", this.get_name(), skill_name.to_variant());
+            this.bind_mut().on_done_acting();
+            return;
+        }
+        skill_resource.bind().consume_resources_for_casting(skill_name);
         skill.dyn_bind_mut().cast(this.clone(), this.bind().target.clone().unwrap());
     }
 

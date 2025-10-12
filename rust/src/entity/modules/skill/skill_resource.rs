@@ -28,12 +28,12 @@ impl INode for SkillResourceModule {
 
 #[godot_api]
 impl SkillResourceModule {
-    pub(crate) fn consume_resources_for_casting(&mut self, skill: SkillDefinition) {
+    pub(crate) fn consume_resources_for_casting(&self, skill: SkillDefinition) {
         let mut implementation = self.implementation.clone().unwrap();
         implementation.dyn_bind_mut().consume_resources_for_casting(skill);
     }
 
-    pub(crate) fn has_resources_to_cast(&mut self, skill: SkillDefinition) -> bool {
+    pub(crate) fn has_resources_to_cast(&self, skill: SkillDefinition) -> bool {
         let mut implementation = self.implementation.clone().unwrap();
         let can_cast = implementation.dyn_bind_mut().has_resources_to_cast(skill);
 

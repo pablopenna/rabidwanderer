@@ -7,6 +7,7 @@ use crate::entity::modules::skill::skill_container::SkillContainerModule;
 use crate::global_signals::GlobalSignals;
 use crate::skill::chooser::skill_chooser::SkillChooser;
 use crate::skill::skill::Skill;
+use crate::skill::skill_definition::SkillDefinition;
 
 #[derive(GodotClass)]
 #[class(base=Node,init)]
@@ -38,8 +39,9 @@ impl UiSkillChooser {
     }
 
     fn on_skill_chosen_by_ui(&mut self, mut skill: Gd<Skill>) {
+        let name = SkillDefinition::from_gstring(skill.bind().get_name());
         let implementation = skill.bind_mut().get_implementation();
 
-        self.get_skill_chooser().unwrap().signals().skill_chosen().emit(&implementation);
+        self.get_skill_chooser().unwrap().signals().skill_chosen().emit(name, &implementation);
     }
 }

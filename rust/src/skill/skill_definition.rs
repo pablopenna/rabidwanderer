@@ -1,7 +1,7 @@
 use godot::prelude::*;
 use rand::Rng;
 
-#[derive(GodotConvert, Var, Export, Clone, PartialEq)]
+#[derive(GodotConvert, Var, Export, Clone, PartialEq, Debug)]
 #[godot(via = GString)] 
 pub(crate) enum SkillDefinition {
     Tackle,
