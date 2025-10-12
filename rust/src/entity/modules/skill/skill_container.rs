@@ -3,6 +3,7 @@ use godot::prelude::*;
 
 use crate::entity::board_entity::BoardEntity;
 use crate::skill::skill::Skill;
+use crate::skill::skill_definition::SkillDefinition;
 use crate::utils::get_first_child_of_type::get_first_child_of_type;
 
 const MAX_NUMBER_OF_SKILLS: i32 = 4;
@@ -19,13 +20,13 @@ impl SkillContainerModule {
     #[signal]
     pub(crate) fn skill_added(skill: Gd<Skill>);
 
-    pub(crate) fn add_skill(&mut self, skill: Gd<Skill>) {
+    pub(crate) fn _add_skill(&mut self, skill: Gd<Skill>) {
         let item_node = skill.clone().upcast::<Node>();
         self.base_mut().add_child(&item_node);
         self.signals().skill_added().emit(&skill);
     }
 
-    pub(crate) fn has_room(&self) -> bool {
+    pub(crate) fn _has_room(&self) -> bool {
         self.base().get_child_count() < MAX_NUMBER_OF_SKILLS
     }
 
@@ -37,7 +38,16 @@ impl SkillContainerModule {
         self.base().get_children().get(index).unwrap().cast::<Skill>()
     }
 
-    pub(crate) fn get_number_of_skills(&self) -> usize {
+    pub(crate) fn get_skill_with_name(&self, searched_name: SkillDefinition) -> Option<Gd<Skill>> {
+        self.base().get_children().iter_shared()
+            .map(|child| child.cast::<Skill>())
+            .find(|skill| {
+            let name = skill.bind().get_name();
+            SkillDefinition::from_gstring(name) == searched_name
+        })
+    }
+
+    pub(crate) fn _get_number_of_skills(&self) -> usize {
         self.base().get_children().len()
     }
 

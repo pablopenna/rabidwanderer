@@ -6,3 +6,4 @@ pub(crate) mod skill_implementation;
 pub(crate) mod implementations;
 pub(crate) mod animations;
 pub(crate) mod chooser;
+pub(crate) mod resource;

@@ -1,7 +1,7 @@
 use godot::prelude::*;
 use rand::Rng;
 
-#[derive(GodotConvert, Var, Export, Clone)]
+#[derive(GodotConvert, Var, Export, Clone, PartialEq)]
 #[godot(via = GString)] 
 pub(crate) enum SkillDefinition {
     Tackle,
@@ -22,6 +22,13 @@ impl SkillDefinition {
                 "[img]res://art/tombstone.png[/img]Furiously charges at the enemy dealing average damage",
             SkillDefinition::Bite => 
                 "Omn nom nom nom\n...\nChomp\n...\n*gulp*",
+        }
+    }
+
+    pub(crate) fn get_cooldown(&self) -> u8 {
+        match self {
+            SkillDefinition::Tackle => 2,
+            SkillDefinition::Bite => 1,
         }
     }
 
