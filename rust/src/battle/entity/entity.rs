@@ -87,10 +87,24 @@ impl BattleEntity {
     }
 
     #[func]
+    fn on_skill_casting_done(&mut self) {
+        if self.can_cast_more_skills() {
+            Self::act_with_skill(self.to_gd());
+            return;
+        }
+        self.on_done_acting();
+    }
+
+    #[func]
     fn on_apply_damage(&mut self) {
         godot_print!("I am {} and I'm attacking", self.base().get_name());
         let attack_damage = self.stats.bind().get_stat(Stat::Attack);
         self.target.clone().unwrap().bind_mut().take_damage(attack_damage.max(0) as u16);
+    }
+
+    #[func]
+    fn can_cast_more_skills(&self) -> bool {
+        false
     }
 
     #[func]

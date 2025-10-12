@@ -33,6 +33,6 @@ impl SkillImplementation for BiteSkillImplementation {
         );
         tween.tween_callback(&Callable::from_object_method(&animation, "queue_free"));
         tween.tween_callback(&Callable::from_object_method(&user, "on_apply_damage"));
-        tween.tween_callback(&Callable::from_object_method(&user, "on_done_acting")).unwrap().set_delay(1.0);
+        tween.tween_callback(&Callable::from_object_method(&user, "on_skill_casting_done"));
     }
 }
