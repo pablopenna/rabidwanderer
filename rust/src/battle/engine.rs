@@ -3,7 +3,6 @@ use godot::classes::*;
 use godot::prelude::*;
 
 use crate::battle::entity::container::BattleEntityContainer;
-use crate::battle::team::Team;
 use crate::battle::turns::action::Action;
 use crate::battle::turns::turn_handler::TurnHandler;
 use crate::consts::groups::BATTLE_ENGINE_GROUP;
@@ -75,11 +74,11 @@ impl BattleEngine {
     }
 
     fn on_current_action_done(&mut self) {
-        let mut last_turn = self.current_action.clone().unwrap();
-        last_turn.signals().tree_exited().builder()
+        let mut last_action = self.current_action.clone().unwrap();
+        last_action.signals().tree_exited().builder()
             .flags(ConnectFlags::ONE_SHOT)
             .connect_other_mut(self, Self::after_action_cleanup);
-        last_turn.queue_free();
+        last_action.queue_free();
         godot_print!("Cleaning last action...");
     }
 

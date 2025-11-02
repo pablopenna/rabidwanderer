@@ -85,5 +85,8 @@ fn add_skills_to_entity(skills: Gd<SkillContainerModule>, entity: &mut Gd<Battle
 }
 
 fn add_skill_resources_to_entity(skill_resources: Gd<SkillResourceModule>, entity: &mut Gd<BattleEntity>) {
-    entity.bind_mut().set_skill_resource(skill_resources);
+    entity.bind_mut().set_skill_resource(skill_resources.clone());
+    
+    let ro_entity = entity as &Gd<BattleEntity>;
+    skill_resources.signals().added_to_battle_entity().emit(ro_entity);
 }

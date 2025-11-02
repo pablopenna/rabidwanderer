@@ -50,7 +50,8 @@ stats = NodePath("../StatsModule")
 [node name="SkillResourceModule" type="SkillResourceModule" parent="." node_paths=PackedStringArray("implementation")]
 implementation = NodePath("CooldownTracker")
 
-[node name="CooldownTracker" type="CooldownTracker" parent="SkillResourceModule" node_paths=PackedStringArray("skills_container")]
+[node name="CooldownTracker" type="CooldownTracker" parent="SkillResourceModule" node_paths=PackedStringArray("skill_resource_module", "skills_container")]
+skill_resource_module = NodePath("..")
 skills_container = NodePath("../../SkillContainerModule")
 
 [node name="BattleModule" type="BattleModule" parent="." node_paths=PackedStringArray("stats", "skills", "skill_resources")]

@@ -1,6 +1,7 @@
 use godot::classes::*;
 use godot::prelude::*;
 
+use crate::battle::entity::entity::BattleEntity;
 use crate::skill::resource::manager::SkillResourceManager;
 use crate::skill::skill_definition::SkillDefinition;
 
@@ -28,9 +29,14 @@ impl INode for SkillResourceModule {
 
 #[godot_api]
 impl SkillResourceModule {
+    #[signal]
+    pub(crate) fn added_to_battle_entity(entity: Gd<BattleEntity>);
+
     pub(crate) fn consume_resources_for_casting(&self, skill: SkillDefinition) {
         let mut implementation = self.implementation.clone().unwrap();
-        implementation.dyn_bind_mut().consume_resources_for_casting(skill);
+        implementation
+            .dyn_bind_mut()
+            .consume_resources_for_casting(skill);
     }
 
     pub(crate) fn has_resources_to_cast(&self, skill: SkillDefinition) -> bool {
