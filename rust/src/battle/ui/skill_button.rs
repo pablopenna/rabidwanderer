@@ -6,21 +6,24 @@ use crate::skill::skill::Skill;
 use crate::skill::skill_definition::SkillDefinition;
 
 #[derive(GodotClass)]
-#[class(base=Button)]
+#[class(base=BoxContainer)]
 pub struct SkillButton {
-    #[export]
+    #[var]
     linked_skill: Option<Gd<Skill>>, // set on instantiation
     #[var]
     skill_resource: Option<Gd<SkillResourceModule>>, // set on instantiation
-    base: Base<Button>,
+    #[export]
+    button: OnEditor<Gd<Button>>,
+    base: Base<BoxContainer>,
 }
 
 #[godot_api]
-impl IButton for SkillButton {
-    fn init(base: Base<Button>) -> Self {
+impl IBoxContainer for SkillButton {
+    fn init(base: Base<BoxContainer>) -> Self {
         Self {
             linked_skill: None,
             skill_resource: None,
+            button: OnEditor::default(),
             base,
         }
     }
@@ -35,9 +38,12 @@ impl SkillButton {
     pub(crate) fn skill_button_pressed(skill: Gd<Skill>, skill_resource: Gd<SkillResourceModule>);
 
     fn setup(&mut self) {
-        self.signals()
+        let button = self.get_button().unwrap();
+
+        button
+            .signals()
             .pressed()
-            .connect_self(Self::on_button_pressed);
+            .connect_other(self, Self::on_button_pressed);
 
         self.setup_icon();
     }
@@ -48,7 +54,9 @@ impl SkillButton {
         if icon.is_none() {
             return;
         }
-        self.base_mut().set_button_icon(&icon.unwrap());
+
+        let mut button = self.get_button().unwrap();
+        button.set_button_icon(&icon.unwrap());
     }
 
     fn on_button_pressed(&mut self) {
