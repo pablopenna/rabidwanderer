@@ -43,12 +43,15 @@ impl RealStats {
     #[signal]
     pub(crate) fn hp_changed(new_hp: u16);
 
-    pub(crate) fn new(base_stats: Gd<BaseStats>, inventory: Option<Gd<InventoryModule>>) -> Gd<Self> {
+    pub(crate) fn new(
+        base_stats: Gd<BaseStats>,
+        inventory: Option<Gd<InventoryModule>>,
+    ) -> Gd<Self> {
         let mut new_stats = Self::new_gd();
         new_stats.bind_mut().current_hp = base_stats.bind().get_max_hp();
         new_stats.bind_mut().base_stats = base_stats;
         new_stats.bind_mut().inventory = inventory;
-        
+
         new_stats
     }
 
@@ -71,9 +74,16 @@ impl RealStats {
     pub(crate) fn get_stat(&self, stat: Stat) -> i16 {
         let base_value = self.get_base_stat(&stat) as i16;
         let modifier = self.get_modifier_from_items(&stat);
-        let stat_value =  base_value + modifier;
+        let stat_value = base_value + modifier;
         if stat == Stat::Attack {
-            return stat_value + Self::add_randomization_to(stat_value, DAMAGE_VARIATION_RATIO);
+            let randomization = Self::get_randomization_for(stat_value, DAMAGE_VARIATION_RATIO);
+            godot_print!(
+                "[DMG CALC] base: {}, modifier: {}, rand: {}",
+                base_value,
+                modifier,
+                randomization
+            );
+            return stat_value + randomization;
         }
         stat_value
     }
@@ -91,14 +101,15 @@ impl RealStats {
         if self.inventory.is_none() {
             return 0;
         }
-        
+
         let items = self.inventory.clone().unwrap().bind().get_items();
-        let modifiers_from_items: Array<Gd<StatModifier>> = items.iter_shared().flat_map(
-            |item| {
+        let modifiers_from_items: Array<Gd<StatModifier>> = items
+            .iter_shared()
+            .flat_map(|item| {
                 let modifiers = item.bind().get_modifiers_for_stat(&base_stat);
                 modifiers.iter_shared().collect::<Vec<_>>()
-            }
-        ).collect();
+            })
+            .collect();
 
         let mut modified_value: i16 = 0;
         modifiers_from_items.iter_shared().for_each(|r#mod| {
@@ -106,25 +117,28 @@ impl RealStats {
             match r#type {
                 ModifierType::FLAT => {
                     modified_value = modified_value + r#mod.bind().get_value().round() as i16;
-                },
+                }
                 ModifierType::PERCENTAGE => {
-                    modified_value += (modified_value as f32 * r#mod.bind().get_value()).round() as i16;
-                },
+                    modified_value +=
+                        (modified_value as f32 * r#mod.bind().get_value()).round() as i16;
+                }
                 ModifierType::CUSTOM => {
-                    let custom_modifier = CustomModifier::from_gstring(r#mod.bind().get_custom_implementation());
-                    let custom_modifier_logic = get_implementation_for_custom_modifier(custom_modifier);
+                    let custom_modifier =
+                        CustomModifier::from_gstring(r#mod.bind().get_custom_implementation());
+                    let custom_modifier_logic =
+                        get_implementation_for_custom_modifier(custom_modifier);
                     modified_value = modified_value + custom_modifier_logic(modified_value)
-                },
+                }
             }
         });
 
         modified_value
     }
 
-    fn add_randomization_to(value: i16, ratio: f32) -> i16 {
+    fn get_randomization_for(value: i16, ratio: f32) -> i16 {
         let mut rng = rand::rng();
         let variation: f32 = value as f32 * ratio;
-        let randomized_value = value as f32 + rng.random_range(-variation..variation);
+        let randomized_value = rng.random_range(-variation..variation);
 
         randomized_value.round() as i16
     }
