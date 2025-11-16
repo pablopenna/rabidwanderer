@@ -2,19 +2,20 @@
 
 [ext_resource type="Texture2D" uid="uid://b7xa22vrbjk3j" path="res://art/tombstone.png" id="1_hrvhf"]
 
-[node name="Container" type="SkillButton" node_paths=PackedStringArray("button")]
-button = NodePath("SkillButton")
+[node name="SkillButton" type="SkillButton" node_paths=PackedStringArray("button", "resource_label")]
+button = NodePath("Button")
+resource_label = NodePath("ResourceLabel")
 offset_right = 18.0
 offset_bottom = 35.0
 theme_override_constants/separation = 0
 vertical = true
 
-[node name="SkillButton" type="Button" parent="."]
+[node name="Button" type="Button" parent="."]
 layout_mode = 2
 icon = ExtResource("1_hrvhf")
 icon_alignment = 1
 
-[node name="SkillTooltipTrigger" type="SkillTooltipTrigger" parent="SkillButton" node_paths=PackedStringArray("skill_button")]
+[node name="SkillTooltipTrigger" type="SkillTooltipTrigger" parent="Button" node_paths=PackedStringArray("skill_button")]
 skill_button = NodePath("../..")
 layout_mode = 1
 anchors_preset = 15
@@ -24,7 +25,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 
-[node name="Label" type="Label" parent="."]
+[node name="ResourceLabel" type="Label" parent="."]
 layout_mode = 2
 size_flags_horizontal = 8
 text = "?"

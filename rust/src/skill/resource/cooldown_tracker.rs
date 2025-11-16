@@ -33,13 +33,7 @@ impl INode for CooldownTracker {
 #[godot_dyn]
 impl SkillResourceManager for CooldownTracker {
     fn consume_resources_for_casting(&mut self, skill: SkillDefinition) {
-        let skill_node_to_track = self
-            .get_skills_container()
-            .clone()
-            .unwrap()
-            .bind()
-            .get_skill_with_name(skill)
-            .unwrap();
+        let skill_node_to_track = self._get_skill_node_for_skill(skill).unwrap();
         let definition = SkillDefinition::from_gstring(skill_node_to_track.bind().get_name());
         let skill_cooldown = definition.get_cooldown();
         let _previous_value = self
@@ -47,14 +41,8 @@ impl SkillResourceManager for CooldownTracker {
             .insert(skill_node_to_track, skill_cooldown);
     }
 
-    fn has_resources_to_cast(&mut self, skill: SkillDefinition) -> bool {
-        let skill_node_to_track = self
-            .get_skills_container()
-            .clone()
-            .unwrap()
-            .bind()
-            .get_skill_with_name(skill)
-            .unwrap();
+    fn has_resources_to_cast(&self, skill: SkillDefinition) -> bool {
+        let skill_node_to_track = self._get_skill_node_for_skill(skill).unwrap();
         if !self
             .cooldowns_tracking_table
             .contains_key(&skill_node_to_track)
@@ -67,6 +55,24 @@ impl SkillResourceManager for CooldownTracker {
             .unwrap();
 
         *remaining_cooldown <= 0
+    }
+
+    /* get skill cooldown */
+    fn get_resource_cost_for(&self, skill: SkillDefinition) -> u16 {
+        let skill_cooldown = skill.get_cooldown();
+        skill_cooldown as u16
+    }
+
+    /* get remaining skill cooldown */
+    fn get_available_resource_for(&self, skill: SkillDefinition) -> u16 {
+        let skill_node = self._get_skill_node_for_skill(skill).unwrap();
+        let remaining_cooldown = self.cooldowns_tracking_table.get(&skill_node);
+
+        if remaining_cooldown.is_none() {
+            return 0;
+        }
+
+        *remaining_cooldown.unwrap() as u16
     }
 }
 
@@ -105,5 +111,13 @@ impl CooldownTracker {
         if *cooldown > 0 {
             *cooldown -= 1;
         }
+    }
+
+    fn _get_skill_node_for_skill(&self, skill: SkillDefinition) -> Option<Gd<Skill>> {
+        self.get_skills_container()
+            .clone()
+            .unwrap()
+            .bind()
+            .get_skill_with_name(skill)
     }
 }

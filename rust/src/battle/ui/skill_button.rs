@@ -14,6 +14,8 @@ pub struct SkillButton {
     skill_resource: Option<Gd<SkillResourceModule>>, // set on instantiation
     #[export]
     button: OnEditor<Gd<Button>>,
+    #[export]
+    resource_label: OnEditor<Gd<Label>>,
     base: Base<BoxContainer>,
 }
 
@@ -24,6 +26,7 @@ impl IBoxContainer for SkillButton {
             linked_skill: None,
             skill_resource: None,
             button: OnEditor::default(),
+            resource_label: OnEditor::default(),
             base,
         }
     }
@@ -46,6 +49,7 @@ impl SkillButton {
             .connect_other(self, Self::on_button_pressed);
 
         self.setup_icon();
+        self.update_resource_label();
     }
 
     fn setup_icon(&mut self) {
@@ -57,6 +61,21 @@ impl SkillButton {
 
         let mut button = self.get_button().unwrap();
         button.set_button_icon(&icon.unwrap());
+    }
+
+    fn update_resource_label(&mut self) {
+        let skill = self.linked_skill.clone().unwrap();
+        let skill_definition = SkillDefinition::from_gstring(skill.bind().get_name());
+
+        let resource = self.get_skill_resource().unwrap();
+        let resource_implementation = resource.bind().get_implementation();
+        let available_resource = resource_implementation
+            .dyn_bind()
+            .get_available_resource_for(skill_definition)
+            .to_string();
+
+        let mut label = self.get_resource_label().unwrap();
+        label.set_text(&available_resource);
     }
 
     fn on_button_pressed(&mut self) {

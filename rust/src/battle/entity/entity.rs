@@ -111,7 +111,7 @@ impl BattleEntity {
         mut this: Gd<Self>,
         skill_name: SkillDefinition,
         mut skill: DynGd<Node, dyn SkillImplementation>,
-        skill_resource: Gd<SkillResourceModule>,
+        mut skill_resource: Gd<SkillResourceModule>,
     ) {
         // let skill_resource = this.bind().get_skill_resource();
 
@@ -130,7 +130,7 @@ impl BattleEntity {
         }
 
         skill_resource
-            .bind()
+            .bind_mut()
             .consume_resources_for_casting(skill_name);
         skill
             .dyn_bind_mut()

@@ -6,7 +6,6 @@ use crate::entity::modules::skill::skill_container::SkillContainerModule;
 use crate::entity::modules::skill::skill_resource::SkillResourceModule;
 use crate::global_signals::GlobalSignals;
 use crate::skill::skill::Skill;
-use crate::skill::skill_definition::SkillDefinition;
 
 #[derive(GodotClass)]
 #[class(init, base=GridContainer)]

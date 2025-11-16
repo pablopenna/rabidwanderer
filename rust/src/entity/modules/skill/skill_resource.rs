@@ -12,8 +12,11 @@ use crate::skill::skill_definition::SkillDefinition;
 #[derive(GodotClass)]
 #[class(base=Node)]
 pub(crate) struct SkillResourceModule {
+    // HACK: if I call it implementation, get_implementation() is automatically generated
+    // due to #[export] and it breaks the DynGd part: the return type of that generated
+    // function becomes Option<Gd<Node>>.
     #[export]
-    implementation: Option<DynGd<Node, dyn SkillResourceManager>>,
+    _implementation: Option<DynGd<Node, dyn SkillResourceManager>>,
     base: Base<Node>,
 }
 
@@ -22,7 +25,7 @@ impl INode for SkillResourceModule {
     fn init(base: Base<Node>) -> Self {
         Self {
             base,
-            implementation: None,
+            _implementation: Option::default(),
         }
     }
 }
@@ -32,17 +35,23 @@ impl SkillResourceModule {
     #[signal]
     pub(crate) fn added_to_battle_entity(entity: Gd<BattleEntity>);
 
-    pub(crate) fn consume_resources_for_casting(&self, skill: SkillDefinition) {
-        let mut implementation = self.implementation.clone().unwrap();
-        implementation
+    pub(crate) fn consume_resources_for_casting(&mut self, skill: SkillDefinition) {
+        self._implementation
+            .clone()
+            .unwrap()
             .dyn_bind_mut()
             .consume_resources_for_casting(skill);
     }
 
     pub(crate) fn has_resources_to_cast(&self, skill: SkillDefinition) -> bool {
-        let mut implementation = self.implementation.clone().unwrap();
-        let can_cast = implementation.dyn_bind_mut().has_resources_to_cast(skill);
+        self._implementation
+            .clone()
+            .unwrap()
+            .dyn_bind()
+            .has_resources_to_cast(skill)
+    }
 
-        can_cast
+    pub(crate) fn get_implementation(&self) -> DynGd<Node, dyn SkillResourceManager> {
+        self._implementation.clone().unwrap()
     }
 }
