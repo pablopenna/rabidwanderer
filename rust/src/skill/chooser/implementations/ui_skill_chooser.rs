@@ -4,6 +4,7 @@ use godot::prelude::*;
 
 use crate::battle::entity::entity::BattleEntity;
 use crate::entity::modules::skill::skill_container::SkillContainerModule;
+use crate::entity::modules::skill::skill_resource::SkillResourceModule;
 use crate::global_signals::GlobalSignals;
 use crate::skill::chooser::skill_chooser::SkillChooser;
 use crate::skill::skill::Skill;
@@ -26,22 +27,40 @@ impl INode for UiSkillChooser {
 
 impl UiSkillChooser {
     fn setup(&mut self) {
-        self.get_skill_chooser().unwrap().signals().choose_skill().connect_other(self, Self::choose);
+        self.get_skill_chooser()
+            .unwrap()
+            .signals()
+            .choose_skill()
+            .connect_other(self, Self::choose);
     }
 
-    fn choose(&mut self, skill_pool: Gd<SkillContainerModule>, target: Gd<BattleEntity>) {
-        
-        GlobalSignals::get_singleton().signals().skill_chosen_in_battle_ui().builder()
-        .flags(ConnectFlags::ONE_SHOT)
-        .connect_other_mut(self, Self::on_skill_chosen_by_ui);
-    
-        GlobalSignals::get_singleton().signals().show_skills_in_battle_ui().emit(&skill_pool);  
+    fn choose(
+        &mut self,
+        skill_pool: Gd<SkillContainerModule>,
+        skill_resource: Gd<SkillResourceModule>,
+        _target: Gd<BattleEntity>,
+    ) {
+        GlobalSignals::get_singleton()
+            .signals()
+            .skill_chosen_in_battle_ui()
+            .builder()
+            .flags(ConnectFlags::ONE_SHOT)
+            .connect_other_mut(self, Self::on_skill_chosen_by_ui);
+
+        GlobalSignals::get_singleton()
+            .signals()
+            .show_skills_in_battle_ui()
+            .emit(&skill_pool, &skill_resource);
     }
 
-    fn on_skill_chosen_by_ui(&mut self, mut skill: Gd<Skill>) {
+    fn on_skill_chosen_by_ui(&mut self, mut skill: Gd<Skill>, skill_resource: Gd<SkillResourceModule>) {
         let name = SkillDefinition::from_gstring(skill.bind().get_name());
         let implementation = skill.bind_mut().get_implementation();
 
-        self.get_skill_chooser().unwrap().signals().skill_chosen().emit(name, &implementation);
+        self.get_skill_chooser()
+            .unwrap()
+            .signals()
+            .skill_chosen()
+            .emit(name, &implementation, &skill_resource);
     }
 }

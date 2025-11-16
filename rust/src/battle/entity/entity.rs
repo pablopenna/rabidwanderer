@@ -2,13 +2,13 @@ use godot::classes::object::ConnectFlags;
 use godot::classes::*;
 use godot::prelude::*;
 
+use crate::battle::team::Team;
 use crate::entity::modules::skill::skill_container::SkillContainerModule;
 use crate::entity::modules::skill::skill_resource::SkillResourceModule;
 use crate::skill::chooser::skill_chooser::SkillChooser;
 use crate::skill::skill_definition::SkillDefinition;
 use crate::skill::skill_implementation::SkillImplementation;
 use crate::stats::real::RealStats;
-use crate::battle::team::Team;
 use crate::stats::stat::Stat;
 
 #[derive(GodotClass)]
@@ -59,6 +59,7 @@ impl BattleEntity {
     pub(crate) fn done_acting();
 
     pub(crate) fn take_damage(&mut self, damage: u16) {
+        godot_print!("[{}] is taking {} damage", self.base().get_name(), damage);
         let hp = self.stats.bind_mut().get_current_hp();
         if hp > damage {
             self.stats.bind_mut().set_current_hp(hp - damage);
@@ -66,7 +67,11 @@ impl BattleEntity {
             self.stats.bind_mut().set_current_hp(0);
             self.signals().death().emit();
         }
-        godot_print!("Ouch! I have {} remaining", self.stats.bind().get_current_hp());
+        godot_print!(
+            "[{}] Ouch! I have {} remaining",
+            self.base().get_name(),
+            self.stats.bind().get_current_hp()
+        );
     }
 
     #[func(gd_self)]
@@ -74,29 +79,62 @@ impl BattleEntity {
         let skills_container = this.bind().get_skills();
         let target = this.bind().get_target().unwrap();
         let skill_chooser = this.bind().get_skill_chooser().unwrap();
-        
+        let skill_resource = this.bind().get_skill_resource();
+
         // Passing the "this" variable as parameter to connect_other gives compilation error
         // Workaround is using connect() with a closure + "move" keyword. Source:
         // https://github.com/godot-rust/gdext/issues/1318#issuecomment-3306720324
-        skill_chooser.signals().skill_chosen().builder()
-        .flags(ConnectFlags::ONE_SHOT)
-        .connect( move |skill_name, skill_implementation| 
-            Self::on_skill_chosen(this.clone(), skill_name, skill_implementation)
-        );
-        skill_chooser.signals().choose_skill().emit(&skills_container, &target);
+        skill_chooser
+            .signals()
+            .skill_chosen()
+            .builder()
+            .flags(ConnectFlags::ONE_SHOT)
+            .connect(
+                move |skill_name, skill_implementation, skill_resource_from_signal| {
+                    Self::on_skill_chosen(
+                        this.clone(),
+                        skill_name,
+                        skill_implementation,
+                        skill_resource_from_signal,
+                    )
+                },
+            );
+
+        skill_chooser
+            .signals()
+            .choose_skill()
+            .emit(&skills_container, &skill_resource, &target);
     }
 
     #[func(gd_self)]
-    fn on_skill_chosen(mut this: Gd<Self>, skill_name: SkillDefinition, mut skill: DynGd<Node, dyn SkillImplementation>) {
-        let skill_resource = this.bind().get_skill_resource();
-        if !skill_resource.bind().has_resources_to_cast(skill_name.clone()) {
-            // TODO: do not lose action
-            godot_print!("[{}] resources to cast {} are not enough", this.get_name(), skill_name.to_variant());
+    fn on_skill_chosen(
+        mut this: Gd<Self>,
+        skill_name: SkillDefinition,
+        mut skill: DynGd<Node, dyn SkillImplementation>,
+        skill_resource: Gd<SkillResourceModule>,
+    ) {
+        // let skill_resource = this.bind().get_skill_resource();
+
+        // TODO: Do this check in the SkillChooser so this should never happen
+        if !skill_resource
+            .bind()
+            .has_resources_to_cast(skill_name.clone())
+        {
+            godot_print!(
+                "[FATAL] Skill {} chosen by {} cannot be casted as there are not enough resources",
+                skill_name.to_variant(),
+                this.get_name()
+            );
             this.bind_mut().on_done_acting();
             return;
         }
-        skill_resource.bind().consume_resources_for_casting(skill_name);
-        skill.dyn_bind_mut().cast(this.clone(), this.bind().target.clone().unwrap());
+
+        skill_resource
+            .bind()
+            .consume_resources_for_casting(skill_name);
+        skill
+            .dyn_bind_mut()
+            .cast(this.clone(), this.bind().target.clone().unwrap());
     }
 
     #[func]
@@ -112,7 +150,12 @@ impl BattleEntity {
     fn on_apply_damage(&mut self) {
         godot_print!("I am {} and I'm attacking", self.base().get_name());
         let attack_damage = self.stats.bind().get_stat(Stat::Attack);
-        self.target.clone().unwrap().bind_mut().take_damage(attack_damage.max(0) as u16);
+        godot_print!("I am about to deal {} damage", attack_damage);
+        self.target
+            .clone()
+            .unwrap()
+            .bind_mut()
+            .take_damage(attack_damage.max(0) as u16);
     }
 
     #[func]

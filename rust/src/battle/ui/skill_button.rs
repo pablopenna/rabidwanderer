@@ -1,13 +1,17 @@
 use godot::classes::*;
 use godot::prelude::*;
 
+use crate::entity::modules::skill::skill_resource::SkillResourceModule;
 use crate::skill::skill::Skill;
+use crate::skill::skill_definition::SkillDefinition;
 
 #[derive(GodotClass)]
 #[class(base=Button)]
 pub struct SkillButton {
     #[export]
     linked_skill: Option<Gd<Skill>>, // set on instantiation
+    #[var]
+    skill_resource: Option<Gd<SkillResourceModule>>, // set on instantiation
     base: Base<Button>,
 }
 
@@ -16,6 +20,7 @@ impl IButton for SkillButton {
     fn init(base: Base<Button>) -> Self {
         Self {
             linked_skill: None,
+            skill_resource: None,
             base,
         }
     }
@@ -27,11 +32,13 @@ impl IButton for SkillButton {
 #[godot_api]
 impl SkillButton {
     #[signal]
-    pub(crate) fn skill_button_pressed(skill: Gd<Skill>);
+    pub(crate) fn skill_button_pressed(skill: Gd<Skill>, skill_resource: Gd<SkillResourceModule>);
 
     fn setup(&mut self) {
-        self.signals().pressed().connect_self(Self::on_button_pressed);   
-        
+        self.signals()
+            .pressed()
+            .connect_self(Self::on_button_pressed);
+
         self.setup_icon();
     }
 
@@ -46,7 +53,17 @@ impl SkillButton {
 
     fn on_button_pressed(&mut self) {
         let skill = self.linked_skill.clone().unwrap();
-        self.signals().skill_button_pressed().emit(&skill);
+        let skill_resource = self.skill_resource.clone().unwrap();
+        let can_cast = skill_resource
+            .bind()
+            .has_resources_to_cast(SkillDefinition::from_gstring(skill.bind().get_name()));
+
+        if can_cast {
+            self.signals()
+                .skill_button_pressed()
+                .emit(&skill, &skill_resource);
+        } else {
+            godot_print!("Cannot choose that!");
+        }
     }
 }
-
