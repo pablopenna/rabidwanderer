@@ -33,7 +33,8 @@ impl SkillChooser {
     pub(crate) fn choose_skill(
         skill_pool: Gd<SkillContainerModule>,
         skill_resource: Gd<SkillResourceModule>,
-        target: Gd<BattleEntity>,
+        actor: Gd<BattleEntity>,
+        target_candidates: Array<Gd<BattleEntity>>,
     );
 
     // emited by the child of this node once a skill is chosen. The battle entity emiting the signal above should listen to this
@@ -42,5 +43,6 @@ impl SkillChooser {
         skill_name: SkillDefinition,
         skill_implementation: DynGd<Node, dyn SkillImplementation>,
         skill_resource: Gd<SkillResourceModule>,
+        targets: Array<Gd<BattleEntity>>,
     );
 }

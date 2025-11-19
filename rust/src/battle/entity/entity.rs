@@ -2,7 +2,9 @@ use godot::classes::object::ConnectFlags;
 use godot::classes::*;
 use godot::prelude::*;
 
+use crate::battle::entity::container::BattleEntityContainer;
 use crate::battle::team::Team;
+use crate::consts::groups::get_battle_entity_container_node_from_tree;
 use crate::entity::modules::skill::skill_container::SkillContainerModule;
 use crate::entity::modules::skill::skill_resource::SkillResourceModule;
 use crate::skill::chooser::skill_chooser::SkillChooser;
@@ -26,11 +28,10 @@ pub(crate) struct BattleEntity {
     #[export]
     team: Team,
     #[export]
-    target: Option<Gd<BattleEntity>>,
-    #[export]
     animation_player: OnEditor<Gd<AnimationPlayer>>,
     #[export]
     sprite: OnEditor<Gd<Sprite2D>>,
+    battle_entity_container: Option<Gd<BattleEntityContainer>>,
 }
 
 #[godot_api]
@@ -43,9 +44,9 @@ impl INode2D for BattleEntity {
             skill_chooser: OnEditor::default(),
             skill_resource: SkillResourceModule::new_alloc(),
             team: Team::Player,
-            target: None,
             animation_player: OnEditor::default(),
             sprite: OnEditor::default(),
+            battle_entity_container: None,
         }
     }
 }
@@ -77,9 +78,14 @@ impl BattleEntity {
     #[func(gd_self)]
     pub(crate) fn act_with_skill(this: Gd<Self>) {
         let skills_container = this.bind().get_skills();
-        let target = this.bind().get_target().unwrap();
         let skill_chooser = this.bind().get_skill_chooser().unwrap();
         let skill_resource = this.bind().get_skill_resource();
+
+        let container = BattleEntity::get_battle_entity_container(this.clone());
+        let target_candidates = container.bind().get_all_entities();
+
+        // Ugly but needed AFAIK due to borrowing and lifecycle
+        let that = this.clone();
 
         // Passing the "this" variable as parameter to connect_other gives compilation error
         // Workaround is using connect() with a closure + "move" keyword. Source:
@@ -90,20 +96,23 @@ impl BattleEntity {
             .builder()
             .flags(ConnectFlags::ONE_SHOT)
             .connect(
-                move |skill_name, skill_implementation, skill_resource_from_signal| {
+                move |skill_name, skill_implementation, skill_resource_from_signal, targets| {
                     Self::on_skill_chosen(
-                        this.clone(),
+                        that.clone(),
                         skill_name,
                         skill_implementation,
                         skill_resource_from_signal,
+                        targets,
                     )
                 },
             );
 
-        skill_chooser
-            .signals()
-            .choose_skill()
-            .emit(&skills_container, &skill_resource, &target);
+        skill_chooser.signals().choose_skill().emit(
+            &skills_container,
+            &skill_resource,
+            &this,
+            &target_candidates,
+        );
     }
 
     #[func(gd_self)]
@@ -112,6 +121,7 @@ impl BattleEntity {
         skill_name: SkillDefinition,
         mut skill: DynGd<Node, dyn SkillImplementation>,
         mut skill_resource: Gd<SkillResourceModule>,
+        targets: Array<Gd<BattleEntity>>,
     ) {
         // let skill_resource = this.bind().get_skill_resource();
 
@@ -132,9 +142,7 @@ impl BattleEntity {
         skill_resource
             .bind_mut()
             .consume_resources_for_casting(skill_name);
-        skill
-            .dyn_bind_mut()
-            .cast(this.clone(), this.bind().target.clone().unwrap());
+        skill.dyn_bind_mut().cast(this.clone(), &targets);
     }
 
     #[func]
@@ -146,16 +154,24 @@ impl BattleEntity {
         self.on_done_acting();
     }
 
+    // TODO: move to skill (as targets are visible to skill)
     #[func]
-    fn on_apply_damage(&mut self) {
-        godot_print!("I am {} and I'm attacking", self.base().get_name());
+    fn on_apply_damage(&mut self, targets: Array<Gd<BattleEntity>>) {
+        godot_print!("[{}] I'm attacking", self.base().get_name());
         let attack_damage = self.stats.bind().get_stat(Stat::Attack);
-        godot_print!("I am about to deal {} damage", attack_damage);
-        self.target
-            .clone()
-            .unwrap()
-            .bind_mut()
-            .take_damage(attack_damage.max(0) as u16);
+        godot_print!(
+            "[{}] I am about to deal {} damage",
+            self.base().get_name(),
+            attack_damage
+        );
+        let mut target = targets.at(0);
+        godot_print!(
+            "[{}] I am about to attack {}",
+            self.base().get_name(),
+            target.get_name()
+        );
+
+        target.bind_mut().take_damage(attack_damage.max(0) as u16);
     }
 
     #[func]
@@ -165,7 +181,18 @@ impl BattleEntity {
 
     #[func]
     fn on_done_acting(&mut self) {
-        godot_print!("I am {} and I'm done", self.base().get_name());
+        godot_print!("[{}] I'm done", self.base().get_name());
         self.signals().done_acting().emit();
+    }
+
+    #[func(gd_self)]
+    fn get_battle_entity_container(mut this: Gd<Self>) -> Gd<BattleEntityContainer> {
+        if this.bind().battle_entity_container.is_none() {
+            let node = this.clone().upcast::<Node>();
+            this.bind_mut().battle_entity_container =
+                Some(get_battle_entity_container_node_from_tree(&node));
+        }
+
+        this.bind().battle_entity_container.clone().unwrap()
     }
 }

@@ -47,7 +47,6 @@ impl BattleSetup {
         if !are_there_enemies { return; }
         
         self.set_instances_position(&battle_entities);
-        self.set_instances_targets(&battle_entities);
         self.add_instances_to_container(&battle_entities);
 
         GlobalSignals::get_singleton().signals().battle_set_up().emit();
@@ -76,19 +75,6 @@ impl BattleSetup {
                 e.set_position(self.player_position_reference.get_position());
             } else {
                 e.set_position(self.enemy_position_reference.get_position());
-            }
-        });
-    }
-
-    fn set_instances_targets(&self, instances: &Array<Gd<BattleEntity>>) {
-        let player_instances = Team::get_entities_from_team(Team::Player, instances);
-        let enemy_instances = Team::get_entities_from_team(Team::Enemy, instances);
-
-        instances.iter_shared().for_each(|mut e| {
-            if Team::from_gstring(e.bind().get_team()) == Team::Player {
-                e.bind_mut().set_target(Some(enemy_instances.clone().at(0)));
-            } else {
-                e.bind_mut().set_target(Some(player_instances.clone().at(0)));
             }
         });
     }
