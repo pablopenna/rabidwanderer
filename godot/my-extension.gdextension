@@ -71,5 +71,7 @@ SkillChooser="res://icon.svg"
 FirstSkillChooser="res://icon.svg"
 UiSkillChooser="res://icon.svg"
 
+TargetingTrigger="res://icon.svg"
+
 TackleSkillImplementation="res://icon.svg"
 BiteSkillImplementation="res://icon.svg"

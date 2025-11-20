@@ -1,6 +1,6 @@
 use godot::prelude::*;
 
-use crate::{entity::modules::skill::{skill_container::SkillContainerModule, skill_resource::SkillResourceModule}, item::item::Item, skill::skill::Skill};
+use crate::{battle::entity::entity::BattleEntity, entity::modules::skill::{skill_container::SkillContainerModule, skill_resource::SkillResourceModule}, item::item::Item, skill::skill::Skill};
 
 #[derive(GodotClass)]
 #[class(init, base=Object)]
@@ -31,20 +31,27 @@ impl GlobalSignals {
     #[signal]
     pub(crate) fn battle_ui_hid();
 
+    // Skills
     #[signal]
     pub(crate) fn show_skills_in_battle_ui(skills: Gd<SkillContainerModule>, skill_resource: Gd<SkillResourceModule>);
     #[signal]
     pub(crate) fn skill_chosen_in_battle_ui(skill: Gd<Skill>, skill_resource: Gd<SkillResourceModule>);
 
+    // Inventory
     #[signal]
     pub(crate) fn inventory_ui_item_added(item: Gd<Item>);
     #[signal]
     pub(crate) fn inventory_ui_item_clicked(item: Gd<Item>);
 
+    // Tooltip
     #[signal]
     pub(crate) fn show_tooltip(content: GString);
     #[signal]
     pub(crate) fn hide_tooltip();
+    
+    // Targeting
+    #[signal]
+    pub(crate) fn entity_targeted_via_ui(battle_entity: Gd<BattleEntity>);
 
     pub(crate) fn get_singleton() -> Gd<GlobalSignals> {
         godot::classes::Engine::singleton().get_singleton("GlobalSignals").unwrap().cast::<GlobalSignals>()
