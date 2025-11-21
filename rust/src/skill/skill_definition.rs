@@ -2,7 +2,7 @@ use godot::prelude::*;
 use rand::Rng;
 
 #[derive(GodotConvert, Var, Export, Clone, PartialEq, Debug)]
-#[godot(via = GString)] 
+#[godot(via = GString)]
 pub(crate) enum SkillDefinition {
     Tackle,
     Bite,
@@ -18,9 +18,9 @@ impl SkillDefinition {
 
     pub(crate) fn get_description(&self) -> &'static str {
         match self {
-            SkillDefinition::Tackle => 
-                "[img]res://art/tombstone.png[/img]Furiously charges at the enemy dealing average damage",
-            SkillDefinition::Bite => 
+            SkillDefinition::Tackle =>
+                "[img]res://art/misc/tombstone.png[/img]Furiously charges at the enemy dealing average damage",
+            SkillDefinition::Bite =>
                 "Omn nom nom nom\n...\nChomp\n...\n*gulp*",
         }
     }
@@ -32,10 +32,7 @@ impl SkillDefinition {
         }
     }
 
-    const RANDOM_POOL: [SkillDefinition; 2] = [
-        SkillDefinition::Tackle,
-        SkillDefinition::Bite,
-    ];
+    const RANDOM_POOL: [SkillDefinition; 2] = [SkillDefinition::Tackle, SkillDefinition::Bite];
 
     pub(crate) fn random() -> Self {
         let mut rng = rand::rng();
