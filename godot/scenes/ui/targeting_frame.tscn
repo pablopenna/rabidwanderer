@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://3p0khdrpmsve"]
+
+[ext_resource type="Texture2D" uid="uid://eoeaenxd0nqd" path="res://art/ui/target_frame.png" id="1_gjlsw"]
+
+[node name="DynamicFrame" type="DynamicFrame"]
+margin = 4.0
+offset_right = 24.0
+offset_bottom = 24.0
+texture = ExtResource("1_gjlsw")
+draw_center = false
+patch_margin_left = 6
+patch_margin_top = 6
+patch_margin_right = 6
+patch_margin_bottom = 6

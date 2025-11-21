@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://chktskt814ykc"]
+[gd_scene load_steps=4 format=3 uid="uid://chktskt814ykc"]
 
 [ext_resource type="Texture2D" uid="uid://chb5sg8jyoyjr" path="res://art/entity/wolf.png" id="2_fems2"]
+[ext_resource type="PackedScene" uid="uid://3p0khdrpmsve" path="res://scenes/ui/targeting_frame.tscn" id="2_ynhry"]
 [ext_resource type="AnimationLibrary" uid="uid://d02urngyn0vvo" path="res://resources/animations/enemy_library.res" id="3_jwryq"]
 
 [node name="Wolf" type="BattleEntity" node_paths=PackedStringArray("skill_chooser", "animation_player", "sprite")]
@@ -15,6 +16,7 @@ metadata/_edit_lock_ = true
 
 [node name="TargetingTrigger" type="TargetingTrigger" parent="Sprite2D" node_paths=PackedStringArray("entity")]
 entity = NodePath("../..")
+frame_scene = ExtResource("2_ynhry")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
