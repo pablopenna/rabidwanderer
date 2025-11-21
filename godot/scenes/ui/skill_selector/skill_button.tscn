@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cei1r1x4rlter"]
 
-[ext_resource type="Texture2D" uid="uid://b7xa22vrbjk3j" path="res://art/tombstone.png" id="1_hrvhf"]
+[ext_resource type="Texture2D" uid="uid://b7xa22vrbjk3j" path="res://art/misc/tombstone.png" id="1_hrvhf"]
 
 [node name="SkillButton" type="SkillButton" node_paths=PackedStringArray("button", "resource_label")]
 button = NodePath("Button")
