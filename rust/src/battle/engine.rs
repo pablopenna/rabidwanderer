@@ -67,6 +67,13 @@ impl BattleEngine {
         }
 
         let mut current_action = self.current_action.clone().unwrap();
+        let current_actor = current_action.bind().get_actor();
+        
+        if !current_actor.bind().get_stats().bind().is_alive() {
+            self.on_current_action_done();
+            return;
+        }
+        
         current_action.signals().turn_ended().builder()
             .flags(ConnectFlags::ONE_SHOT | ConnectFlags::DEFERRED)
             .connect_other_mut(self, Self::on_current_action_done);

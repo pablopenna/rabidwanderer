@@ -25,6 +25,10 @@ impl INode for Action {
 impl Action {
     #[signal]
     pub(crate) fn turn_ended();
+    
+    pub(crate) fn get_actor(&self) -> Gd<BattleEntity> {
+        self.actor.clone().unwrap()
+    }
 
     pub(crate) fn new(actor: Gd<BattleEntity>) -> Gd<Self>{
         let mut new_turn = Action::new_alloc();
