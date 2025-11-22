@@ -40,19 +40,18 @@ wait_time = 0.1
 autostart = true
 
 [node name="PlayerRefPosition" type="Node2D" parent="."]
-position = Vector2(37, 55)
-metadata/_edit_lock_ = true
+position = Vector2(42, 55)
 
 [node name="EnemyRefPosition" type="Node2D" parent="."]
-position = Vector2(121, 55)
-metadata/_edit_lock_ = true
+position = Vector2(107, 55)
 
 [node name="TurnHandler" type="TurnHandler" parent="."]
 
-[node name="BattleSetup" type="BattleSetup" parent="." node_paths=PackedStringArray("player_position_reference", "enemy_position_reference", "container", "turns_handler")]
+[node name="BattleSetup" type="BattleSetup" parent="." node_paths=PackedStringArray("player_position_reference", "enemy_position_reference", "container", "placer", "turns_handler")]
 player_position_reference = NodePath("../PlayerRefPosition")
 enemy_position_reference = NodePath("../EnemyRefPosition")
 container = NodePath("../BattleEntityContainer")
+placer = NodePath("../BattleEntityPlacer")
 turns_handler = NodePath("../TurnHandler")
 
 [node name="BattleEngine" type="BattleEngine" parent="." node_paths=PackedStringArray("turn_handler", "battle_entity_container")]
@@ -60,6 +59,12 @@ turn_handler = NodePath("../TurnHandler")
 battle_entity_container = NodePath("../BattleEntityContainer")
 
 [node name="BattleEntityContainer" type="BattleEntityContainer" parent="."]
+
+[node name="BattleEntityPlacer" type="BattleEntityPlacer" parent="." node_paths=PackedStringArray("container", "player_team_reference_position", "enemy_team_reference_position")]
+container = NodePath("../BattleEntityContainer")
+player_team_reference_position = NodePath("../PlayerRefPosition")
+enemy_team_reference_position = NodePath("../EnemyRefPosition")
+offset = 26.0
 
 [node name="SkillAnimationFactory" type="SkillAnimationFactory" parent="."]
 bite_animation_scene = ExtResource("1_8rcu5")

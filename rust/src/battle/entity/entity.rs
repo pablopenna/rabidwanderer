@@ -58,6 +58,10 @@ impl BattleEntity {
 
     #[signal]
     pub(crate) fn done_acting();
+    
+    pub(crate) fn get_entity_team(&self) -> Team {
+        Team::from_gstring(self.team.get_property())
+    }
 
     pub(crate) fn take_damage(&mut self, damage: u16) {
         godot_print!("[{}] is taking {} damage", self.base().get_name(), damage);

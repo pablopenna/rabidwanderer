@@ -48,6 +48,7 @@ TurnHandler="res://icon.svg"
 Action="res://icon.svg"
 BattleSetup="res://icon.svg"
 BattleEntityContainer="res://icon.svg"
+BattleEntityPlacer="res://icon.svg"
 
 BattleUi="res://icon.svg"
 InventoryUiDisplay="res://icon.svg"

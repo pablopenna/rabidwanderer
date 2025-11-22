@@ -40,20 +40,17 @@ impl BattleEntityContainer {
             .collect()
     }
 
-    pub(crate) fn get_entities_from_team(&self, team: Team) -> Array<Gd<BattleEntity>> {
-        self.base()
-            .get_children()
-            .iter_shared()
-            .map(|child| child.cast::<BattleEntity>())
-            .filter(|entity| entity.bind().get_team() == team.get_property())
-            .collect()
+    pub(crate) fn get_entities_from_team(&self, team: &Team) -> Array<Gd<BattleEntity>> {
+        let all_entities = self.get_all_entities();
+
+        Team::get_entities_from_team(team, &all_entities)
     }
 
     pub(crate) fn get_alive_entities(&self) -> Array<Gd<BattleEntity>> {
-        self.base()
-            .get_children()
+        let all_entities = self.get_all_entities();
+
+        all_entities
             .iter_shared()
-            .map(|child| child.cast::<BattleEntity>())
             .filter(|entity| entity.bind().get_stats().bind().is_alive())
             .collect()
     }
