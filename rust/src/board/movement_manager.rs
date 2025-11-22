@@ -61,7 +61,7 @@ impl BoardMovementManager {
         entity.signals().moved_board_tile().emit();
     }
 
-    pub(crate) fn add_entity_to_board_at_coordinate(&mut self, entity: &mut Gd<BoardEntity>, coordinate: BoardCoordinate) {
+    pub(crate) fn add_entity_to_board_at_coordinate(&mut self, entity: &mut Gd<BoardEntity>, coordinate: &BoardCoordinate) {
         let mut data_tile = self
             .get_board()
             .unwrap()

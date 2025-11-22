@@ -37,13 +37,13 @@ impl INode for GameManager {
         {
             self.base_mut().add_to_group(GAME_MANAGER_GROUP);
         }
-        
+
         {
             let mut movement_manager_ref = self.movement_manager.bind_mut();
             let board = self.board.get_property().unwrap();
             movement_manager_ref.set_board(Option::Some(board));
         }
-        
+
         {
             let movement_manager_node = self.movement_manager.clone().upcast::<Node>();
             self.base_mut().add_child(&movement_manager_node);
@@ -61,9 +61,9 @@ impl GameManager {
 
     fn on_game_ready(&mut self) {
         self.place_player_in_starting_point();
-        for _ in 0..10  {
+        for _ in 0..10 {
             self.add_floor_item_to_random_tile();
-            self.add_enemy_to_random_tile();
+            self.add_enemy_to_random_tile(2);
         }
     }
 
@@ -77,14 +77,11 @@ impl GameManager {
             .bind_mut()
             .get_coordinates()
             .clone();
-        
+
         let mut player = self.get_player_ref();
-        
+
         let mut movement_manager_bind = self.movement_manager.bind_mut();
-        movement_manager_bind.add_entity_to_board_at_coordinate(
-            &mut player, 
-            starting_coordinate
-        );
+        movement_manager_bind.add_entity_to_board_at_coordinate(&mut player, &starting_coordinate);
     }
 
     fn get_player_ref(&self) -> Gd<BoardEntity> {
@@ -103,13 +100,18 @@ impl GameManager {
             .bind_mut()
             .get_coordinates()
             .clone();
-        
-        let mut item = self.floor_item_factory.bind_mut().create_random_floor_item();
 
-        self.movement_manager.bind_mut().add_entity_to_board_at_coordinate(&mut item, random_coordinate);
+        let mut item = self
+            .floor_item_factory
+            .bind_mut()
+            .create_random_floor_item();
+
+        self.movement_manager
+            .bind_mut()
+            .add_entity_to_board_at_coordinate(&mut item, &random_coordinate);
     }
 
-    fn add_enemy_to_random_tile(&mut self) {
+    fn add_enemy_to_random_tile(&mut self, amount: u8) {
         let random_coordinate = self
             .get_board()
             .unwrap()
@@ -119,10 +121,12 @@ impl GameManager {
             .bind_mut()
             .get_coordinates()
             .clone();
-        
-        let mut enemy = self.enemy_factory.bind_mut().instance_random_enemy();
 
-        self.movement_manager.bind_mut().add_entity_to_board_at_coordinate(&mut enemy, random_coordinate);
+        for _ in 0..amount {
+            let mut enemy = self.enemy_factory.bind_mut().instance_random_enemy();
+            self.movement_manager
+                .bind_mut()
+                .add_entity_to_board_at_coordinate(&mut enemy, &random_coordinate);
+        }
     }
 }
-
