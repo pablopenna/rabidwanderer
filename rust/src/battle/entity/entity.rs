@@ -58,7 +58,7 @@ impl BattleEntity {
 
     #[signal]
     pub(crate) fn done_acting();
-    
+
     pub(crate) fn get_entity_team(&self) -> Team {
         Team::from_gstring(self.team.get_property())
     }
@@ -159,24 +159,24 @@ impl BattleEntity {
     }
 
     // TODO: move to skill (as targets are visible to skill)
-    #[func]
-    fn on_apply_damage(&mut self, targets: Array<Gd<BattleEntity>>) {
-        godot_print!("[{}] I'm attacking", self.base().get_name());
-        let attack_damage = self.stats.bind().get_stat(Stat::Attack);
+    #[func(gd_self)]
+    fn on_apply_damage(this: Gd<Self>, targets: Array<Gd<BattleEntity>>) {
+        godot_print!("[{}] I'm attacking", this.get_name());
+        let attack_damage = this.bind().get_stats().bind().get_stat(Stat::Attack);
         godot_print!(
             "[{}] I am about to deal {} damage",
-            self.base().get_name(),
+            this.get_name(),
             attack_damage
         );
-        
+
         targets.iter_shared().for_each(|mut target| {
             godot_print!(
                 "[{}] I am about to attack {}",
-                self.base().get_name(),
+                this.get_name(),
                 target.get_name()
             );
-    
-            target.bind_mut().take_damage(attack_damage.max(0) as u16); 
+
+            target.bind_mut().take_damage(attack_damage.max(0) as u16);
         });
     }
 
