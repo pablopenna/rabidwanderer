@@ -9,8 +9,7 @@ use crate::global_signals::GlobalSignals;
 use crate::skill::chooser::skill_chooser::SkillChooser;
 use crate::skill::skill::Skill;
 use crate::skill::skill_definition::SkillDefinition;
-use crate::targeting::get_implementation::get_targets_using_mode;
-use crate::targeting::mode::TargetingMode;
+use crate::skill::skill_implementation::SkillImplementation;
 
 #[derive(GodotClass)]
 #[class(base=Node)]
@@ -19,7 +18,15 @@ pub(crate) struct UiSkillChooser {
     #[export]
     skill_chooser: OnEditor<Gd<SkillChooser>>,
     actor: Option<Gd<BattleEntity>>,
-    target_candidates: Array<Gd<BattleEntity>>,
+    status: Status,
+}
+
+// Attributes to store temporary data as I could not pass it along among methods with signals in between
+struct Status {
+    _skill_definition: Option<SkillDefinition>,
+    _skill_implementation: Option<DynGd<Node, dyn SkillImplementation>>,
+    _skill_resource: Option<Gd<SkillResourceModule>>,
+    _targets: Option<Array<Gd<BattleEntity>>>,
 }
 
 #[godot_api]
@@ -29,34 +36,52 @@ impl INode for UiSkillChooser {
             base,
             skill_chooser: OnEditor::default(),
             actor: None,
-            target_candidates: array!(),
+            status: Status {
+                _skill_definition: None,
+                _skill_implementation: None,
+                _skill_resource: None,
+                _targets: None,
+            },
         }
     }
-    
+
     fn ready(&mut self) {
         self.setup();
     }
 }
 
+// 1. Choose Skill via UI
+// 2. Choose target
 impl UiSkillChooser {
     fn setup(&mut self) {
         self.get_skill_chooser()
             .unwrap()
             .signals()
             .choose_skill()
-            .connect_other(self, Self::choose);
+            .connect_other(self, Self::choose_skill_via_ui);
     }
 
-    fn choose(
+    fn clear_status(&mut self) {
+        self.status = Status {
+            _skill_definition: None,
+            _skill_implementation: None,
+            _skill_resource: None,
+            _targets: None,
+        }
+    }
+
+    fn choose_skill_via_ui(
         &mut self,
         skill_pool: Gd<SkillContainerModule>,
         skill_resource: Gd<SkillResourceModule>,
         actor: Gd<BattleEntity>,
-        target_candidates: Array<Gd<BattleEntity>>,
+        _target_candidates: Array<Gd<BattleEntity>>, // TODO: use when TargetingType == ALL_ENEMIES, ALL, etc.
     ) {
         self.actor = Some(actor);
-        self.target_candidates.clone_from(&target_candidates);
-        
+        self.clear_status();
+
+        godot_print!("Choosing skill via UI...");
+
         GlobalSignals::get_singleton()
             .signals()
             .skill_chosen_in_battle_ui()
@@ -75,18 +100,48 @@ impl UiSkillChooser {
         mut skill: Gd<Skill>,
         skill_resource: Gd<SkillResourceModule>,
     ) {
-        let name = SkillDefinition::from_gstring(skill.bind().get_name());
-        let implementation = skill.bind_mut().get_implementation();
-        let targets = UiSkillChooser::get_targets(&self.actor.clone().unwrap(), &self.target_candidates);
+        self.status._skill_definition =
+            Some(SkillDefinition::from_gstring(skill.bind().get_name()));
+        self.status._skill_implementation = Some(skill.bind_mut().get_implementation());
+        self.status._skill_resource = Some(skill_resource);
+
+        godot_print!("Skill chosen via UI!");
+
+        // TODO: Trigger code that gates the UI to show targeting frames. Right now is always enabled.
+        self.choose_target_via_ui();
+    }
+
+    fn choose_target_via_ui(&mut self) {
+        godot_print!("Choosing target via UI...");
+
+        GlobalSignals::get_singleton()
+            .signals()
+            .entity_targeted_via_ui()
+            .builder()
+            .flags(ConnectFlags::ONE_SHOT)
+            .connect_other_mut(self, Self::on_target_chosen_by_ui);
+    }
+
+    fn on_target_chosen_by_ui(&mut self, target: Gd<BattleEntity>) {
+        self.status._targets = Some(array!(&target));
+
+        godot_print!("Target chosen via UI!");
+
+        self.finish_choosing();
+    }
+
+    fn finish_choosing(&mut self) {
+        godot_print!("Done choosing.");
 
         self.get_skill_chooser()
             .unwrap()
             .signals()
             .skill_chosen()
-            .emit(name, &implementation, &skill_resource, &targets);
-    }
-    
-    fn get_targets(actor: &Gd<BattleEntity>, target_candidates: &Array<Gd<BattleEntity>>) -> Array<Gd<BattleEntity>> {
-        get_targets_using_mode(TargetingMode::FirstAvailable, actor, target_candidates)
+            .emit(
+                self.status._skill_definition.clone().unwrap(),
+                &self.status._skill_implementation.clone().unwrap(),
+                &self.status._skill_resource.clone().unwrap(),
+                &self.status._targets.clone().unwrap(),
+            );
     }
 }

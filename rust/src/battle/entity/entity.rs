@@ -168,14 +168,16 @@ impl BattleEntity {
             self.base().get_name(),
             attack_damage
         );
-        let mut target = targets.at(0);
-        godot_print!(
-            "[{}] I am about to attack {}",
-            self.base().get_name(),
-            target.get_name()
-        );
-
-        target.bind_mut().take_damage(attack_damage.max(0) as u16);
+        
+        targets.iter_shared().for_each(|mut target| {
+            godot_print!(
+                "[{}] I am about to attack {}",
+                self.base().get_name(),
+                target.get_name()
+            );
+    
+            target.bind_mut().take_damage(attack_damage.max(0) as u16); 
+        });
     }
 
     #[func]
