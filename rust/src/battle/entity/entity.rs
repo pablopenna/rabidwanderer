@@ -12,6 +12,8 @@ use crate::skill::skill_definition::SkillDefinition;
 use crate::skill::skill_implementation::SkillImplementation;
 use crate::stats::real::RealStats;
 use crate::stats::stat::Stat;
+use crate::targeting::target_amount::TargetAmount;
+use crate::targeting::target_faction::TargetFaction;
 
 #[derive(GodotClass)]
 #[class(base=Node2D)]
@@ -100,13 +102,20 @@ impl BattleEntity {
             .builder()
             .flags(ConnectFlags::ONE_SHOT)
             .connect(
-                move |skill_name, skill_implementation, skill_resource_from_signal, targets| {
+                move |skill_name,
+                      skill_implementation,
+                      skill_resource_from_signal,
+                      targets,
+                      target_amount,
+                      target_faction| {
                     Self::on_skill_chosen(
                         that.clone(),
                         skill_name,
                         skill_implementation,
                         skill_resource_from_signal,
                         targets,
+                        target_amount,
+                        target_faction,
                     )
                 },
             );
@@ -126,6 +135,8 @@ impl BattleEntity {
         mut skill: DynGd<Node, dyn SkillImplementation>,
         mut skill_resource: Gd<SkillResourceModule>,
         targets: Array<Gd<BattleEntity>>,
+        _target_amount: TargetAmount,
+        _target_faction: TargetFaction,
     ) {
         // let skill_resource = this.bind().get_skill_resource();
 

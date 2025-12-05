@@ -6,6 +6,8 @@ use crate::entity::modules::skill::skill_container::SkillContainerModule;
 use crate::entity::modules::skill::skill_resource::SkillResourceModule;
 use crate::skill::skill_definition::SkillDefinition;
 use crate::skill::skill_implementation::SkillImplementation;
+use crate::targeting::target_amount::TargetAmount;
+use crate::targeting::target_faction::TargetFaction;
 
 // pub(crate) trait SkillChooser {
 //     fn choose(&mut self, skill_pool: &Gd<SkillContainerModule>, target: &Gd<BattleEntity>) -> DynGd<Node, dyn SkillImplementation>;
@@ -44,5 +46,7 @@ impl SkillChooser {
         skill_implementation: DynGd<Node, dyn SkillImplementation>,
         skill_resource: Gd<SkillResourceModule>,
         targets: Array<Gd<BattleEntity>>,
+        target_amount: TargetAmount,
+        target_faction: TargetFaction,
     );
 }

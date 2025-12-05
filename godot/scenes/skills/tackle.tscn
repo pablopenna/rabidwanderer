@@ -4,3 +4,4 @@
 
 [node name="Tackle" type="Skill"]
 icon = ExtResource("1_1b3pi")
+target_amount = "All"

@@ -1,9 +1,11 @@
 use godot::classes::*;
 use godot::prelude::*;
 
+use crate::skill::get_implementation::get_skill_implementation;
 use crate::skill::skill_definition::SkillDefinition;
 use crate::skill::skill_implementation::SkillImplementation;
-use crate::skill::get_implementation::get_skill_implementation;
+use crate::targeting::target_amount::TargetAmount;
+use crate::targeting::target_faction::TargetFaction;
 
 /*
 * This is a template for a skill.
@@ -15,6 +17,10 @@ pub(crate) struct Skill {
     name: SkillDefinition,
     #[export]
     icon: OnEditor<Gd<Texture2D>>,
+    #[export]
+    target_amount: TargetAmount,
+    #[export]
+    target_faction: TargetFaction,
     implementation: Option<DynGd<Node, dyn SkillImplementation>>,
     base: Base<Node>,
 }
@@ -25,6 +31,8 @@ impl INode for Skill {
         Self {
             name: SkillDefinition::Tackle, // default, to be overriden later
             icon: OnEditor::default(),
+            target_amount: TargetAmount::Single, // default, to be overriden later
+            target_faction: TargetFaction::Opponent, // default, to be overriden later
             implementation: None,
             base,
         }

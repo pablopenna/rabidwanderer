@@ -10,6 +10,8 @@ use crate::skill::chooser::skill_chooser::SkillChooser;
 use crate::skill::skill::Skill;
 use crate::skill::skill_definition::SkillDefinition;
 use crate::skill::skill_implementation::SkillImplementation;
+use crate::targeting::target_amount::TargetAmount;
+use crate::targeting::target_faction::TargetFaction;
 
 #[derive(GodotClass)]
 #[class(base=Node)]
@@ -26,6 +28,8 @@ struct Status {
     _skill_definition: Option<SkillDefinition>,
     _skill_implementation: Option<DynGd<Node, dyn SkillImplementation>>,
     _skill_resource: Option<Gd<SkillResourceModule>>,
+    _skill_target_faction: Option<TargetFaction>,
+    _skill_target_amount: Option<TargetAmount>,
     _targets: Option<Array<Gd<BattleEntity>>>,
 }
 
@@ -40,6 +44,8 @@ impl INode for UiSkillChooser {
                 _skill_definition: None,
                 _skill_implementation: None,
                 _skill_resource: None,
+                _skill_target_faction: None,
+                _skill_target_amount: None,
                 _targets: None,
             },
         }
@@ -66,6 +72,8 @@ impl UiSkillChooser {
             _skill_definition: None,
             _skill_implementation: None,
             _skill_resource: None,
+            _skill_target_faction: None,
+            _skill_target_amount: None,
             _targets: None,
         }
     }
@@ -75,7 +83,7 @@ impl UiSkillChooser {
         skill_pool: Gd<SkillContainerModule>,
         skill_resource: Gd<SkillResourceModule>,
         actor: Gd<BattleEntity>,
-        _target_candidates: Array<Gd<BattleEntity>>, // TODO: use when TargetingType == ALL_ENEMIES, ALL, etc.
+        target_candidates: Array<Gd<BattleEntity>>, // TODO: use when TargetingType == ALL_ENEMIES, ALL, etc.
     ) {
         self.actor = Some(actor);
         self.clear_status();
@@ -89,6 +97,7 @@ impl UiSkillChooser {
             .flags(ConnectFlags::ONE_SHOT)
             .connect_other_mut(self, Self::on_skill_chosen_by_ui);
 
+        self.status._targets = Some(target_candidates.clone());
         GlobalSignals::get_singleton()
             .signals()
             .show_skills_in_battle_ui()
@@ -104,8 +113,20 @@ impl UiSkillChooser {
             Some(SkillDefinition::from_gstring(skill.bind().get_name()));
         self.status._skill_implementation = Some(skill.bind_mut().get_implementation());
         self.status._skill_resource = Some(skill_resource);
+        self.status._skill_target_amount =
+            Some(TargetAmount::from_gstring(skill.bind().get_target_amount()));
+        self.status._skill_target_faction = Some(TargetFaction::from_gstring(
+            skill.bind().get_target_faction(),
+        ));
 
         godot_print!("Skill chosen via UI!");
+
+        if self.status._skill_target_amount.clone().unwrap() == TargetAmount::All {
+            // TODO: actually get targets with target amount and faction
+            // self.status._targets have already been set in choose_skill_via_ui()
+            self.finish_choosing();
+            return;
+        }
 
         // TODO: Trigger code that gates the UI to show targeting frames. Right now is always enabled.
         self.choose_target_via_ui();
@@ -142,6 +163,8 @@ impl UiSkillChooser {
                 &self.status._skill_implementation.clone().unwrap(),
                 &self.status._skill_resource.clone().unwrap(),
                 &self.status._targets.clone().unwrap(),
+                self.status._skill_target_amount.clone().unwrap(),
+                self.status._skill_target_faction.clone().unwrap(),
             );
     }
 }
