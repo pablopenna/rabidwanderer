@@ -53,15 +53,15 @@ impl TurnHandler {
     }
 
     /** Should wait for the actions_ready signal to be emitted before actions are processed as skills might not be chosen */
-    pub(crate) fn generate_new_turn(&mut self, mut battlers: Vec<Gd<BattleEntity>>) {
+    pub(crate) fn generate_new_turn(&mut self, mut battlers: Array<Gd<BattleEntity>>) {
         godot_print!("Generating actions for new turn");
-        battlers.sort_by(|a, b| {
+        battlers.sort_unstable_by(|a, b| {
             let a_speed = a.bind().get_stats().bind().get_stat(Stat::Speed);
             let b_speed = b.bind().get_stats().bind().get_stat(Stat::Speed);
             a_speed.cmp(&b_speed)
         });
 
-        battlers.iter().for_each(|battler| {
+        battlers.iter_shared().for_each(|battler| {
             let new_action = Action::new(battler.clone());
             new_action
                 .signals()

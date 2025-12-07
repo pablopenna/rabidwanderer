@@ -63,7 +63,7 @@ impl BattleEngine {
             .are_there_actions_left_in_turn()
         {
             godot_print!("new turn!");
-            
+
             // Have to wait for the actions to have the skills to be used decided
             self.turn_handler
                 .signals()
@@ -71,12 +71,10 @@ impl BattleEngine {
                 .builder()
                 .flags(ConnectFlags::ONE_SHOT)
                 .connect_other_mut(self, Self::update_battle);
-            
+
             self.turn_handler
                 .bind_mut()
-                .generate_new_turn(Vec::from_godot(
-                    self.battle_entity_container.bind().get_all_entities(),
-                ));
+                .generate_new_turn(self.battle_entity_container.bind().get_alive_entities());
             return;
         }
 
