@@ -17,7 +17,7 @@ impl TargetChooser for FirstTargetChooser {
     ) -> Array<Gd<BattleEntity>> {
         let actor_team = Team::from_gstring(actor.bind().get_team());
         let entities_in_target_faction =
-            get_entities_belonging_to_faction(&actor_team, target_faction, candidates);
+            TargetFaction::get_entities_belonging_to_faction(&actor_team, target_faction, candidates);
         
         if *target_amount == TargetAmount::All {
             return entities_in_target_faction;
@@ -42,32 +42,4 @@ fn are_entities_different(actor_a: &Gd<BattleEntity>, actor_b: &Gd<BattleEntity>
 
 fn is_entity_alive(actor: &Gd<BattleEntity>) -> bool {
     (*actor).bind().get_stats().bind().is_alive()
-}
-
-fn get_entities_belonging_to_faction(
-    reference_actor_team: &Team,
-    faction: &TargetFaction,
-    candidates: &Array<Gd<BattleEntity>>,
-) -> Array<Gd<BattleEntity>> {
-    let team = get_team_for_faction(reference_actor_team, faction);
-
-    Team::get_entities_from_team(&team, candidates)
-}
-
-// factions are relative, teams are absolute
-fn get_team_for_faction(reference_actor_team: &Team, faction: &TargetFaction) -> Team {
-    match reference_actor_team {
-        Team::Player => match faction {
-            TargetFaction::Opponent => Team::Enemy,
-            TargetFaction::OneSelf => Team::Player,
-            TargetFaction::AllyExcludingSelf => Team::Player,
-            TargetFaction::AllyIncludingSelf => Team::Player,
-        },
-        Team::Enemy => match faction {
-            TargetFaction::Opponent => Team::Player,
-            TargetFaction::OneSelf => Team::Enemy,
-            TargetFaction::AllyExcludingSelf => Team::Enemy,
-            TargetFaction::AllyIncludingSelf => Team::Enemy,
-        },
-    }
 }

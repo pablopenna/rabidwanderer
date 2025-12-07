@@ -51,7 +51,17 @@ impl GlobalSignals {
     
     // Targeting
     #[signal]
-    pub(crate) fn entity_targeted_via_ui(battle_entity: Gd<BattleEntity>);
+    pub(crate) fn battle_entity_clicked_via_ui(battle_entity: Gd<BattleEntity>);
+    #[signal]
+    pub(crate) fn battle_entity_hovered_in_via_ui(battle_entity: Gd<BattleEntity>);
+    #[signal]
+    pub(crate) fn battle_entity_hovered_out_via_ui(battle_entity: Gd<BattleEntity>);
+    
+    #[signal]
+    pub(crate) fn choose_target_via_ui(candidates: Array<Gd<BattleEntity>>);
+    #[signal]
+    pub(crate) fn targets_chosen_via_ui(selection: Array<Gd<BattleEntity>>);
+    
 
     pub(crate) fn get_singleton() -> Gd<GlobalSignals> {
         godot::classes::Engine::singleton().get_singleton("GlobalSignals").unwrap().cast::<GlobalSignals>()

@@ -1,6 +1,8 @@
 use godot::classes::*;
 use godot::prelude::*;
 
+// It is recommended to use the DynamicFrame Scene in the Godot project
+// instead of this struct directly as the texture needs to be set.
 #[derive(GodotClass)]
 #[class(init, base=NinePatchRect)]
 pub struct DynamicFrame {
@@ -24,8 +26,8 @@ impl DynamicFrame {
         self.base_mut().set_visible(false);
     }
 
-    pub(crate) fn adjust_to(&mut self, target: Gd<Sprite2D>) {
-        self.set_target(Some(target));
+    pub(crate) fn adjust_to(&mut self, target: &Gd<Sprite2D>) {
+        self.set_target(Some((*target).clone()));
         self.adjust_to_target();
     }
 

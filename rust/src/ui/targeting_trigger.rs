@@ -3,17 +3,14 @@ use godot::prelude::*;
 
 use crate::battle::entity::entity::BattleEntity;
 use crate::global_signals::GlobalSignals;
-use crate::ui::dynamic_frame::DynamicFrame;
 
+// Detects if battle entity is hovered or clicked and emits signal
 #[derive(GodotClass)]
 #[class(base=Control)]
 pub struct TargetingTrigger {
     base: Base<Control>,
     #[export]
     entity: OnEditor<Gd<BattleEntity>>,
-    #[export]
-    frame_scene: OnEditor<Gd<PackedScene>>, // Need a scene so that the texture is already set
-    frame: OnReady<Gd<DynamicFrame>>,
 }
 
 #[godot_api]
@@ -22,8 +19,6 @@ impl IControl for TargetingTrigger {
         TargetingTrigger {
             base,
             entity: OnEditor::default(),
-            frame_scene: OnEditor::default(),
-            frame: OnReady::manual(),
         }
     }
 
@@ -35,38 +30,30 @@ impl IControl for TargetingTrigger {
 #[godot_api]
 impl TargetingTrigger {
     fn setup(&mut self) {
-        self.instance_frame();
-
         self.setup_mouse_entered();
         self.setup_mouse_exited();
         self.setup_mouse_clicked();
     }
 
-    fn instance_frame(&mut self) {
-        let scene = self.get_frame_scene().unwrap();
-        let mut instance = scene.instantiate_as::<DynamicFrame>();
-
-        instance.bind_mut().hide();
-        self.base_mut().add_child(&instance);
-        self.frame.init(instance);
-    }
-
     fn setup_mouse_entered(&mut self) {
-        let mut frame = self.frame.clone();
-        let entity_sprite = self.get_entity().unwrap().bind().get_sprite().unwrap();
+        let battle_entity = self.get_entity().unwrap();
 
         self.signals().mouse_entered().connect(move || {
-            godot_print!("Hover - in");
-            frame.bind_mut().adjust_to(entity_sprite.clone());
+            GlobalSignals::get_singleton()
+                .signals()
+                .battle_entity_hovered_in_via_ui()
+                .emit(&battle_entity);
         });
     }
 
     fn setup_mouse_exited(&mut self) {
-        let mut frame = self.frame.clone();
+        let battle_entity = self.get_entity().unwrap();
 
         self.signals().mouse_exited().connect(move || {
-            godot_print!("Hover - out");
-            frame.bind_mut().hide();
+            GlobalSignals::get_singleton()
+                .signals()
+                .battle_entity_hovered_out_via_ui()
+                .emit(&battle_entity);
         });
     }
 
@@ -86,7 +73,7 @@ impl TargetingTrigger {
                 let battle_entity = this.get_entity().unwrap();
                 GlobalSignals::get_singleton()
                     .signals()
-                    .entity_targeted_via_ui()
+                    .battle_entity_clicked_via_ui()
                     .emit(&battle_entity);
             },
         );

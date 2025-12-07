@@ -30,7 +30,8 @@ struct Status {
     _skill_resource: Option<Gd<SkillResourceModule>>,
     _skill_target_faction: Option<TargetFaction>,
     _skill_target_amount: Option<TargetAmount>,
-    _targets: Option<Array<Gd<BattleEntity>>>,
+    _target_candidates: Option<Array<Gd<BattleEntity>>>,
+    _targets_chosen: Option<Array<Gd<BattleEntity>>>,
 }
 
 #[godot_api]
@@ -46,7 +47,8 @@ impl INode for UiSkillChooser {
                 _skill_resource: None,
                 _skill_target_faction: None,
                 _skill_target_amount: None,
-                _targets: None,
+                _target_candidates: None,
+                _targets_chosen: None,
             },
         }
     }
@@ -74,7 +76,8 @@ impl UiSkillChooser {
             _skill_resource: None,
             _skill_target_faction: None,
             _skill_target_amount: None,
-            _targets: None,
+            _target_candidates: None,
+            _targets_chosen: None,
         }
     }
 
@@ -97,7 +100,7 @@ impl UiSkillChooser {
             .flags(ConnectFlags::ONE_SHOT)
             .connect_other_mut(self, Self::on_skill_chosen_by_ui);
 
-        self.status._targets = Some(target_candidates.clone());
+        self.status._target_candidates = Some(target_candidates.clone());
         GlobalSignals::get_singleton()
             .signals()
             .show_skills_in_battle_ui()
@@ -119,32 +122,47 @@ impl UiSkillChooser {
             skill.bind().get_target_faction(),
         ));
 
+        // filter candidates based in faction as after choosing not all candidates are valid
+        let actor_team = self.actor.clone().unwrap().bind().get_entity_team();
+        let candidates = self.status._target_candidates.clone().unwrap();
+        let target_faction = self.status._skill_target_faction.clone().unwrap();
+
+        self.status._target_candidates = Some(TargetFaction::get_entities_belonging_to_faction(
+            &actor_team,
+            &target_faction,
+            &candidates,
+        ));
+
         godot_print!("Skill chosen via UI!");
 
         if self.status._skill_target_amount.clone().unwrap() == TargetAmount::All {
-            // TODO: actually get targets with target amount and faction
-            // self.status._targets have already been set in choose_skill_via_ui()
+            self.status._targets_chosen = self.status._target_candidates.clone();
             self.finish_choosing();
             return;
         }
 
         // TODO: Trigger code that gates the UI to show targeting frames. Right now is always enabled.
-        self.choose_target_via_ui();
+        self.choose_target_via_ui(&self.status._target_candidates.clone().unwrap());
     }
 
-    fn choose_target_via_ui(&mut self) {
+    fn choose_target_via_ui(&mut self, candidates: &Array<Gd<BattleEntity>>) {
         godot_print!("Choosing target via UI...");
 
         GlobalSignals::get_singleton()
             .signals()
-            .entity_targeted_via_ui()
+            .targets_chosen_via_ui()
             .builder()
             .flags(ConnectFlags::ONE_SHOT)
             .connect_other_mut(self, Self::on_target_chosen_by_ui);
+
+        GlobalSignals::get_singleton()
+            .signals()
+            .choose_target_via_ui()
+            .emit(candidates)
     }
 
-    fn on_target_chosen_by_ui(&mut self, target: Gd<BattleEntity>) {
-        self.status._targets = Some(array!(&target));
+    fn on_target_chosen_by_ui(&mut self, targets: Array<Gd<BattleEntity>>) {
+        self.status._targets_chosen = Some(targets);
 
         godot_print!("Target chosen via UI!");
 
@@ -162,7 +180,7 @@ impl UiSkillChooser {
                 self.status._skill_definition.clone().unwrap(),
                 &self.status._skill_implementation.clone().unwrap(),
                 &self.status._skill_resource.clone().unwrap(),
-                &self.status._targets.clone().unwrap(),
+                &self.status._targets_chosen.clone().unwrap(),
                 self.status._skill_target_amount.clone().unwrap(),
                 self.status._skill_target_faction.clone().unwrap(),
             );
