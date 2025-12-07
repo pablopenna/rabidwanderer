@@ -59,6 +59,9 @@ impl BattleEntity {
     pub(crate) fn death();
 
     #[signal]
+    pub(crate) fn skill_chosen(skill_name: SkillDefinition, targets: Array<Gd<BattleEntity>>);
+    
+    #[signal]
     pub(crate) fn done_acting();
 
     pub(crate) fn get_entity_team(&self) -> Team {
@@ -82,7 +85,7 @@ impl BattleEntity {
     }
 
     #[func(gd_self)]
-    pub(crate) fn act_with_skill(this: Gd<Self>) {
+    pub(crate) fn choose_skill(this: Gd<Self>) {
         let skills_container = this.bind().get_skills();
         let skill_chooser = this.bind().get_skill_chooser().unwrap();
         let skill_resource = this.bind().get_skill_resource();
@@ -130,40 +133,33 @@ impl BattleEntity {
 
     #[func(gd_self)]
     fn on_skill_chosen(
-        mut this: Gd<Self>,
+        this: Gd<Self>,
         skill_name: SkillDefinition,
-        mut skill: DynGd<Node, dyn SkillImplementation>,
-        mut skill_resource: Gd<SkillResourceModule>,
+        mut _skill: DynGd<Node, dyn SkillImplementation>,
+        mut _skill_resource: Gd<SkillResourceModule>,
         targets: Array<Gd<BattleEntity>>,
         _target_amount: TargetAmount,
         _target_faction: TargetFaction,
     ) {
-        // let skill_resource = this.bind().get_skill_resource();
-
-        // TODO: Do this check in the SkillChooser so this should never happen
-        if !skill_resource
-            .bind()
-            .has_resources_to_cast(skill_name.clone())
-        {
-            godot_print!(
-                "[FATAL] Skill {} chosen by {} cannot be casted as there are not enough resources",
-                skill_name.to_variant(),
-                this.get_name()
-            );
-            this.bind_mut().on_done_acting();
-            return;
-        }
-
-        skill_resource
-            .bind_mut()
-            .consume_resources_for_casting(skill_name);
-        skill.dyn_bind_mut().cast(this.clone(), &targets);
+        this.signals().skill_chosen().emit(skill_name, &targets);
+    }
+    
+    #[func(gd_self)]
+    pub(crate) fn cast_skill(
+        this: Gd<Self>,
+        skill_name: SkillDefinition,
+        targets: Array<Gd<BattleEntity>>,
+    ) {
+        let mut skill_node = this.bind().skills.bind().get_skill_with_name(skill_name).unwrap();
+        let mut skill_implementation = skill_node.bind_mut().get_implementation();
+        
+        skill_implementation.dyn_bind_mut().cast(this.clone(), &targets);
     }
 
     #[func]
     fn on_skill_casting_done(&mut self) {
         if self.can_cast_more_skills() {
-            Self::act_with_skill(self.to_gd());
+            Self::choose_skill(self.to_gd());
             return;
         }
         self.on_done_acting();
