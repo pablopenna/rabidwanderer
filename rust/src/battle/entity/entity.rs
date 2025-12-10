@@ -59,7 +59,7 @@ impl BattleEntity {
 
     #[signal]
     pub(crate) fn skill_chosen(skill_name: SkillDefinition, targets: Array<Gd<BattleEntity>>);
-    
+
     #[signal]
     pub(crate) fn done_acting();
 
@@ -142,17 +142,29 @@ impl BattleEntity {
     ) {
         this.signals().skill_chosen().emit(skill_name, &targets);
     }
-    
+
     #[func(gd_self)]
     pub(crate) fn cast_skill(
         this: Gd<Self>,
         skill_name: SkillDefinition,
         targets: Array<Gd<BattleEntity>>,
     ) {
-        let mut skill_node = this.bind().skills.bind().get_skill_with_name(skill_name).unwrap();
+        let mut skill_node = this
+            .bind()
+            .skills
+            .bind()
+            .get_skill_with_name(skill_name.clone())
+            .unwrap();
         let mut skill_implementation = skill_node.bind_mut().get_implementation();
-        
-        skill_implementation.dyn_bind_mut().cast(this.clone(), &targets);
+        let mut skill_resource = this.bind().get_skill_resource();
+
+        skill_resource
+            .bind_mut()
+            .consume_resources_for_casting(skill_name);
+
+        skill_implementation
+            .dyn_bind_mut()
+            .cast(this.clone(), &targets);
     }
 
     #[func]
