@@ -2,6 +2,7 @@ use godot::classes::*;
 use godot::prelude::*;
 
 use crate::battle::entity::entity::BattleEntity;
+use crate::skill::implementations::utils::apply_damage::apply_damage_variant;
 use crate::skill::skill_implementation::SkillImplementation;
 
 #[derive(GodotClass)]
@@ -33,7 +34,8 @@ impl SkillImplementation for TackleSkillImplementation {
             0.5,
         );
         tween.tween_callback(
-            &Callable::from_object_method(&user, "on_apply_damage").bind(&[targets.to_variant()]),
+            &Callable::from_fn("apply_damage", apply_damage_variant)
+                .bind(&[user.to_variant(), targets.to_variant()]),
         );
         tween.tween_callback(&Callable::from_object_method(
             &user,

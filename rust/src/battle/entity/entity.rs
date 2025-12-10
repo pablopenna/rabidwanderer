@@ -11,7 +11,6 @@ use crate::skill::chooser::skill_chooser::SkillChooser;
 use crate::skill::skill_definition::SkillDefinition;
 use crate::skill::skill_implementation::SkillImplementation;
 use crate::stats::real::RealStats;
-use crate::stats::stat::Stat;
 use crate::targeting::target_amount::TargetAmount;
 use crate::targeting::target_faction::TargetFaction;
 
@@ -163,28 +162,6 @@ impl BattleEntity {
             return;
         }
         self.on_done_acting();
-    }
-
-    // TODO: move to skill (as targets are visible to skill)
-    #[func(gd_self)]
-    fn on_apply_damage(this: Gd<Self>, targets: Array<Gd<BattleEntity>>) {
-        godot_print!("[{}] I'm attacking", this.get_name());
-        let attack_damage = this.bind().get_stats().bind().get_stat(Stat::Attack);
-        godot_print!(
-            "[{}] I am about to deal {} damage",
-            this.get_name(),
-            attack_damage
-        );
-
-        targets.iter_shared().for_each(|mut target| {
-            godot_print!(
-                "[{}] I am about to attack {}",
-                this.get_name(),
-                target.get_name()
-            );
-
-            target.bind_mut().take_damage(attack_damage.max(0) as u16);
-        });
     }
 
     #[func]

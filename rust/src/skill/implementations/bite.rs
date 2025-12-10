@@ -4,6 +4,7 @@ use godot::prelude::*;
 use crate::battle::entity::entity::BattleEntity;
 use crate::consts::groups::get_skill_animation_factory_node_from_tree;
 use crate::skill::animations::skill_animation_factory::SkillAnimationName;
+use crate::skill::implementations::utils::apply_damage::apply_damage_variant;
 use crate::skill::skill_implementation::SkillImplementation;
 
 #[derive(GodotClass)]
@@ -34,7 +35,8 @@ impl SkillImplementation for BiteSkillImplementation {
         tween.tween_property(&animation, "frame", &Variant::from(4), 1.0);
         tween.tween_callback(&Callable::from_object_method(&animation, "queue_free"));
         tween.tween_callback(
-            &Callable::from_object_method(&user, "on_apply_damage").bind(&[targets.to_variant()]),
+            &Callable::from_fn("apply_damage", apply_damage_variant)
+                .bind(&[user.to_variant(), targets.to_variant()]),
         );
         tween.tween_callback(&Callable::from_object_method(
             &user,
