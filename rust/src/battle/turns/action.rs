@@ -43,6 +43,10 @@ impl Action {
     pub(crate) fn get_skill(&self) -> Option<SkillDefinition> {
         self.skill_to_cast.clone()
     }
+    
+    pub(crate) fn get_skill_priotiy(&self) -> Option<i32> {
+        self.skill_priority.clone()
+    }
 
     pub(crate) fn new(actor: Gd<BattleEntity>) -> Gd<Self> {
         let mut new_turn = Action::new_alloc();
