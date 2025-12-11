@@ -43,18 +43,32 @@ impl FirstSkillChooser {
         target_candidates: Array<Gd<BattleEntity>>,
     ) {
         let mut chosen_skill = skill_pool.bind().get_skill_at(0);
-        
+
         let name = SkillDefinition::from_gstring(chosen_skill.bind().get_name());
         let implementation = chosen_skill.bind_mut().get_implementation();
+        let priority = chosen_skill.bind().get_priority();
         let target_amount = TargetAmount::from_gstring(chosen_skill.bind().get_target_amount());
         let target_faction = TargetFaction::from_gstring(chosen_skill.bind().get_target_faction());
-        let targets = FirstSkillChooser::get_targets(&actor, &target_candidates, &target_amount, &target_faction);
+        let targets = FirstSkillChooser::get_targets(
+            &actor,
+            &target_candidates,
+            &target_amount,
+            &target_faction,
+        );
 
         self.get_skill_chooser()
             .unwrap()
             .signals()
             .skill_chosen()
-            .emit(name, &implementation, &skill_resource, &targets, target_amount, target_faction);
+            .emit(
+                name,
+                &implementation,
+                priority,
+                &skill_resource,
+                &targets,
+                target_amount,
+                target_faction,
+            );
     }
 
     fn get_targets(
@@ -63,6 +77,12 @@ impl FirstSkillChooser {
         target_amount: &TargetAmount,
         target_faction: &TargetFaction,
     ) -> Array<Gd<BattleEntity>> {
-        get_targets_using_mode(TargetingMode::FirstAvailable, actor, target_candidates, target_amount, target_faction)
+        get_targets_using_mode(
+            TargetingMode::FirstAvailable,
+            actor,
+            target_candidates,
+            target_amount,
+            target_faction,
+        )
     }
 }

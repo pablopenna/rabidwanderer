@@ -44,6 +44,7 @@ impl SkillChooser {
     pub(crate) fn skill_chosen(
         skill_name: SkillDefinition,
         skill_implementation: DynGd<Node, dyn SkillImplementation>,
+        skill_priority: i32,
         skill_resource: Gd<SkillResourceModule>,
         targets: Array<Gd<BattleEntity>>,
         target_amount: TargetAmount,

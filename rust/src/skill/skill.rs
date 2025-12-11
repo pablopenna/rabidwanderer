@@ -22,6 +22,8 @@ pub(crate) struct Skill {
     #[export]
     target_faction: TargetFaction,
     implementation: Option<DynGd<Node, dyn SkillImplementation>>,
+    #[export]
+    priority: i32,
     base: Base<Node>,
 }
 
@@ -34,6 +36,7 @@ impl INode for Skill {
             target_amount: TargetAmount::Single, // default, to be overriden later
             target_faction: TargetFaction::Opponent, // default, to be overriden later
             implementation: None,
+            priority: 0,
             base,
         }
     }

@@ -27,6 +27,7 @@ pub(crate) struct UiSkillChooser {
 struct Status {
     _skill_definition: Option<SkillDefinition>,
     _skill_implementation: Option<DynGd<Node, dyn SkillImplementation>>,
+    _skill_priority: Option<i32>,
     _skill_resource: Option<Gd<SkillResourceModule>>,
     _skill_target_faction: Option<TargetFaction>,
     _skill_target_amount: Option<TargetAmount>,
@@ -44,6 +45,7 @@ impl INode for UiSkillChooser {
             status: Status {
                 _skill_definition: None,
                 _skill_implementation: None,
+                _skill_priority: None,
                 _skill_resource: None,
                 _skill_target_faction: None,
                 _skill_target_amount: None,
@@ -73,6 +75,7 @@ impl UiSkillChooser {
         self.status = Status {
             _skill_definition: None,
             _skill_implementation: None,
+            _skill_priority: None,
             _skill_resource: None,
             _skill_target_faction: None,
             _skill_target_amount: None,
@@ -115,6 +118,7 @@ impl UiSkillChooser {
         self.status._skill_definition =
             Some(SkillDefinition::from_gstring(skill.bind().get_name()));
         self.status._skill_implementation = Some(skill.bind_mut().get_implementation());
+        self.status._skill_priority = Some(skill.bind().get_priority());
         self.status._skill_resource = Some(skill_resource);
         self.status._skill_target_amount =
             Some(TargetAmount::from_gstring(skill.bind().get_target_amount()));
@@ -141,7 +145,6 @@ impl UiSkillChooser {
             return;
         }
 
-        // TODO: Trigger code that gates the UI to show targeting frames. Right now is always enabled.
         self.choose_target_via_ui(&self.status._target_candidates.clone().unwrap());
     }
 
@@ -179,6 +182,7 @@ impl UiSkillChooser {
             .emit(
                 self.status._skill_definition.clone().unwrap(),
                 &self.status._skill_implementation.clone().unwrap(),
+                self.status._skill_priority.clone().unwrap(),
                 &self.status._skill_resource.clone().unwrap(),
                 &self.status._targets_chosen.clone().unwrap(),
                 self.status._skill_target_amount.clone().unwrap(),

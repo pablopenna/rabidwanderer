@@ -9,10 +9,7 @@ use crate::entity::modules::skill::skill_container::SkillContainerModule;
 use crate::entity::modules::skill::skill_resource::SkillResourceModule;
 use crate::skill::chooser::skill_chooser::SkillChooser;
 use crate::skill::skill_definition::SkillDefinition;
-use crate::skill::skill_implementation::SkillImplementation;
 use crate::stats::real::RealStats;
-use crate::targeting::target_amount::TargetAmount;
-use crate::targeting::target_faction::TargetFaction;
 
 #[derive(GodotClass)]
 #[class(base=Node2D)]
@@ -58,7 +55,7 @@ impl BattleEntity {
     pub(crate) fn death();
 
     #[signal]
-    pub(crate) fn skill_chosen(skill_name: SkillDefinition, targets: Array<Gd<BattleEntity>>);
+    pub(crate) fn skill_chosen(skill_name: SkillDefinition, skill_priority: i32, targets: Array<Gd<BattleEntity>>);
 
     #[signal]
     pub(crate) fn done_acting();
@@ -105,19 +102,17 @@ impl BattleEntity {
             .flags(ConnectFlags::ONE_SHOT)
             .connect(
                 move |skill_name,
-                      skill_implementation,
-                      skill_resource_from_signal,
+                      _skill_implementation,
+                      skill_priority,
+                      _skill_resource_from_signal,
                       targets,
-                      target_amount,
-                      target_faction| {
+                      _target_amount,
+                      _target_faction| {
                     Self::on_skill_chosen(
                         that.clone(),
                         skill_name,
-                        skill_implementation,
-                        skill_resource_from_signal,
+                        skill_priority,
                         targets,
-                        target_amount,
-                        target_faction,
                     )
                 },
             );
@@ -134,13 +129,10 @@ impl BattleEntity {
     fn on_skill_chosen(
         this: Gd<Self>,
         skill_name: SkillDefinition,
-        mut _skill: DynGd<Node, dyn SkillImplementation>,
-        mut _skill_resource: Gd<SkillResourceModule>,
+        skill_priority: i32,
         targets: Array<Gd<BattleEntity>>,
-        _target_amount: TargetAmount,
-        _target_faction: TargetFaction,
     ) {
-        this.signals().skill_chosen().emit(skill_name, &targets);
+        this.signals().skill_chosen().emit(skill_name, skill_priority, &targets);
     }
 
     #[func(gd_self)]

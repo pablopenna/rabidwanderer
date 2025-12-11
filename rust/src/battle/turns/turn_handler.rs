@@ -82,6 +82,7 @@ impl TurnHandler {
             .all(|action| action.bind().get_skill().is_some());
 
         if are_all_actions_ready {
+            // TODO: sort actions by priority and then speed.
             self.signals().actions_ready().emit();
         }
     }

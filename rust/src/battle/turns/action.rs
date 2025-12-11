@@ -12,6 +12,7 @@ pub(crate) struct Action {
     actor: Option<Gd<BattleEntity>>,
     skill_to_cast: Option<SkillDefinition>,
     skill_targets: Array<Gd<BattleEntity>>,
+    skill_priority: Option<i32>,
 }
 
 #[godot_api]
@@ -22,6 +23,7 @@ impl INode for Action {
             actor: None,
             skill_to_cast: None,
             skill_targets: Array::default(),
+            skill_priority: None,
         }
     }
 }
@@ -45,23 +47,29 @@ impl Action {
     pub(crate) fn new(actor: Gd<BattleEntity>) -> Gd<Self> {
         let mut new_turn = Action::new_alloc();
         new_turn.bind_mut().actor = Some(actor.clone());
-        
+
         actor
             .signals()
             .skill_chosen()
             .builder()
             .flags(ConnectFlags::ONE_SHOT)
             .connect_other_mut(&new_turn, Self::set_skill_and_targets);
-        
+
         BattleEntity::choose_skill(actor);
 
         new_turn
     }
 
-    fn set_skill_and_targets(&mut self, skill: SkillDefinition, targets: Array<Gd<BattleEntity>>) {
+    fn set_skill_and_targets(
+        &mut self,
+        skill: SkillDefinition,
+        skill_priority: i32,
+        targets: Array<Gd<BattleEntity>>,
+    ) {
         self.skill_to_cast = Some(skill);
+        self.skill_priority = Some(skill_priority);
         self.skill_targets.clone_from(&targets);
-        
+
         self.signals().action_ready().emit();
     }
 
