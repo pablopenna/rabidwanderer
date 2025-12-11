@@ -12,6 +12,8 @@ pub(crate) struct SkillFactory {
     tackle_scene: OnEditor<Gd<PackedScene>>,
     #[export]
     bite_scene: OnEditor<Gd<PackedScene>>,
+    #[export]
+    sonic_punch_scene: OnEditor<Gd<PackedScene>>,
     base: Base<Node>,
 }
 
@@ -21,6 +23,7 @@ impl INode for SkillFactory {
         Self {
             tackle_scene: OnEditor::default(),
             bite_scene: OnEditor::default(),
+            sonic_punch_scene: OnEditor::default(),
             base
         }
     }
@@ -42,6 +45,7 @@ impl SkillFactory {
         match def {
             SkillDefinition::Tackle => self.get_tackle_scene().unwrap(),
             SkillDefinition::Bite => self.get_bite_scene().unwrap(),
+            SkillDefinition::SonicPunch => self.get_sonic_punch_scene().unwrap(),
         }
     }
 }

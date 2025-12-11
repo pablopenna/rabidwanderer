@@ -2,5 +2,5 @@
 
 [resource]
 max_hp = 10
-attack = 2
-speed = 3
+attack = 3
+speed = 1
