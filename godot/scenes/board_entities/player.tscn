@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://2n6rh32qnx05"]
+[gd_scene load_steps=12 format=3 uid="uid://2n6rh32qnx05"]
 
 [ext_resource type="Texture2D" uid="uid://cxkuapitpvj8g" path="res://art/entity/knight2_outline.png" id="1_8t548"]
 [ext_resource type="Shader" uid="uid://2810ppb25wdd" path="res://shaders/remove_transparency.gdshader" id="1_sk03y"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://ci6hqdfbamf88" path="res://scenes/skills/bite.tscn" id="6_p1paa"]
 [ext_resource type="PackedScene" uid="uid://q5ig43mmlb3v" path="res://scenes/skills/sonic_punch.tscn" id="7_q724e"]
 [ext_resource type="PackedScene" uid="uid://btau6wq8e04pu" path="res://scenes/skills/lick_wounds.tscn" id="8_fodvn"]
+[ext_resource type="PackedScene" uid="uid://c7w76oand0v4" path="res://scenes/skills/summon_spirit.tscn" id="9_c86h8"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_f3bwa"]
 shader = ExtResource("1_sk03y")
@@ -52,6 +53,8 @@ stats = NodePath("../StatsModule")
 [node name="SonicPunch" parent="SkillContainerModule" instance=ExtResource("7_q724e")]
 
 [node name="LickWounds" parent="SkillContainerModule" instance=ExtResource("8_fodvn")]
+
+[node name="SummonSpirit" parent="SkillContainerModule" instance=ExtResource("9_c86h8")]
 
 [node name="SkillResourceModule" type="SkillResourceModule" parent="." node_paths=PackedStringArray("_implementation")]
 _implementation = NodePath("CooldownTracker")

@@ -3,6 +3,7 @@ use godot::classes::*;
 use godot::prelude::*;
 
 use crate::battle::entity::container::BattleEntityContainer;
+use crate::battle::team::Team;
 use crate::battle::turns::action::Action;
 use crate::battle::turns::turn_handler::TurnHandler;
 use crate::consts::groups::BATTLE_ENGINE_GROUP;
@@ -116,13 +117,13 @@ impl BattleEngine {
     fn after_action_cleanup(&mut self) {
         godot_print!("Last turn cleaned");
         self.current_action = None;
-        let alive_entities = self
+        let alive_enemies = self
             .battle_entity_container
             .clone()
             .bind()
-            .get_alive_entities();
-        if alive_entities.len() <= 1 {
-            godot_print!("Only one is left standing...");
+            .get_alive_entities_from_team(&Team::Enemy);
+        if alive_enemies.len() == 0 {
+            godot_print!("No enemies left...");
             self.on_battle_end();
             return;
         }

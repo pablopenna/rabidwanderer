@@ -24,7 +24,7 @@ use crate::stats::real::RealStats;
 pub struct StatsModule {
     #[export]
     base_stats: OnEditor<Gd<BaseStats>>,
-    real_stats: OnReady<Gd<RealStats>>,
+    real_stats: Option<Gd<RealStats>>,
     #[export]
     inventory: Option<Gd<InventoryModule>>, // Required to get the stats modifiers from the items
     base: Base<Node>,
@@ -36,20 +36,9 @@ impl INode for StatsModule {
         Self {
             base,
             base_stats: OnEditor::default(),
-            real_stats: OnReady::manual(),
+            real_stats: None,
             inventory: None,
         }
-    }
-
-    fn ready(&mut self) {
-        self.real_stats.init(
-            RealStats::new(
-                self.base_stats.get_property().unwrap(),
-                self.inventory.clone(),
-            )
-        );
-
-        self.real_stats.signals().no_hp_left().connect_other(self, Self::on_real_stats_no_hp_left);
     }
 }
 
@@ -58,8 +47,22 @@ impl StatsModule {
     #[signal]
     pub(crate) fn no_hp_left();
 
-    pub(crate) fn get_stats(&self) -> Gd<RealStats> {
-        self.real_stats.get_property()
+    pub(crate) fn get_stats(&mut self) -> Gd<RealStats> {
+        if self.real_stats.is_none() {
+            self.init_real_stats();
+        }
+        
+        self.real_stats.clone().unwrap()
+    }
+    
+    fn init_real_stats(&mut self) {
+        let real_stats = RealStats::new(
+            self.base_stats.get_property().unwrap(),
+            self.inventory.clone(),
+        );
+        real_stats.signals().no_hp_left().connect_other(self, Self::on_real_stats_no_hp_left);
+        
+        self.real_stats = Some(real_stats);
     }
 
     fn on_real_stats_no_hp_left(&mut self) {

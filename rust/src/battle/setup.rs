@@ -61,6 +61,19 @@ impl BattleSetup {
             .battle_set_up()
             .emit();
     }
+    
+    pub(crate) fn cleanup_combat(&mut self) {
+        self.container.clone().bind_mut().remove_all_entities();
+        self.turns_handler
+            .clone()
+            .bind_mut()
+            .remove_all_actions_from_turn();
+    }
+    
+    pub(crate) fn add_entity_to_combat(&mut self, entity: Gd<BattleEntity>) {
+        self.add_single_instance_to_container(&entity);
+        self.set_single_instance_position(entity);
+    }
 
     fn get_instances(&mut self, coord: &BoardCoordinate) -> Array<Gd<BattleEntity>> {
         let tile = self.get_board().bind().get_tile_at(&coord).unwrap();
@@ -75,7 +88,7 @@ impl BattleSetup {
 
         let battle_entities: Array<Gd<BattleEntity>> = battle_modules
             .iter_shared()
-            .map(|e| e.bind().get_battle_entity_instance())
+            .map(|mut e| e.bind_mut().get_battle_entity_instance())
             .collect();
 
         battle_entities
@@ -95,19 +108,21 @@ impl BattleSetup {
             self.placer.bind().place_entity_at_index(entity, i);
         }
     }
+    
+    fn set_single_instance_position(&self, instance: Gd<BattleEntity>) {
+        let team = instance.bind().get_entity_team();
+        let amount_of_entities_in_team = self.container.bind().get_entities_from_team(&team).len();
+        self.placer.bind().place_entity_at_index(instance, amount_of_entities_in_team);
+    }
 
     fn add_instances_to_container(&mut self, instances: &Array<Gd<BattleEntity>>) {
         instances
             .iter_shared()
-            .for_each(|e| self.container.bind_mut().add_entity(&e));
+            .for_each(|e| self.add_single_instance_to_container(&e));
     }
-
-    pub(crate) fn cleanup_combat(&mut self) {
-        self.container.clone().bind_mut().remove_all_entities();
-        self.turns_handler
-            .clone()
-            .bind_mut()
-            .remove_all_actions_from_turn();
+ 
+    fn add_single_instance_to_container(&mut self, instance: &Gd<BattleEntity>) {
+        self.container.bind_mut().add_entity(instance);
     }
 
     fn get_board(&mut self) -> Gd<Board> {

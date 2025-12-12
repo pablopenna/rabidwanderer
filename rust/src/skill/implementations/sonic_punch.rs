@@ -17,13 +17,18 @@ impl SkillImplementation for SonicPunchSkillImplementation {
     // https://godot-rust.github.io/docs/gdext/master/godot/prelude/attr.godot_api.html#associated-functions-and-methods
     // Calling tween_property on the user.sprite triggers an already_bound error. Using #[func(gd_self)] fixes the issue.
     fn cast(&mut self, user: Gd<BattleEntity>, targets: &Array<Gd<BattleEntity>>) {
-        godot_print!("puncheada de manual. nº targets: {}", targets.len());
+        godot_print!(
+            "[{}] puncheada de manual. nº targets: {}",
+            user.get_name(),
+            targets.len()
+        );
 
         let user_position = user.get_global_position();
         let target = targets.get(0).unwrap();
         let target_position = target.get_global_position();
 
-        let mut tween = self.base_mut().create_tween().unwrap();
+        let mut tween = self.base().get_tree().unwrap().create_tween().unwrap();
+
         tween.tween_property(
             &user.bind().get_sprite().unwrap(),
             "global_position",
@@ -43,6 +48,10 @@ impl SkillImplementation for SonicPunchSkillImplementation {
         tween.tween_callback(&Callable::from_object_method(
             &user,
             "on_skill_casting_done",
-        )); //.unwrap().set_delay(1.0);
+        ));
+
+        // apply_damage_variant(&[&user.to_variant(), &targets.to_variant()]);
+        // user.bind_mut().on_skill_casting_done();
+        // godot_print!("[{}] hello?", user.get_name());
     }
 }

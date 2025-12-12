@@ -10,6 +10,7 @@ pub(crate) enum SkillDefinition {
     Bite,
     SonicPunch,
     LickWounds,
+    SummonSpirit,
 }
 
 impl SkillDefinition {
@@ -19,6 +20,7 @@ impl SkillDefinition {
             SkillDefinition::Bite => "Bite",
             SkillDefinition::SonicPunch => "Sonic Punch",
             SkillDefinition::LickWounds => "Lick Wounds",
+            SkillDefinition::SummonSpirit => "Summon Spirit",
         }
     }
 
@@ -32,6 +34,7 @@ impl SkillDefinition {
                 "Fiaum!",
             SkillDefinition::LickWounds =>
                 "Meow",
+            SkillDefinition::SummonSpirit => "Share the burden",
         }
     }
 
@@ -41,6 +44,7 @@ impl SkillDefinition {
             SkillDefinition::Bite => 1,
             SkillDefinition::SonicPunch => 1,
             SkillDefinition::LickWounds => 2,
+            SkillDefinition::SummonSpirit => 3,
         }
     }
     
@@ -50,6 +54,7 @@ impl SkillDefinition {
             SkillDefinition::Bite => TargetAmount::Single,
             SkillDefinition::SonicPunch => TargetAmount::Single,
             SkillDefinition::LickWounds => TargetAmount::Single,
+            SkillDefinition::SummonSpirit => TargetAmount::Single,
         }
     }
     
@@ -59,6 +64,7 @@ impl SkillDefinition {
             SkillDefinition::Bite => TargetFaction::Opponent,
             SkillDefinition::SonicPunch => TargetFaction::Opponent,
             SkillDefinition::LickWounds => TargetFaction::OneSelf,
+            SkillDefinition::SummonSpirit => TargetFaction::OneSelf,
         }
     }
     
@@ -68,13 +74,16 @@ impl SkillDefinition {
             SkillDefinition::Bite => 0,
             SkillDefinition::SonicPunch => 1,
             SkillDefinition::LickWounds => 0,
+            SkillDefinition::SummonSpirit => 0,
         }
     }
 
-    const _RANDOM_POOL: [SkillDefinition; 3] = [
+    const _RANDOM_POOL: [SkillDefinition; 5] = [
         SkillDefinition::Tackle,
         SkillDefinition::Bite,
         SkillDefinition::SonicPunch,
+        SkillDefinition::LickWounds,
+        SkillDefinition::SummonSpirit,
     ];
 
     pub(crate) fn _random() -> Self {

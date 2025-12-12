@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://c4mdemd284n0y"]
+[gd_scene load_steps=10 format=3 uid="uid://c4mdemd284n0y"]
 
 [ext_resource type="TileSet" uid="uid://ch3lkinfhmitw" path="res://resources/board_tileset.tres" id="2_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://2n6rh32qnx05" path="res://scenes/board_entities/player.tscn" id="2_h2yge"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dqm3n1e4wlusu" path="res://scenes/board_entities/enemy/wolf.tscn" id="5_5vw27"]
 [ext_resource type="PackedScene" uid="uid://cirv8ed8ak827" path="res://scenes/items/item_rusty_plate.tscn" id="5_272bh"]
 [ext_resource type="PackedScene" uid="uid://bbtucxxldcnw" path="res://scenes/board_entities/floor_item.tscn" id="6_7mycd"]
+[ext_resource type="PackedScene" uid="uid://tpwd2ac4raer" path="res://scenes/summon_entities/spirit.tscn" id="7_kek77"]
 [ext_resource type="PackedScene" uid="uid://w8or6a0027fd" path="res://scenes/ui/ui_root.tscn" id="8_5vw27"]
 
 [node name="Main" type="Node2D"]
@@ -30,6 +31,9 @@ wolf_enemy_scene = ExtResource("5_5vw27")
 [node name="Board" type="Board" parent="GameManager"]
 tile_set = ExtResource("2_0xm2m")
 z_index = -1
+
+[node name="SummonFactory" type="SummonFactory" parent="GameManager"]
+summoning_spirit_scene = ExtResource("7_kek77")
 
 [node name="BoardCamera" type="BoardCamera" parent="." node_paths=PackedStringArray("focus_target")]
 focus_move_speed = 10.0

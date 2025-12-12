@@ -16,6 +16,8 @@ pub(crate) struct SkillFactory {
     sonic_punch_scene: OnEditor<Gd<PackedScene>>,
     #[export]
     lick_wounds_scene: OnEditor<Gd<PackedScene>>,
+    #[export]
+    summon_spirit_scene: OnEditor<Gd<PackedScene>>,
     base: Base<Node>,
 }
 
@@ -27,6 +29,7 @@ impl INode for SkillFactory {
             bite_scene: OnEditor::default(),
             sonic_punch_scene: OnEditor::default(),
             lick_wounds_scene: OnEditor::default(),
+            summon_spirit_scene: OnEditor::default(),
             base
         }
     }
@@ -50,6 +53,7 @@ impl SkillFactory {
             SkillDefinition::Bite => self.get_bite_scene().unwrap(),
             SkillDefinition::SonicPunch => self.get_sonic_punch_scene().unwrap(),
             SkillDefinition::LickWounds => self.get_lick_wounds_scene().unwrap(),
+            SkillDefinition::SummonSpirit => self.get_summon_spirit_scene().unwrap(),
         }
     }
 }

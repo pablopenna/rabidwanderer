@@ -46,6 +46,15 @@ impl BattleEntityContainer {
         Team::get_entities_from_team(team, &all_entities)
     }
 
+    pub(crate) fn get_alive_entities_from_team(&self, team: &Team) -> Array<Gd<BattleEntity>> {
+        let entities_from_team = self.get_entities_from_team(team);
+
+        entities_from_team
+            .iter_shared()
+            .filter(|entity| entity.bind().get_stats().bind().is_alive())
+            .collect()
+    }
+
     pub(crate) fn get_alive_entities(&self) -> Array<Gd<BattleEntity>> {
         let all_entities = self.get_all_entities();
 

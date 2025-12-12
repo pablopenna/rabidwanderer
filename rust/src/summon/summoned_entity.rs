@@ -2,6 +2,7 @@ use godot::classes::*;
 use godot::prelude::*;
 
 use crate::battle::entity::entity::BattleEntity;
+use crate::battle::team::Team;
 use crate::entity::modules::battle::battle::BattleModule;
 
 /** A summoned entity is like a BoardEntity in the sense that it spawns a BattleEntity but
@@ -21,7 +22,10 @@ pub struct SummonedEntity {
 
 #[godot_api]
 impl SummonedEntity {
-    pub(crate) fn generate_battle_entity(&mut self) -> Gd<BattleEntity> {
-        self.battle_module.bind_mut().generate_new_battle_entity_instance()
+    pub(crate) fn generate_battle_entity(&mut self, team: Team) -> Gd<BattleEntity> {
+        let mut instance = self.battle_module.bind_mut().generate_new_battle_entity_instance();
+        instance.bind_mut().set_team(team.to_godot());
+        
+        instance
     }
 }

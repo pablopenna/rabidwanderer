@@ -1,3 +1,28 @@
-[gd_scene format=3 uid="uid://tpwd2ac4raer"]
+[gd_scene load_steps=4 format=3 uid="uid://tpwd2ac4raer"]
 
-[node name="Spirit" type="SummonedEntity"]
+[ext_resource type="PackedScene" uid="uid://b4a3ij2lajfbm" path="res://scenes/battle_entities/spirit.tscn" id="1_po8hq"]
+[ext_resource type="BaseStats" uid="uid://1jd22l621q8d" path="res://resources/stats/spirit_base_stats.tres" id="2_n5yiv"]
+[ext_resource type="PackedScene" uid="uid://q5ig43mmlb3v" path="res://scenes/skills/sonic_punch.tscn" id="3_jitpc"]
+
+[node name="Spirit" type="SummonedEntity" node_paths=PackedStringArray("battle_module")]
+battle_module = NodePath("BattleModule")
+
+[node name="BattleModule" type="BattleModule" parent="." node_paths=PackedStringArray("stats", "skills", "skill_resources")]
+battle_entity_scene = ExtResource("1_po8hq")
+stats = NodePath("StatsModule")
+skills = NodePath("SkillContainerModule")
+skill_resources = NodePath("SkillResourceModule")
+
+[node name="StatsModule" type="StatsModule" parent="BattleModule"]
+base_stats = ExtResource("2_n5yiv")
+
+[node name="SkillContainerModule" type="SkillContainerModule" parent="BattleModule"]
+
+[node name="SonicPunch" parent="BattleModule/SkillContainerModule" instance=ExtResource("3_jitpc")]
+
+[node name="SkillResourceModule" type="SkillResourceModule" parent="BattleModule" node_paths=PackedStringArray("_implementation")]
+_implementation = NodePath("CooldownTracker")
+
+[node name="CooldownTracker" type="CooldownTracker" parent="BattleModule/SkillResourceModule" node_paths=PackedStringArray("skill_resource_module", "skills_container")]
+skill_resource_module = NodePath("..")
+skills_container = NodePath("../../SkillContainerModule")

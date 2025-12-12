@@ -56,7 +56,11 @@ impl BattleEntity {
     pub(crate) fn death();
 
     #[signal]
-    pub(crate) fn skill_chosen(skill_name: SkillDefinition, skill_priority: i32, targets: Array<Gd<BattleEntity>>);
+    pub(crate) fn skill_chosen(
+        skill_name: SkillDefinition,
+        skill_priority: i32,
+        targets: Array<Gd<BattleEntity>>,
+    );
 
     #[signal]
     pub(crate) fn done_acting();
@@ -80,13 +84,17 @@ impl BattleEntity {
             self.stats.bind().get_current_hp()
         );
     }
-    
+
     pub(crate) fn heal_damage(&mut self, healing_amount: u16) {
-        godot_print!("[{}] is healing {} damage", self.base().get_name(), healing_amount);
+        godot_print!(
+            "[{}] is healing {} damage",
+            self.base().get_name(),
+            healing_amount
+        );
         let hp = self.stats.bind().get_current_hp();
         let max_hp = self.stats.bind().get_stat(Stat::MaxHp) as u16;
         let heal_to_hp = (hp + healing_amount).min(max_hp);
-        
+
         self.stats.bind_mut().set_current_hp(heal_to_hp);
     }
 
@@ -118,12 +126,7 @@ impl BattleEntity {
                       targets,
                       _target_amount,
                       _target_faction| {
-                    Self::on_skill_chosen(
-                        that.clone(),
-                        skill_name,
-                        skill_priority,
-                        targets,
-                    )
+                    Self::on_skill_chosen(that.clone(), skill_name, skill_priority, targets)
                 },
             );
 
@@ -142,7 +145,9 @@ impl BattleEntity {
         skill_priority: i32,
         targets: Array<Gd<BattleEntity>>,
     ) {
-        this.signals().skill_chosen().emit(skill_name, skill_priority, &targets);
+        this.signals()
+            .skill_chosen()
+            .emit(skill_name, skill_priority, &targets);
     }
 
     #[func(gd_self)]
@@ -170,7 +175,7 @@ impl BattleEntity {
     }
 
     #[func]
-    fn on_skill_casting_done(&mut self) {
+    pub(crate) fn on_skill_casting_done(&mut self) {
         if self.can_cast_more_skills() {
             Self::choose_skill(self.to_gd());
             return;

@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://c7w76oand0v4"]
+
+[ext_resource type="Texture2D" uid="uid://dab8btyq08g5g" path="res://art/item/coin.png" id="1_pjl8r"]
+
+[node name="SummonSpirit" type="Skill"]
+_definition = "SummonSpirit"
+icon = ExtResource("1_pjl8r")
