@@ -50,8 +50,14 @@ impl BattleModule {
         get_first_child_of_type::<BattleModule>(&entity)
     }
 
+    /** Gets cached entity, returning the same instance in different calls */
     pub(crate) fn get_battle_entity_instance(&self) -> Gd<BattleEntity> {
         self.battle_entity_instance.get_property()
+    }
+    
+    /** Generates new entity, returning the different instances in different calls */
+    pub(crate) fn generate_new_battle_entity_instance(&mut self) -> Gd<BattleEntity> {
+        self.generate_instance()
     }
 
     fn generate_instance(&mut self) -> Gd<BattleEntity> {

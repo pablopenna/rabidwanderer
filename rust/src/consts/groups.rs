@@ -12,6 +12,7 @@ use crate::game_manager::GameManager;
 use crate::item::factory::ItemFactory;
 use crate::skill::animations::skill_animation_factory::SkillAnimationFactory;
 use crate::skill::skill_factory::SkillFactory;
+use crate::summon::summon_factory::SummonFactory;
 
 pub(crate) const MOVEMENT_MANAGER_GROUP: &str = "MovementManager";
 // IMPORTANT: make sure the Player scene has the Player group assigned
@@ -25,6 +26,7 @@ pub(crate) const BATTLE_ENGINE_GROUP: &str = "BattleEngine";
 pub(crate) const BATTLE_SETUP_GROUP: &str = "BattleSetup";
 pub(crate) const BOARD_GROUP: &str = "Board";
 pub(crate) const BATTLE_ENTITY_CONTAINER_GROUP: &str = "BattleEntityContainer";
+pub(crate) const SUMMON_FACTORY_GROUP: &str = "SummonFactory";
 
 pub(crate) fn get_node_in_group_from_tree(node: &Gd<Node>, group_name: &str) -> Gd<Node> {
     let movement_node = node
@@ -92,4 +94,11 @@ pub(crate) fn get_battle_entity_container_node_from_tree(
 ) -> Gd<BattleEntityContainer> {
     let container = get_node_in_group_from_tree(node, BATTLE_ENTITY_CONTAINER_GROUP);
     container.cast::<BattleEntityContainer>()
+}
+
+pub(crate) fn get_summon_factory_node_from_tree(
+    node: &Gd<Node>,
+) -> Gd<SummonFactory> {
+    let factory = get_node_in_group_from_tree(node, SUMMON_FACTORY_GROUP);
+    factory.cast::<SummonFactory>()
 }

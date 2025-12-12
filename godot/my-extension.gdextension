@@ -76,5 +76,10 @@ TargetingTrigger="res://icon.svg"
 DynamicFrame="res://icon.svg"
 UiTargetingHelper="res://icon.svg"
 
+SummonFactory="res://icon.svg"
+SummonedEntity="res://icon.svg"
+
 TackleSkillImplementation="res://icon.svg"
 BiteSkillImplementation="res://icon.svg"
+SonicPunchSkillImplementation="res://icon.svg"
+LickWoundsSkillImplementation="res://icon.svg"

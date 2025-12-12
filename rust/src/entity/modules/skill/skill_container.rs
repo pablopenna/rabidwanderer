@@ -8,7 +8,7 @@ use crate::utils::get_first_child_of_type::get_first_child_of_type;
 
 const MAX_NUMBER_OF_SKILLS: i32 = 4;
 
-// Items are placed as children of this node
+// Skills are placed as children of this node
 #[derive(GodotClass)]
 #[class(init, base=Node)]
 pub struct SkillContainerModule {

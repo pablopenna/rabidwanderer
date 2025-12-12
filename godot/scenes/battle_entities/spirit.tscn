@@ -1,0 +1,30 @@
+[gd_scene load_steps=2 format=3 uid="uid://b4a3ij2lajfbm"]
+
+[ext_resource type="Texture2D" uid="uid://0kga5rya4nie" path="res://art/summoned_spirit.png" id="1_fteiy"]
+
+[node name="SummonedSpirit" type="BattleEntity" node_paths=PackedStringArray("skill_chooser", "animation_player", "sprite")]
+skill_chooser = NodePath("SkillChooser")
+animation_player = NodePath("")
+sprite = NodePath("Sprite2D")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_fteiy")
+hframes = 2
+metadata/_edit_lock_ = true
+
+[node name="TargetingTrigger" type="TargetingTrigger" parent="Sprite2D" node_paths=PackedStringArray("entity")]
+entity = NodePath("../..")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -12.0
+offset_top = -12.0
+offset_right = -12.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SkillChooser" type="SkillChooser" parent="."]
+
+[node name="FirstSkillChooser" type="FirstSkillChooser" parent="SkillChooser" node_paths=PackedStringArray("skill_chooser")]
+skill_chooser = NodePath("..")
