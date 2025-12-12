@@ -10,6 +10,7 @@ use crate::entity::modules::skill::skill_resource::SkillResourceModule;
 use crate::skill::chooser::skill_chooser::SkillChooser;
 use crate::skill::skill_definition::SkillDefinition;
 use crate::stats::real::RealStats;
+use crate::stats::stat::Stat;
 
 #[derive(GodotClass)]
 #[class(base=Node2D)]
@@ -78,6 +79,15 @@ impl BattleEntity {
             self.base().get_name(),
             self.stats.bind().get_current_hp()
         );
+    }
+    
+    pub(crate) fn heal_damage(&mut self, healing_amount: u16) {
+        godot_print!("[{}] is healing {} damage", self.base().get_name(), healing_amount);
+        let hp = self.stats.bind().get_current_hp();
+        let max_hp = self.stats.bind().get_stat(Stat::MaxHp) as u16;
+        let heal_to_hp = (hp + healing_amount).min(max_hp);
+        
+        self.stats.bind_mut().set_current_hp(heal_to_hp);
     }
 
     #[func(gd_self)]
