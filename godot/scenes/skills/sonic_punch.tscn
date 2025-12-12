@@ -3,6 +3,5 @@
 [ext_resource type="Texture2D" uid="uid://dab8btyq08g5g" path="res://art/item/coin.png" id="1_aj7m4"]
 
 [node name="SonicPunch" type="Skill"]
-name = "SonicPunch"
+_definition = "SonicPunch"
 icon = ExtResource("1_aj7m4")
-priority = 1

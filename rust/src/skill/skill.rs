@@ -14,16 +14,10 @@ use crate::targeting::target_faction::TargetFaction;
 #[class(base=Node)]
 pub(crate) struct Skill {
     #[export]
-    name: SkillDefinition,
+    _definition: SkillDefinition,
     #[export]
     icon: OnEditor<Gd<Texture2D>>,
-    #[export]
-    target_amount: TargetAmount,
-    #[export]
-    target_faction: TargetFaction,
     implementation: Option<DynGd<Node, dyn SkillImplementation>>,
-    #[export]
-    priority: i32,
     base: Base<Node>,
 }
 
@@ -31,12 +25,9 @@ pub(crate) struct Skill {
 impl INode for Skill {
     fn init(base: Base<Node>) -> Self {
         Self {
-            name: SkillDefinition::Tackle, // default, to be overriden later
+            _definition: SkillDefinition::Tackle, // default, to be overriden later
             icon: OnEditor::default(),
-            target_amount: TargetAmount::Single, // default, to be overriden later
-            target_faction: TargetFaction::Opponent, // default, to be overriden later
             implementation: None,
-            priority: 0,
             base,
         }
     }
@@ -44,15 +35,37 @@ impl INode for Skill {
 
 #[godot_api]
 impl Skill {
-    // https://godot-rust.github.io/docs/gdext/master/godot/obj/struct.DynGd.html
-    // Important: caller should add node returned to the tree. Not doing that will cause undesired behaviours in the game
     pub(crate) fn get_implementation(&mut self) -> DynGd<Node, dyn SkillImplementation> {
         if self.implementation.is_none() {
-            let skill_name = SkillDefinition::from_gstring(self.get_name());
+            let skill_name = self.get_definition();
             let implementation = get_skill_implementation(skill_name);
             self.base_mut().add_child(&implementation);
             self.implementation = Some(implementation);
         }
         self.implementation.clone().unwrap()
+    }
+
+    pub(crate) fn get_definition(&self) -> SkillDefinition {
+        self._definition.clone()
+    }
+
+    pub(crate) fn get_description(&self) -> &'static str {
+        self._definition.get_description()
+    }
+
+    pub(crate) fn get_cooldown(&self) -> u8 {
+        self._definition.get_cooldown()
+    }
+
+    pub(crate) fn get_target_amount(&self) -> TargetAmount {
+        self._definition.get_target_amount()
+    }
+
+    pub(crate) fn get_target_faction(&self) -> TargetFaction {
+        self._definition.get_target_faction()
+    }
+
+    pub(crate) fn get_priority(&self) -> i32 {
+        self._definition.get_priority()
     }
 }

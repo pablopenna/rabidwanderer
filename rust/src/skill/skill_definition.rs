@@ -1,6 +1,8 @@
 use godot::prelude::*;
 use rand::Rng;
 
+use crate::targeting::{target_amount::TargetAmount, target_faction::TargetFaction};
+
 #[derive(GodotConvert, Var, Export, Clone, PartialEq, Debug)]
 #[godot(via = GString)]
 pub(crate) enum SkillDefinition {
@@ -39,6 +41,33 @@ impl SkillDefinition {
             SkillDefinition::Bite => 1,
             SkillDefinition::SonicPunch => 1,
             SkillDefinition::LickWounds => 2,
+        }
+    }
+    
+    pub(crate) fn get_target_amount(&self) -> TargetAmount {
+        match self {
+            SkillDefinition::Tackle => TargetAmount::All,
+            SkillDefinition::Bite => TargetAmount::Single,
+            SkillDefinition::SonicPunch => TargetAmount::Single,
+            SkillDefinition::LickWounds => TargetAmount::Single,
+        }
+    }
+    
+    pub(crate) fn get_target_faction(&self) -> TargetFaction {
+        match self {
+            SkillDefinition::Tackle => TargetFaction::Opponent,
+            SkillDefinition::Bite => TargetFaction::Opponent,
+            SkillDefinition::SonicPunch => TargetFaction::Opponent,
+            SkillDefinition::LickWounds => TargetFaction::OneSelf,
+        }
+    }
+    
+    pub(crate) fn get_priority(&self) -> i32 {
+        match self {
+            SkillDefinition::Tackle => 0,
+            SkillDefinition::Bite => 0,
+            SkillDefinition::SonicPunch => 1,
+            SkillDefinition::LickWounds => 0,
         }
     }
 

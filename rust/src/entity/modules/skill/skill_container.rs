@@ -42,8 +42,8 @@ impl SkillContainerModule {
         self.base().get_children().iter_shared()
             .map(|child| child.cast::<Skill>())
             .find(|skill| {
-                let name = skill.bind().get_name();
-                SkillDefinition::from_gstring(name) == searched_name
+                let name = skill.bind().get_definition();
+                name == searched_name
             })
     }
 

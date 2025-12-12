@@ -3,7 +3,6 @@ use godot::prelude::*;
 
 use crate::entity::modules::skill::skill_resource::SkillResourceModule;
 use crate::skill::skill::Skill;
-use crate::skill::skill_definition::SkillDefinition;
 
 #[derive(GodotClass)]
 #[class(base=BoxContainer)]
@@ -65,7 +64,7 @@ impl SkillButton {
 
     fn update_resource_label(&mut self) {
         let skill = self.linked_skill.clone().unwrap();
-        let skill_definition = SkillDefinition::from_gstring(skill.bind().get_name());
+        let skill_definition = skill.bind().get_definition();
 
         let resource = self.get_skill_resource().unwrap();
         let resource_implementation = resource.bind().get_implementation();
@@ -83,7 +82,7 @@ impl SkillButton {
         let skill_resource = self.skill_resource.clone().unwrap();
         let can_cast = skill_resource
             .bind()
-            .has_resources_to_cast(SkillDefinition::from_gstring(skill.bind().get_name()));
+            .has_resources_to_cast(skill.bind().get_definition());
 
         if can_cast {
             self.signals()

@@ -116,15 +116,15 @@ impl UiSkillChooser {
         skill_resource: Gd<SkillResourceModule>,
     ) {
         self.status._skill_definition =
-            Some(SkillDefinition::from_gstring(skill.bind().get_name()));
+            Some(skill.bind().get_definition());
         self.status._skill_implementation = Some(skill.bind_mut().get_implementation());
         self.status._skill_priority = Some(skill.bind().get_priority());
         self.status._skill_resource = Some(skill_resource);
         self.status._skill_target_amount =
-            Some(TargetAmount::from_gstring(skill.bind().get_target_amount()));
-        self.status._skill_target_faction = Some(TargetFaction::from_gstring(
+            Some(skill.bind().get_target_amount());
+        self.status._skill_target_faction = Some(
             skill.bind().get_target_faction(),
-        ));
+        );
 
         // filter candidates based in faction as after choosing not all candidates are valid
         let actor_team = self.actor.clone().unwrap().bind().get_entity_team();

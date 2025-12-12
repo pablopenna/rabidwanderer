@@ -3,5 +3,5 @@
 [ext_resource type="Texture2D" uid="uid://dab8btyq08g5g" path="res://art/item/coin.png" id="1_0mi04"]
 
 [node name="Bite" type="Skill"]
-name = "Bite"
+_definition = "Bite"
 icon = ExtResource("1_0mi04")

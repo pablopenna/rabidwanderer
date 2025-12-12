@@ -34,8 +34,7 @@ impl INode for CooldownTracker {
 impl SkillResourceManager for CooldownTracker {
     fn consume_resources_for_casting(&mut self, skill: SkillDefinition) {
         let skill_node_to_track = self.get_skill_node_for_skill(skill).unwrap();
-        let definition = SkillDefinition::from_gstring(skill_node_to_track.bind().get_name());
-        let skill_cooldown = definition.get_cooldown();
+        let skill_cooldown = skill_node_to_track.bind().get_cooldown();
         let _previous_value = self
             .cooldowns_tracking_table
             .insert(skill_node_to_track, skill_cooldown);
