@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://btau6wq8e04pu"]
+
+[ext_resource type="Texture2D" uid="uid://dab8btyq08g5g" path="res://art/item/coin.png" id="1_orgwm"]
+
+[node name="LickWounds" type="Skill"]
+name = "LickWounds"
+icon = ExtResource("1_orgwm")
+target_faction = "OneSelf"

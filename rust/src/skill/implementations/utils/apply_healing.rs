@@ -19,7 +19,7 @@ pub(crate) fn apply_healing(actor: Gd<BattleEntity>, targets: Array<Gd<BattleEnt
             target.get_name()
         );
 
-        target.bind_mut().take_damage(attack_damage.max(0) as u16);
+        target.bind_mut().heal_damage(attack_damage.max(0) as u16);
     });
 }
 

@@ -2,6 +2,7 @@ use godot::classes::Node;
 use godot::obj::{DynGd, NewAlloc};
 
 use crate::skill::implementations::bite::BiteSkillImplementation;
+use crate::skill::implementations::lick_wounds::LickWoundsSkillImplementation;
 use crate::skill::implementations::sonic_punch::SonicPunchSkillImplementation;
 use crate::skill::implementations::tackle::TackleSkillImplementation;
 use crate::skill::skill_definition::SkillDefinition;
@@ -14,5 +15,6 @@ pub(crate) fn get_skill_implementation(skill_name: SkillDefinition) -> DynGd<Nod
         SkillDefinition::Tackle => TackleSkillImplementation::new_alloc().into_dyn::<dyn SkillImplementation>().upcast::<Node>(),
         SkillDefinition::Bite => BiteSkillImplementation::new_alloc().into_dyn::<dyn SkillImplementation>().upcast::<Node>(),
         SkillDefinition::SonicPunch => SonicPunchSkillImplementation::new_alloc().into_dyn::<dyn SkillImplementation>().upcast::<Node>(),
+        SkillDefinition::LickWounds => LickWoundsSkillImplementation::new_alloc().into_dyn::<dyn SkillImplementation>().upcast::<Node>(),
     }
 }

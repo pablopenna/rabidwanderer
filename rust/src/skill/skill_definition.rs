@@ -7,6 +7,7 @@ pub(crate) enum SkillDefinition {
     Tackle,
     Bite,
     SonicPunch,
+    LickWounds,
 }
 
 impl SkillDefinition {
@@ -15,6 +16,7 @@ impl SkillDefinition {
             SkillDefinition::Tackle => "Tackle",
             SkillDefinition::Bite => "Bite",
             SkillDefinition::SonicPunch => "Sonic Punch",
+            SkillDefinition::LickWounds => "Lick Wounds",
         }
     }
 
@@ -26,6 +28,8 @@ impl SkillDefinition {
                 "Omn nom nom nom\n...\nChomp\n...\n*gulp*",
             SkillDefinition::SonicPunch =>
                 "Fiaum!",
+            SkillDefinition::LickWounds =>
+                "Meow",
         }
     }
 
@@ -34,6 +38,7 @@ impl SkillDefinition {
             SkillDefinition::Tackle => 2,
             SkillDefinition::Bite => 1,
             SkillDefinition::SonicPunch => 1,
+            SkillDefinition::LickWounds => 2,
         }
     }
 
