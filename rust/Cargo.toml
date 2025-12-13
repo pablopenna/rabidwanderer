@@ -7,5 +7,5 @@ edition = "2021"
 crate-type = ["cdylib"]  # Compile this crate to a dynamic C library.
 
 [dependencies]
-godot = "0.4.2" # gdext version - https://github.com/godot-rust/gdext/releases
-rand = "0.9.2"
+godot = "0.4.5" # gdext version - https://github.com/godot-rust/gdext/releases
+rand = "0.9.2" # https://docs.rs/rand/latest/rand/
