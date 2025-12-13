@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://d0o07ap7le1n7"]
+
+[ext_resource type="Texture2D" uid="uid://dab8btyq08g5g" path="res://art/item/coin.png" id="1_8q27m"]
+
+[node name="Idle" type="Skill"]
+_definition = "Idle"
+icon = ExtResource("1_8q27m")

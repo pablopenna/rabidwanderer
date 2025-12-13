@@ -6,6 +6,7 @@ use crate::targeting::{target_amount::TargetAmount, target_faction::TargetFactio
 #[derive(GodotConvert, Var, Export, Clone, PartialEq, Debug)]
 #[godot(via = GString)]
 pub(crate) enum SkillDefinition {
+    Idle,
     Tackle,
     Bite,
     SonicPunch,
@@ -16,6 +17,7 @@ pub(crate) enum SkillDefinition {
 impl SkillDefinition {
     pub(crate) fn _get_display_name(&self) -> &'static str {
         match self {
+            SkillDefinition::Idle => "Idle",
             SkillDefinition::Tackle => "Tackle",
             SkillDefinition::Bite => "Bite",
             SkillDefinition::SonicPunch => "Sonic Punch",
@@ -26,6 +28,7 @@ impl SkillDefinition {
 
     pub(crate) fn get_description(&self) -> &'static str {
         match self {
+            SkillDefinition::Idle => "Catch your breath",
             SkillDefinition::Tackle =>
                 "[img]res://art/misc/tombstone.png[/img]Furiously charges at the enemy dealing average damage",
             SkillDefinition::Bite =>
@@ -40,6 +43,7 @@ impl SkillDefinition {
 
     pub(crate) fn get_cooldown(&self) -> u8 {
         match self {
+            SkillDefinition::Idle => 0,
             SkillDefinition::Tackle => 2,
             SkillDefinition::Bite => 1,
             SkillDefinition::SonicPunch => 1,
@@ -50,6 +54,7 @@ impl SkillDefinition {
     
     pub(crate) fn get_target_amount(&self) -> TargetAmount {
         match self {
+            SkillDefinition::Idle => TargetAmount::Single,
             SkillDefinition::Tackle => TargetAmount::All,
             SkillDefinition::Bite => TargetAmount::Single,
             SkillDefinition::SonicPunch => TargetAmount::Single,
@@ -60,6 +65,7 @@ impl SkillDefinition {
     
     pub(crate) fn get_target_faction(&self) -> TargetFaction {
         match self {
+            SkillDefinition::Idle => TargetFaction::OneSelf,
             SkillDefinition::Tackle => TargetFaction::Opponent,
             SkillDefinition::Bite => TargetFaction::Opponent,
             SkillDefinition::SonicPunch => TargetFaction::Opponent,
@@ -70,6 +76,7 @@ impl SkillDefinition {
     
     pub(crate) fn get_priority(&self) -> i32 {
         match self {
+            SkillDefinition::Idle => 0,
             SkillDefinition::Tackle => 0,
             SkillDefinition::Bite => 0,
             SkillDefinition::SonicPunch => 1,

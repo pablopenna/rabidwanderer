@@ -1,4 +1,5 @@
 pub(crate) mod bite;
+pub(crate) mod idle;
 pub(crate) mod lick_wounds;
 pub(crate) mod sonic_punch;
 pub(crate) mod summon_spirit;

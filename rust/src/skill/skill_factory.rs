@@ -6,8 +6,10 @@ use crate::skill::skill::Skill;
 use crate::skill::skill_definition::SkillDefinition;
 
 #[derive(GodotClass)]
-#[class(base=Node)]
+#[class(base=Node, init)]
 pub(crate) struct SkillFactory {
+    #[export]
+    idle_scene: OnEditor<Gd<PackedScene>>,
     #[export]
     tackle_scene: OnEditor<Gd<PackedScene>>,
     #[export]
@@ -23,16 +25,6 @@ pub(crate) struct SkillFactory {
 
 #[godot_api]
 impl INode for SkillFactory {
-    fn init(base: Base<Node>) -> Self {
-        Self {
-            tackle_scene: OnEditor::default(),
-            bite_scene: OnEditor::default(),
-            sonic_punch_scene: OnEditor::default(),
-            lick_wounds_scene: OnEditor::default(),
-            summon_spirit_scene: OnEditor::default(),
-            base
-        }
-    }
 
     fn ready(&mut self) {
         let mut node = self.base_mut().to_godot().clone().upcast::<Node>();
@@ -49,6 +41,7 @@ impl SkillFactory {
 
     fn get_scene_for_skill(&self, def: &SkillDefinition) -> Gd<PackedScene> {
         match def {
+            SkillDefinition::Idle => self.get_idle_scene().unwrap(),
             SkillDefinition::Tackle => self.get_tackle_scene().unwrap(),
             SkillDefinition::Bite => self.get_bite_scene().unwrap(),
             SkillDefinition::SonicPunch => self.get_sonic_punch_scene().unwrap(),
