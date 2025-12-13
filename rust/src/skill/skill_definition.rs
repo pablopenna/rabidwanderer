@@ -3,9 +3,10 @@ use rand::Rng;
 
 use crate::targeting::{target_amount::TargetAmount, target_faction::TargetFaction};
 
-#[derive(GodotConvert, Var, Export, Clone, PartialEq, Debug)]
+#[derive(GodotConvert, Var, Export, Clone, PartialEq, Debug, Default)]
 #[godot(via = GString)]
 pub(crate) enum SkillDefinition {
+    #[default]
     Idle,
     Tackle,
     Bite,
@@ -45,13 +46,13 @@ impl SkillDefinition {
         match self {
             SkillDefinition::Idle => 0,
             SkillDefinition::Tackle => 2,
-            SkillDefinition::Bite => 1,
+            SkillDefinition::Bite => 2,
             SkillDefinition::SonicPunch => 1,
             SkillDefinition::LickWounds => 2,
             SkillDefinition::SummonSpirit => 3,
         }
     }
-    
+
     pub(crate) fn get_target_amount(&self) -> TargetAmount {
         match self {
             SkillDefinition::Idle => TargetAmount::Single,
@@ -62,7 +63,7 @@ impl SkillDefinition {
             SkillDefinition::SummonSpirit => TargetAmount::Single,
         }
     }
-    
+
     pub(crate) fn get_target_faction(&self) -> TargetFaction {
         match self {
             SkillDefinition::Idle => TargetFaction::OneSelf,
@@ -73,7 +74,7 @@ impl SkillDefinition {
             SkillDefinition::SummonSpirit => TargetFaction::OneSelf,
         }
     }
-    
+
     pub(crate) fn get_priority(&self) -> i32 {
         match self {
             SkillDefinition::Idle => 0,
@@ -99,7 +100,7 @@ impl SkillDefinition {
         Self::_RANDOM_POOL[idx].clone()
     }
 
-    pub(crate) fn from_gstring(item: GString) -> SkillDefinition {
+    pub(crate) fn _from_gstring(item: GString) -> SkillDefinition {
         SkillDefinition::from_variant(&item.to_variant())
     }
 }

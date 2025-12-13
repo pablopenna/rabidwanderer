@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://c4mdemd284n0y"]
+[gd_scene load_steps=16 format=3 uid="uid://c4mdemd284n0y"]
 
 [ext_resource type="TileSet" uid="uid://ch3lkinfhmitw" path="res://resources/board_tileset.tres" id="2_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://2n6rh32qnx05" path="res://scenes/board_entities/player.tscn" id="2_h2yge"]
@@ -9,6 +9,12 @@
 [ext_resource type="PackedScene" uid="uid://bbtucxxldcnw" path="res://scenes/board_entities/floor_item.tscn" id="6_7mycd"]
 [ext_resource type="PackedScene" uid="uid://tpwd2ac4raer" path="res://scenes/summon_entities/spirit.tscn" id="7_kek77"]
 [ext_resource type="PackedScene" uid="uid://w8or6a0027fd" path="res://scenes/ui/ui_root.tscn" id="8_5vw27"]
+[ext_resource type="PackedScene" uid="uid://d0o07ap7le1n7" path="res://scenes/skills/idle.tscn" id="8_vivmo"]
+[ext_resource type="PackedScene" uid="uid://bsnwk2cjc7bym" path="res://scenes/skills/tackle.tscn" id="9_2cqfq"]
+[ext_resource type="PackedScene" uid="uid://ci6hqdfbamf88" path="res://scenes/skills/bite.tscn" id="10_yaehf"]
+[ext_resource type="PackedScene" uid="uid://q5ig43mmlb3v" path="res://scenes/skills/sonic_punch.tscn" id="11_074og"]
+[ext_resource type="PackedScene" uid="uid://btau6wq8e04pu" path="res://scenes/skills/lick_wounds.tscn" id="12_cegan"]
+[ext_resource type="PackedScene" uid="uid://c7w76oand0v4" path="res://scenes/skills/summon_spirit.tscn" id="13_82xsv"]
 
 [node name="Main" type="Node2D"]
 
@@ -34,6 +40,14 @@ z_index = -1
 
 [node name="SummonFactory" type="SummonFactory" parent="GameManager"]
 summoning_spirit_scene = ExtResource("7_kek77")
+
+[node name="SkillFactory" type="SkillFactory" parent="GameManager"]
+idle_scene = ExtResource("8_vivmo")
+tackle_scene = ExtResource("9_2cqfq")
+bite_scene = ExtResource("10_yaehf")
+sonic_punch_scene = ExtResource("11_074og")
+lick_wounds_scene = ExtResource("12_cegan")
+summon_spirit_scene = ExtResource("13_82xsv")
 
 [node name="BoardCamera" type="BoardCamera" parent="." node_paths=PackedStringArray("focus_target")]
 focus_move_speed = 10.0

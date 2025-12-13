@@ -3,12 +3,15 @@ use godot::classes::*;
 use godot::prelude::*;
 
 use crate::battle::entity::entity::BattleEntity;
+use crate::consts::groups::get_skill_factory_node_from_tree;
 use crate::entity::modules::skill::skill_container::SkillContainerModule;
 use crate::entity::modules::skill::skill_resource::SkillResourceModule;
 use crate::global_signals::GlobalSignals;
+use crate::skill::chooser::implementations::utils::can_cast_at_least_one_skill::can_cast_at_least_one_skill;
 use crate::skill::chooser::skill_chooser::SkillChooser;
 use crate::skill::skill::Skill;
 use crate::skill::skill_definition::SkillDefinition;
+use crate::skill::skill_factory::SkillFactory;
 use crate::skill::skill_implementation::SkillImplementation;
 use crate::targeting::target_amount::TargetAmount;
 use crate::targeting::target_faction::TargetFaction;
@@ -21,6 +24,10 @@ pub(crate) struct UiSkillChooser {
     skill_chooser: OnEditor<Gd<SkillChooser>>,
     actor: Option<Gd<BattleEntity>>,
     status: Status,
+    #[export]
+    idle_skill: SkillDefinition,
+    idle_skill_node: Option<Gd<Skill>>, // Skill casted when no skills from the skill_pool can be casted
+    skill_factory: Option<Gd<SkillFactory>>, // Only used to retrieve the idle_skill
 }
 
 // Attributes to store temporary data as I could not pass it along among methods with signals in between
@@ -52,6 +59,9 @@ impl INode for UiSkillChooser {
                 _target_candidates: None,
                 _targets_chosen: None,
             },
+            idle_skill: SkillDefinition::Idle,
+            idle_skill_node: None,
+            skill_factory: None,
         }
     }
 
@@ -93,8 +103,15 @@ impl UiSkillChooser {
     ) {
         self.actor = Some(actor);
         self.clear_status();
-
+        
         godot_print!("Choosing skill via UI...");
+        
+        if !can_cast_at_least_one_skill(&skill_pool, &skill_resource) {
+            godot_print!("No available skill!");
+            let idle_skill = self.get_idle_skill_node();
+            self.on_skill_chosen_by_ui(idle_skill, skill_resource.clone());
+            return;
+        }
 
         GlobalSignals::get_singleton()
             .signals()
@@ -128,18 +145,19 @@ impl UiSkillChooser {
 
         // filter candidates based in faction as after choosing not all candidates are valid
         let actor_team = self.actor.clone().unwrap().bind().get_entity_team();
-        let candidates = self.status._target_candidates.clone().unwrap();
         let target_faction = self.status._skill_target_faction.clone().unwrap();
+        let target_amount = self.status._skill_target_amount.clone().unwrap();
 
         self.status._target_candidates = Some(TargetFaction::get_entities_belonging_to_faction(
             &actor_team,
             &target_faction,
-            &candidates,
+            & self.status._target_candidates.clone().unwrap(),
         ));
+        let candidates = self.status._target_candidates.clone().unwrap();
 
         godot_print!("Skill chosen via UI!");
 
-        if self.status._skill_target_amount.clone().unwrap() == TargetAmount::All {
+        if target_amount == TargetAmount::All || candidates.len() == 1 {
             self.status._targets_chosen = self.status._target_candidates.clone();
             self.finish_choosing();
             return;
@@ -188,5 +206,23 @@ impl UiSkillChooser {
                 self.status._skill_target_amount.clone().unwrap(),
                 self.status._skill_target_faction.clone().unwrap(),
             );
+    }
+    
+    fn get_idle_skill_node(&mut self) -> Gd<Skill> {
+        if self.idle_skill_node.is_none() {
+            let factory = self.get_skill_factory();
+            let skill = factory.bind().instance_skill(&self.idle_skill);
+            self.idle_skill_node = Some(skill);
+            
+        }
+        self.idle_skill_node.clone().unwrap()
+    }
+    
+    fn get_skill_factory(&mut self) -> Gd<SkillFactory> {
+        if self.skill_factory.is_none() {
+            let factory = get_skill_factory_node_from_tree(&self.base());
+            self.skill_factory = Some(factory);
+        }
+        self.skill_factory.clone().unwrap()
     }
 }
